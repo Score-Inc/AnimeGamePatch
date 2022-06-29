@@ -276,7 +276,7 @@ else
     echo -e "After open please wait 1 or 2 seconds\nand refresh it the site/browser!!!\n\nDon't share your certificate or error\n"
     read -p "Press enter for continue"
     echo "good luck!"
-    sleep 1
+    sleep 2
     termux-open-url http://mitm.it
     echo "CTRL + C Key for Continue"
     mitmdump --ssl-insecure > /sdcard/zlog.txt
