@@ -18,3 +18,8 @@ cd && pkg install git && git clone https://github.com/ElaXan/AnimeGamePatch.git 
 ~ If ask "motd (Y/I/N/O/D/Z) [default=N] ?" <br />
 Press ```N``` on your keyboard then Enter on your Keyboard <br />
 <br />4. Exit/Close Termux using command ```exit 0``` then enter <br />
+5. Open Termux<br />
+6. Enter :
+```bash
+bash AnimeGamePatch/install2.sh
+```
