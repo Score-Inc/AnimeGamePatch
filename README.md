@@ -33,6 +33,9 @@ Q. How to play again? Does i need to follow [this](https://github.com/ElaXan/Ani
 <br />Q. I want to play other server. How to change server?
 <br />A. Using command ```bash zdom.sh``` and enter the server you want play!
 <br />
+<br />Q. Why it said "Password error" or trying enter username and password?
+<br />A. Check your Proxy settings on your phone
+<br />
 <br />Q. Why i got error when i install from [Termux](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux)?
 <br />A. Try change your repo termux using ```termux-change-repo``` and follow [this](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux) step again<br />
 <br />If doesn't work you can join [Discord Server](https://discord.gg/GenshinPS) and go to Support-Channel and send the screenshot error
