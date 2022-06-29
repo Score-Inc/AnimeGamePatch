@@ -36,14 +36,12 @@ zNextStep2() {
         echo "https://drive.google.com/file/d/184KGay4O9dWI_yjuyhTbAWtLlStOvfDo/view?usp=drivesdk"
         exit
     fi
-    zexsign="/sdcard/Download/release.jks" 
-    if [[ -f $zexsign ]] || [[ -f "$HOME/release.jks" ]]; then
+    zexsign="$HOME/AnimeGamePatch/release.jks" 
+    if [[ -f $zexsign ]]; then
         echo "Cool!. Signature Downloaded"
         sleep 1
     else
-        echo -e "Please Download Signature from Google drive\nInstall from this link!!"
-        sleep 1 
-        echo "https://drive.google.com/file/d/12Tt9DF_V89Y6i0lS1pcHdzEp33YAhyyz/view?usp=drivesdk"
+        echo -e "Download Signature from Github!\nhttps://github.com/ElaXan/AnimeGamePatch"
         exit
     fi
     pathfordec="/sdcard/Download/zexhere/dec"
@@ -100,12 +98,13 @@ zNextStep2() {
         echo "Done!!!"
     fi
     sleep 1
-    if [[ -f "$HOME/release.jks" ]]; then
+    if [[ -f "$HOME/AnimeGamePatch/release.jks" ]]; then
         echo "Sign APK (Password is 123456)"
     else
-        cp "/sdcard/Download/release.jks" $HOME
-        echo "Sign APK (Password is 123456)"
+        echo -e "Signature not found!\nPlease download it from Github!"
     fi
+    command cd
+    command cd AnimeGamePatch
     command apksigner sign --ks release.jks --pass-encoding ibm437 /sdcard/Download/Genshin.apk
     if [[ $? != 0 ]]; then
         echo "Wrong Password!"
@@ -128,6 +127,7 @@ zNextStep2() {
     
 
     zRunProgram() {
+        command cd
         mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
     }
 
@@ -156,6 +156,7 @@ zNextStep2() {
     rm -rf "$where_the_apk/Genshin.apk.idsig"
     rm -rf "$where_the_apk/zex.apk"
     rm -rf "/sdcard/zlog.txt"
+    rm -rf "/sdcard/zlog2.txt"
     echo "All Done!!!"
     sleep 1
     echo "Install Genshin Impact with name Genshin.apk in /sdcard/Download"
@@ -165,12 +166,12 @@ zNextStep2() {
     echo ""
     echo "if you want play again. Just run bash zex.sh"
     echo "Don't forget to settings your proxy and Port"
-    pathtool=/sdcard/Download
+    pathtool=$HOME/AnimeGamePatch
     if [[ -f "$HOME/zex.sh" ]]; then
         echo "File already moved for zex.sh!"
     else
         if [[ -f "$pathtool/zex.sh" ]]; then
-            mv /sdcard/Download/zex.sh $HOME
+            mv $pathtool/zex.sh $HOME
             sleep 1
             echo "move zex.sh to Termux data (/data/data/com.termux)"
             sleep 2
@@ -183,7 +184,7 @@ zNextStep2() {
         echo "File already moved for zdom.sh!"
     else
         if [[ -f "$pathtool/zdom.sh" ]]; then
-            mv /sdcard/Download/zdom.sh $HOME
+            mv $pathtool/zdom.sh $HOME
             sleep 1
             echo "move zdom.sh to Termux data (/data/data/com.termux)"
             sleep 2
@@ -191,6 +192,8 @@ zNextStep2() {
             echo "Please Download zdom.sh!"
         fi
     fi
+    sleep 1
+    echo "Open Genshin Now!!"
     sleep 2
     zRunProgram
 }
@@ -217,6 +220,7 @@ if [[ -f $HOME/proxy.py ]]; then
     rm $HOME/proxy.py
 fi
 sleep 1
+command cd
 command wget https://gist.githubusercontent.com/exzork/8bbf5975bb9efab0a9c8a03a01dadd5e/raw/c2574d6f66798e65f2ed4709a69b43c6cecf60be/proxy.py &> /sdcard/zlog2.txt
 checkwgetdownload=$?
 sleep 1
@@ -265,11 +269,11 @@ else
     echo "Download for Android there"
     echo "You will be offline (No Internet). Don't panic!"
     echo "This because Proxy."
-    echo "You can turn off it or delete Proxy on WiFi Settings"
+    echo "You can turn off it or delete Proxy on WiFi Settings\n"
     read -p "Press enter for continue"
-    echo "You sure?"
+    echo -e "Download to /sdcard/Download\nFor code detect that you download it\n"
     read -p "Press enter for continue"
-    echo -e "After open please wait 1 or 2 seconds\nand refresh it the site/browser!!!\n\nDon't share your certificate or error"
+    echo -e "After open please wait 1 or 2 seconds\nand refresh it the site/browser!!!\n\nDon't share your certificate or error\n"
     read -p "Press enter for continue"
     echo "good luck!"
     sleep 1
