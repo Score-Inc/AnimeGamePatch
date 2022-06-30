@@ -4,7 +4,7 @@ This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)
 
 ## Download File
 Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) <br />
-Download Anime Game Patch from [Google Drive](https://drive.google.com/file/d/184KGay4O9dWI_yjuyhTbAWtLlStOvfDo/view?usp=drivesdk) <br />
+Download Anime Game Patch from [Release](https://github.com/ElaXan/AnimeGamePatch/releases/tag/2.7) <br />
 
 ## Termux
 1. Enter : ```termux-setup-storage``` <br />
