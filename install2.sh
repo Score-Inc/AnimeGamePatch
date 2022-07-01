@@ -1,6 +1,6 @@
 #!/data/user/0/com.termux/files/usr/bin/bash
 
-clear
+command clear
 
 whoMadeThis() {
     echo -e "========================================\n               ZEX HERE\n----------------------------------------\nScript was made by @ElashXander (Telegram)\n----------------------------------------\nAny support join Discord\nhttps://discord.gg/GenshinPS\n========================================"
