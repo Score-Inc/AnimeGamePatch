@@ -26,7 +26,7 @@ zNextStep2() {
     echo -e "Please enter path\nwhere you save the APK Genshin when you download from Google Drive\nExample : Download\nExample 2 : Download/file download"
     read -p "Path : /sdcard/" where_the_apk
     where_the_apk="/sdcard/$where_the_apk"
-    zexherebro="Genshin Impact Cert Patch_Sign.apk"
+    zexherebro="Genshin.Impact.Cert.Patch_Sign.apk"
     if [[ -f "$where_the_apk/$zexherebro" ]]; then
         echo "Cool! File genshin apk in $where_the_apk"
         sleep 2
@@ -53,7 +53,7 @@ zNextStep2() {
  
     echo "Decompile Genshin APK! (Please Wait!)"
     sleep 1
-    apktool -r -s d "/sdcard/Download/Genshin Impact Cert Patch_Sign.apk" -o "$pathfordec"
+    apktool -r -s d "/sdcard/Download/Genshin.Impact.Cert.Patch_Sign.apk" -o "$pathfordec"
     if [[ $? != 0 ]]; then
         echo "Decompile Failed!"
         echo "Read the Error and solve it by yourself"
