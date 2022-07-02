@@ -39,6 +39,9 @@ Q. How to play again? Does i need to follow [this](https://github.com/ElaXan/Ani
 <br />Q. Why i got Data Error?
 <br />A. Because you may the proxy not setting to<br /> Hostname : **127.0.0.1**<br />Port : **8080**<br />Try settings proxy and run ```bash zex.sh```
 <br />
+<br />Q. Why preparing data 0% (stuck)?
+<br />A. Please change your data Genshin at /sdcard/Android/data. Change it to ```com.miHoYo.GenshinImpactzex```, then try open the app
+<br />
 <br />Q. Why i got error when i install from [Termux](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux)?
 <br />A. Try change your repo termux using ```termux-change-repo``` and follow [this](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux) step again<br />
 <br />If doesn't work you can join [Discord Server](https://discord.gg/GenshinPS) and go to Support-Channel and send the screenshot error
