@@ -273,8 +273,9 @@ else
     read -p "Press enter for continue"
     echo -e "Download to /sdcard/Download\nFor code detect that you download it\n"
     read -p "Press enter for continue"
-    echo -e "After open please wait 1 or 2 seconds\nand refresh it the site/browser!!!\n\nDon't share your certificate or error\n"
-    read -p "Press enter for continue"
+    echo -e "After open please wait 1 or 2 seconds\nand refresh it the site/browser!!!\n\nDon't share your certificate or error"
+    echo ""
+    read -p "Press enter for open the site"
     echo "good luck!"
     sleep 2
     termux-open-url http://mitm.it
