@@ -23,7 +23,7 @@ zNextStep2() {
         exit
     fi
     sleep 2
-    echo -e "Please enter path\nwhere you save the APK Genshin when you download from Google Drive\nExample : Download\nExample 2 : Download/file download"
+    echo -e "Please enter path\nwhere you save the APK Genshin when you download from Github\nExample : Download\nExample 2 : Download/file download"
     read -p "Path : /sdcard/" where_the_apk
     where_the_apk="/sdcard/$where_the_apk"
     zexherebro="Genshin.Impact.Cert.Patch_Sign.apk"
