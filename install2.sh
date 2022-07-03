@@ -198,88 +198,199 @@ zNextStep2() {
     zRunProgram
 }
 
+# =========== Install =========== #
+
+exportcargo() {
+  echo "Export Cargo"
+  sleep 1
+  export CARGO_BUILD_TARGET=aarch64-linux-android &> /sdcard/zlog.txt
+  checkexport=$?
+  if [[ $? != 0 ]]; then
+    command touch $errpath/expcargerr &> /sdcard/zlog2.txt
+    echo "Failed to export :("
+  else
+    echo "Export done!"
+    command touch $errpath/expcargesucc &> /sdcard/zlog2.txt
+    if [[ $errpath/expcargerr ]]; then
+      rm $errpath/expcargerr
+    fi
+  fi
+}
+
+installmitmproxy() {
+  echo -e "Install mitmproxy with pipx (This may take long time)\n[Make Coffee For Waiting This Shit]"
+  sleep 1
+  command pipx install mitmproxy
+  checkpipxmitm=$?
+  if [[ $? != 0 ]]; then
+    command touch $errpath/insinsmitmerr
+    echo "Install failed :("
+  else
+    echo "Install success"
+    command touch $errpath/insinsmitmsucc
+    if [[ -f $errpath/insinsmitmerr ]]; then
+      command rm $errpath/insinsmitmerr &> /sdcard/zlog2.txt
+    fi
+  fi
+}
+
+downloadproxypy() {
+  echo "Download proxy.py"
+  command cd
+  command wget https://gist.githubusercontent.com/exzork/8bbf5975bb9efab0a9c8a03a01dadd5e/raw/c2574d6f66798e65f2ed4709a69b43c6cecf60be/proxy.py &> /sdcard/zlog2.txt
+  checkwgetdownload=$?
+  if [[ $? != 0 ]]; then
+    echo "Download failed :("
+    command touch $errpath/downproxyerr &> /sdcard/zlog2.txt
+  else
+    echo "Download Success"
+    command touch $errpath/downproxysucc &> /sdcard/zlog2.txt
+    if [[ -f $errpath/downproxyerr ]]; then
+      command rm $errpath/downproxyerr &> /sdcard/zlog2.txt
+    fi
+  fi
+}
+
+editproxypy() {
+  sleep 1
+  echo "Edit proxy.py"
+  sleep 1
+  command cd
+  sed -i 's/genshin.exzork.me/hk.genshinps.me/g' proxy.py
+  checkeditfile=$?
+  if [[ $? != 0 ]]; then
+    echo "Edit failed :("
+    touch $errpath/edproxpyerr &> /sdcard/zlog2.txt
+  else
+    echo "Edit success"
+    touch $errpath/edproxpysucc &> /sdcard/zlog.txt
+    if [[ -f $errpath/edproxpyerr ]]; then
+      rm $errpath/edproxpyerr
+    fi
+  fi
+}
+
+errpath=$HOME/.cache/zex
+if [[ -d $errpath ]]; then
+  echo "Folder already created!"
+  sleep 0.8
+else
+  command mkdir $HOME/.cache/zex
+fi
 clear
 whoMadeThis
 sleep 2
-echo "Export Cargo"
-sleep 1
-export CARGO_BUILD_TARGET=aarch64-linux-android &> /sdcard/zlog.txt
-checkexport=$?
-sleep 1
-echo "Done!"
-sleep 1
-echo -e "Install mitmproxy with pipx (This may take long time)\n[Make Coffee For Waiting This Shit]"
-sleep 1
-pipx install mitmproxy
-checkpipxmitm=$?
-sleep 1
-echo "Done Install mitmproxy"
-sleep 1
-echo "Download proxy.py"
-if [[ -f $HOME/proxy.py ]]; then
-    rm $HOME/proxy.py
+if [[ -f $errpath/expcargesucc ]]; then
+  echo "Already export cargo"
+  checkexport=1
+else
+  exportcargo
 fi
 sleep 1
-command cd
-command wget https://gist.githubusercontent.com/exzork/8bbf5975bb9efab0a9c8a03a01dadd5e/raw/c2574d6f66798e65f2ed4709a69b43c6cecf60be/proxy.py &> /sdcard/zlog2.txt
-checkwgetdownload=$?
+if [[ -f $errpath/insinsmitmsucc ]]; then
+  echo "Mitmproxy already installed"
+  checkpipxmitm=1
+else
+  installmitmproxy
+fi
 sleep 1
-echo "Edit proxy.py"
+if [[ -f $errpath/downproxysucc ]] || [[ -f $HOME/proxy.py ]]; then
+  echo "proxy.py already downloaded"
+  checkwgetdownload=1
+else
+  downloadproxypy
+fi
 sleep 1
-sed -i 's/genshin.exzork.me/hk.genshinps.me/g' proxy.py
-checkeditfile=$?
-sleep 1
-echo "Done"
+if [[ -f $errpath/edproxpysucc ]]; then
+  echo -e "File already edited\nOr use bash zdom.sh for change domain"
+  checkeditfile=1
+  sleep 1
+else
+  editproxypy
+fi
 sleep 2
 clear
 if [[ $checkexport != 0 ]]; then
+    if [[ $checkexport = 1 ]]; then
+      zcheckexport="Already do Export (Success)"
+    else
     zcheckexport="Export Failed (Error)"
+    fi
 else
     zcheckexport="Export Successfully"
 fi
 
 if [[ $checkpipxmitm != 0 ]]; then
-    zcheckpipxmitm="Install mitmproxy Failed (Error)"
+    if [[ $checkpipxmitm = 1 ]]; then
+      zcheckpipxmitm="mitmproxy already installed"
+    else
+      zcheckpipxmitm="Install mitmproxy Failed (Error)"
+    fi
 else
     zcheckpipxmitm="Install mitmproxy Successfully"
 fi
 
 if [[ $checkwgetdownload != 0 ]]; then
-    zcheckwgetdownload="Download Proxy Failed (Error)"
+    if [[ $checkwgetdownload = 1 ]]; then
+      zcheckwgetdownload="proxy.py already downloaded"
+    else
+      zcheckwgetdownload="Download Proxy Failed (Error)"
+    fi
 else
     zcheckwgetdownload="Download Proxy Successfully"
 fi
 
 if [[ $checkeditfile != 0 ]]; then
-    zcheckeditfile="Edit Proxy Failed (Error)"
+    if [[ $checkeditfile = 1 ]]; then
+      zcheckeditfile="proxy.py already edited"
+    else
+      zcheckeditfile="Edit Proxy Failed (Error)"
+    fi
 else
     zcheckeditfile="Edit Proxy Successfully"
 fi
+resultsinstall() {
+  echo "Please Setting your WiFi or mobile data to Proxy"
+  echo "Hostname : 127.0.0.1"
+  echo "Port : 8080"
+  echo "Download for Android there"
+  echo "You will be offline (No Internet). Don't panic!"
+  echo "This because Proxy."
+  echo -e "You can turn off it or delete Proxy on WiFi Settings\n"
+  read -p "Press enter for continue"
+  echo -e "Download to /sdcard/Download\nFor code detect that you download it\n"
+  read -p "Press enter for continue"
+  echo -e "After open please wait 1 or 2 seconds\nand refresh it the site/browser!!!\n\nDon't share your certificate or error"
+  echo ""
+  read -p "Press enter for open the site"
+  echo "good luck!"
+  sleep 2
+  termux-open-url http://mitm.it
+  echo "CTRL + C Key for Continue"
+  mitmdump --ssl-insecure > /sdcard/zlog.txt
+  zNextStep2
+}
+
 whoMadeThis
 sleep 1
 echo -e "Results:\nExport Cargo = $zcheckexport\n\nInstall mitmproxy with pipx = $zcheckpipxmitm\n\nDownload proxy.py = $zcheckwgetdownload\n\nEdit proxy.py = $zcheckeditfile\n\n"
 sleep 1
+if [[ $checkexport = 1 ]]; then
+  checkexport=0
+fi
+if [[ $checkpipxmitm = 1 ]]; then
+  checkpipxmitm=0
+fi
+if [[ $checkwgetdownload = 1 ]]; then
+  checkwgetdownload=0
+fi
+if [[ $checkeditfile = 1 ]]; then
+  checkeditfile=0
+fi
+
 if [[ $checkexport != 0 ]] || [[ $checkpipxmitm != 0 ]] || [[ $checkwgetdownload != 0 ]] || [[ $checkeditfile != 0 ]]; then
-    echo -e "There is Error\nJoin Discord Server and tag @Helper for Help\nhttps://discord.gg/GenshinPS"
-    exit
+  echo -e "There is Error\nJoin Discord Server and tag @Helper for Help\nhttps://discord.gg/GenshinPS"
+  exit
 else
-    echo "Please Setting your WiFi or mobile data to Proxy"
-    echo "Hostname : 127.0.0.1"
-    echo "Port : 8080"
-    echo "Download for Android there"
-    echo "You will be offline (No Internet). Don't panic!"
-    echo "This because Proxy."
-    echo "You can turn off it or delete Proxy on WiFi Settings\n"
-    read -p "Press enter for continue"
-    echo -e "Download to /sdcard/Download\nFor code detect that you download it\n"
-    read -p "Press enter for continue"
-    echo -e "After open please wait 1 or 2 seconds\nand refresh it the site/browser!!!\n\nDon't share your certificate or error"
-    echo ""
-    read -p "Press enter for open the site"
-    echo "good luck!"
-    sleep 2
-    termux-open-url http://mitm.it
-    echo "CTRL + C Key for Continue"
-    mitmdump --ssl-insecure > /sdcard/zlog.txt
-    zNextStep2
+  resultsinstall
 fi
