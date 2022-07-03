@@ -198,6 +198,10 @@ zNextStep2() {
     zRunProgram
 }
 
+logsavedcredit() {
+  command echo "Code made by @ElashXander (Telegram)" > $errpath/$1
+}
+
 # =========== Install =========== #
 
 exportcargo() {
@@ -207,11 +211,13 @@ exportcargo() {
   checkexport=$?
   if [[ $? != 0 ]]; then
     command touch $errpath/expcargerr &> /sdcard/zlog2.txt
+    logsavedcredit "expcargerr"
     echo "Failed to export :("
   else
     echo "Export done!"
     command touch $errpath/expcargesucc &> /sdcard/zlog2.txt
-    if [[ $errpath/expcargerr ]]; then
+    logsavedcredit "expcargesucc"
+    if [[ -f $errpath/expcargerr ]]; then
       rm $errpath/expcargerr
     fi
   fi
@@ -223,13 +229,19 @@ installmitmproxy() {
   command pipx install mitmproxy
   checkpipxmitm=$?
   if [[ $? != 0 ]]; then
-    command touch $errpath/insinsmitmerr
-    echo "Install failed :("
+    if [[ ! -f $errpath/insinsmitmerr ]]; then
+      command touch $errpath/insinsmitmerr &> /sdcard/zlog2.txt
+      logsavedcredit "insinsmitmerr"
+      echo "Install failed :("
+    else
+      echo "Install failed :("
+    fi
   else
     echo "Install success"
     command touch $errpath/insinsmitmsucc
+    logsavedcredit "insinsmitmsucc"
     if [[ -f $errpath/insinsmitmerr ]]; then
-      command rm $errpath/insinsmitmerr &> /sdcard/zlog2.txt
+      rm $errpath/insinsmitmerr &> /sdcard/zlog2.txt
     fi
   fi
 }
@@ -240,13 +252,19 @@ downloadproxypy() {
   command wget https://gist.githubusercontent.com/exzork/8bbf5975bb9efab0a9c8a03a01dadd5e/raw/c2574d6f66798e65f2ed4709a69b43c6cecf60be/proxy.py &> /sdcard/zlog2.txt
   checkwgetdownload=$?
   if [[ $? != 0 ]]; then
-    echo "Download failed :("
-    command touch $errpath/downproxyerr &> /sdcard/zlog2.txt
+    if [[ ! -f $errpath/downproxyerr ]]; then
+      echo "Download failed :("
+      command touch $errpath/downproxyerr &> /sdcard/zlog2.txt
+      logsavedcredit "downproxyerr"
+    else
+      echo "Download failed :("
+    fi
   else
     echo "Download Success"
     command touch $errpath/downproxysucc &> /sdcard/zlog2.txt
+    logsavedcredit "downproxysucc"
     if [[ -f $errpath/downproxyerr ]]; then
-      command rm $errpath/downproxyerr &> /sdcard/zlog2.txt
+      rm $errpath/downproxyerr &> /sdcard/zlog2.txt
     fi
   fi
 }
@@ -261,25 +279,27 @@ editproxypy() {
   if [[ $? != 0 ]]; then
     echo "Edit failed :("
     touch $errpath/edproxpyerr &> /sdcard/zlog2.txt
+    logsavedcredit "edproxpyerr"
   else
     echo "Edit success"
-    touch $errpath/edproxpysucc &> /sdcard/zlog.txt
+    touch $errpath/edproxpysucc &> /sdcard/zlog2.txt
+    logsavedcredit "edproxpysucc"
     if [[ -f $errpath/edproxpyerr ]]; then
       rm $errpath/edproxpyerr
     fi
   fi
 }
 
-errpath=$HOME/.cache/zex
+errpath=$HOME/.config/zex
 if [[ -d $errpath ]]; then
   echo "Folder already created!"
-  sleep 0.8
+  sleep 0.5
 else
-  command mkdir $HOME/.cache/zex
+  command mkdir $errpath
 fi
 clear
 whoMadeThis
-sleep 2
+sleep 0.3 
 if [[ -f $errpath/expcargesucc ]]; then
   echo "Already export cargo"
   checkexport=1
