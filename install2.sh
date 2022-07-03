@@ -210,7 +210,7 @@ echo "Done!"
 sleep 1
 echo -e "Install mitmproxy with pipx (This may take long time)\n[Make Coffee For Waiting This Shit]"
 sleep 1
-pipx install mitmproxy &> /sdcard/zlog2.txt
+pipx install mitmproxy
 checkpipxmitm=$?
 sleep 1
 echo "Done Install mitmproxy"
