@@ -4,50 +4,30 @@ command clear
 command cd
 
 whoMadeThis() {
-echo -e "========================================\n               ZEX HERE\n----------------------------------------\nScript was made by @ElashXander (Telegram)\n----------------------------------------\nAny support join Discord\nhttps://discord.gg/GenshinPS\n========================================"
+    echo -e "========================================\n               ZEX HERE\n----------------------------------------\nScript was made by @ElashXander (Telegram)\n----------------------------------------\nAny support join Discord\nhttps://discord.gg/UfAC8dBD4p\n========================================"
 }
 
-asiaserver() {
+changeServer() {
     command clear
     whoMadeThis
-    command sed -i "s/default = \".*\",/default = \"hk.genshinps.me\",/g" $HOME/proxy.py &> $ZERR
-    if [[ $? != 0 ]]; then
-        echo "ERROR!"
-        echo -e "\nReason Error : ";command cat $ZERR
-        rm $ZERR
-        exit
-    else
-        echo "The Domain changed to hk.genshinps.me"
-        rm $ZERR
+    domainChange=$inpsrv
+    if [[ $domainChange = "1" ]]; then
+        domainChange="hk.genshinps.me"
+    elif [[ $domainChange = "2" ]]; then
+        domainChange="eu.genshinps.me"
+    elif [[ $domainChange = "3" ]]; then
+        domainChange="eu2.genshinps.me"
+    elif [[ $domainChange = "4" ]]; then
+        domainChange="hk.elashxander.my.id"
     fi
-}
-
-euserver() {
-    command clear
-    whoMadeThis
-    command sed -i "s/default = \".*\",/default = \"eu.genshinps.me\",/g" $HOME/proxy.py &> $ZERR
+    command sed -i "s/default = \".*\",/default = \"$domainChange\",/g" $HOME/proxy.py &> $ZERR
     if [[ $? != 0 ]]; then
         echo "ERROR!"
         echo -e "\nReason Error : ";command cat $ZERR
         rm $ZERR
         exit
     else
-        echo "The Domain changed to eu.genshinps.me"
-        rm $ZERR
-    fi
-}
-
-eu2server() {
-    command clear
-    whoMadeThis
-    command sed -i "s/default = \".*\",/default = \"eu2.genshinps.me\",/g" $HOME/proxy.py &> $ZERR
-    if [[ $? != 0 ]]; then
-        echo "ERROR!"
-        echo -e "\nReason Error : ";command cat $ZERR
-        rm $ZERR
-        exit
-    else
-        echo "The Domain changed to eu2.genshinps.me"
+        echo "The Domain changed to $domainChange"
         rm $ZERR
     fi
 }
@@ -71,19 +51,17 @@ customserver() {
 
 ZERR=/data/user/0/com.termux/cache/zlog
 whoMadeThis
-echo -e "Select Server\n1. HK/Asia Server\n2. Europe/EU Server\n3. Europe2/EU2 Server\n4. Custom\n\nExample : 1 for select Asia Server"
+command cd
+if [[ -f "proxy.py" ]]; then
+    echo -e "File target edit to proxy.py\n========================================"
+else
+    echo "File not found for proxy.py"
+fi
+echo -e "Select Server\n1. HK/Asia Server\n2. Europe/EU Server\n3. Europe2/EU2 Server\n4. My Server (Hongkong)\n5. Custom\n\nExample : 1 for select Asia Server"
 read -p "Enter input : " inpsrv
 
 case $inpsrv in
-    "1" ) asiaserver
-          ;;
-    "2" ) euserver
-          ;;
-    "3" ) eu2server
-          ;;
-    "4" ) customserver
-          ;;
-    * ) echo "Wrong Input!"
-        ;;
+    "1" | "2" | "3" | "4" ) changeServer;;
+    "5" ) customserver;;
+    * ) echo "Wrong Input!";;
 esac
-
