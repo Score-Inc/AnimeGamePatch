@@ -3,7 +3,27 @@
 command clear
 
 whoMadeThis() {
-    echo -e "========================================\n               ZEX HERE\n----------------------------------------\nScript was made by @ElashXander (Telegram)\n----------------------------------------\nAny support join Discord\nhttps://discord.gg/GenshinPS\n========================================"
+    echo -e "========================================\n               ZEX HERE\n----------------------------------------\nScript was made by @ElashXander (Telegram)\n----------------------------------------\nAny support join Discord\nhttps://discord.gg/UfAC8dBD4p\n========================================"
+}
+
+certfile() {
+    echo -e "Please download for android and save the certificate to /sdcard/Download\n"
+    echo "Where the cert you download?"
+    echo ""
+    read -p "/sdcard/" whereisthecert
+    if [[ $whereisthecert = "" ]]; then
+      echo "Please enter the path!"
+      command clear
+      whoMadeThis
+      certfile
+    fi
+    if [[ $whereisthecert = "Download" ]]; then
+      echo "Are you kidding me?"
+      command clear
+      whoMadeThis
+      certfile
+    fi
+    
 }
 
 zNextStep2() {
@@ -19,7 +39,7 @@ zNextStep2() {
     if [[ -f "/sdcard/Download/mitmproxy-ca-cert.cer.crt" ]]; then
         echo "Cool we found you download for Android!"
     else
-        echo -e "Did you download it for Android?\nor you not to download the Cert!"
+        echo "We can't find for certificate in /sdcard/Download"
         exit
     fi
     sleep 2
@@ -36,13 +56,51 @@ zNextStep2() {
         echo "https://drive.google.com/file/d/184KGay4O9dWI_yjuyhTbAWtLlStOvfDo/view?usp=drivesdk"
         exit
     fi
+    wantdownload() {
+        read -p "Want try to download it? (y/n)" animegamepatchdownload
+        case $animegamepatchdownload in
+            "y" | "Y" | "yes" | "Yes" | "YEs" | "YES" ) yesdownload;;
+            "n" | "n" | "no" | "No" | "NO" ) nodownload;;
+            * ) echo "Wrong imput"; sleep 2s; wantdownload;;
+        esac
+    }
+    yesdownload() {
+        command cd /sdcard/Download
+        wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.7/Genshin.Impact.Cert.Patch_Sign.apk
+        if [[ -f "/sdcard/Download/Genshin.Impact.Cert.Patch_Sign.apk" ]]; then
+          command cd
+        else
+          echo "Download failed!"
+          exit
+        fi
+
+        if [[ $? != 0 ]]; then
+            echo "Something wrong, Please check your internet!"
+            echo "Turn off the proxy on your WiFi Settings or APN if you using mobile data!"
+            sleep 2s
+            read -p "Do you want to download again? (y/n)" tryingdownloadapk
+            case $tryingdownloadapk in
+              "y" ) echo "Trying download again!"; sleep 1s; yesdownload;;
+              "n" ) echo "Okay download it by yourself";exit 0;;
+              * ) echo "Wrong input!"; exit;;
+            esac
+        else
+            command cd
+        fi
+    }
+    nodownload() {
+        echo "Okay download it by yourself!"
+        echo "Dont forget save download to /sdcard/Download"
+        echo "Download from github here for the link!"
+        echo "https://github.com/ElaXan/AnimeGamePatch/releases/download/2.7/Genshin.Impact.Cert.Patch_Sign.apk"
+        exit
+    }
     zexsign="$HOME/AnimeGamePatch/release.jks" 
     if [[ -f $zexsign ]]; then
         echo "Cool!. Signature Downloaded"
         sleep 1
     else
-        echo -e "Download Signature from Github!\nhttps://github.com/ElaXan/AnimeGamePatch"
-        exit
+        wantdownload
     fi
     pathfordec="/sdcard/Download/zexhere/dec"
     if [[ -d  $pathfordec ]]; then
@@ -204,8 +262,10 @@ logsavedcredit() {
 
 # =========== Install =========== #
 
+
+
 exportcargo() {
-  echo "Export Cargo"
+  echo "Export CARGO_BUILD_TARGET"
   sleep 1
   export CARGO_BUILD_TARGET=aarch64-linux-android &> /sdcard/zlog.txt
   checkexport=$?
@@ -274,7 +334,11 @@ editproxypy() {
   echo "Edit proxy.py"
   sleep 1
   command cd
-  sed -i 's/genshin.exzork.me/hk.genshinps.me/g' proxy.py
+  if [[ -f "proxy.py" ]]; then
+    sed -i 's/genshin.exzork.me/hk.genshinps.me/g' proxy.py
+  else
+    echo "File not found!"
+  fi
   checkeditfile=$?
   if [[ $? != 0 ]]; then
     echo "Edit failed :("
@@ -290,6 +354,47 @@ editproxypy() {
   fi
 }
 
+deleteProgramY() {
+  read -p "Are you sure? (y/n) : " areYouSure
+  case $areYouSure in
+    "y" | "yes" | "Y" ) command pkg remove apktool rustc-dev apksigner -y; command apt autoremove -y; echo -e "\nProgram success removed!"; exit;;
+    "n" | "no" | "N" ) echo "Okay!, program will not be deleted!"; exit;;
+    * ) echo "Wrong input!"; exit;;
+  esac
+}
+
+clear
+
+clearOrWhat="$1"
+
+if [[ $clearOrWhat = "clear" ]]; then
+  echo -e "You want clear the some program?. This will delete\n- apktool\n- apksigner\n- rustc-dev (java)\n"
+  echo -e "Enter Y for delete this program"
+  read -p "or N for not delete this : " deleteProgram
+  case $deleteProgram in
+    "y" | "Y" | "yes" ) deleteProgramY;;
+    "n" | "n" | "no" ) echo "Okay will not be delete the program"; exit;;
+    * ) echo "Wrong input!"; exit;;
+  esac
+elif [[ $clearOrWhat = "" ]]; then
+  command clear
+  noClear=true
+elif [[ noClear = true ]]; then
+  command clear
+else
+  echo "Wrong input!"
+  exit
+fi
+
+if [ -x "/data/data/com.termux/files/home/.local/bin/mitmdump" ]; then
+  echo "file \"mitmdump\" is found!"
+  sleep 2s
+else
+  echo "Please exit termux, open, and enter the command"
+  echo "bash AnimeGamePatch/install2.sh"
+  exit
+fi
+
 errpath=$HOME/.config/zex
 if [[ -d $errpath ]]; then
   echo "Folder already created!"
@@ -297,7 +402,7 @@ if [[ -d $errpath ]]; then
 else
   command mkdir $errpath
 fi
-clear
+
 whoMadeThis
 sleep 0.3 
 if [[ -f $errpath/expcargesucc ]]; then
