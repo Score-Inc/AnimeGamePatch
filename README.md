@@ -48,4 +48,3 @@ Q. How to play again? Does i need to follow [this](https://github.com/ElaXan/Ani
 <br />
 <br />Q. Why i got error when i install from [Termux](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux)?
 <br />A. Try change your repo termux using ```termux-change-repo``` and follow [this](https://github.com/ElaXan/AnimeGamePatch#termux) step again<br />
-<br />If doesn't work you can join [Discord Server](https://discord.gg/UfAC8dBD4p) and go to Support-Channel and send the screenshot error
