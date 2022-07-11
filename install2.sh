@@ -391,7 +391,7 @@ if [ -x "/data/data/com.termux/files/home/.local/bin/mitmdump" ]; then
   sleep 2s
 else
   echo "Please exit termux, open, and enter the command"
-  echo "bash AnimeGamePatch/install2.sh"
+  echo "bash AnimeGamePatch/install.sh"
   exit
 fi
 
