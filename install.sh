@@ -7,8 +7,6 @@ echo -e "========================================\n
 ----------------------------------------\n
 Script was made by @ElashXander (Telegram)\n
 ----------------------------------------\n
-Any support join Discord\n
-https://discord.gg/GenshinPS\n
 ========================================"
 }
 
