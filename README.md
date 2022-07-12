@@ -6,6 +6,10 @@ This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)
 Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) <br />
 Download Anime Game Patch from [Release](https://github.com/ElaXan/AnimeGamePatch/releases/tag/2.7) <br />
 
+## Install
+* You can use MT Manager for install this APK
+* You can use [Split APKS Installer](https://play.google.com/store/apps/details?id=com.aefyr.sai) for install apks
+
 ## Termux
 * This need proxy settings on your phone. No need install cert on your phone but follow the script said until it success. If you don't know about this go to google how to set proxy on your phone. Mobile Data just change the APN (Access Point Name)
 1. Enter : ```termux-setup-storage``` <br />
