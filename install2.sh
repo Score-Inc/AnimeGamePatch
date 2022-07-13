@@ -342,7 +342,7 @@ editproxypy() {
   sleep 1
   command cd
   if [[ -f "proxy.py" ]]; then
-    sed -i 's/genshin.exzork.me/hk.genshinps.me/g' proxy.py
+    sed -i 's/genshin.exzork.me/hk.elashxander.my.id/g' proxy.py
   else
     echo "File not found!"
   fi
