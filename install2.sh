@@ -206,7 +206,7 @@ zNextStep2() {
     echo ""
     echo "No Virus, Already check with VirusTotal"
     echo "Here for the Link"
-    echo "https://www.virustotal.com/gui/file/e50e657e8a5b64ff48888a3a58e99a1a96eb700aa97cc77b991650b551942738/detection"
+    echo "https://www.virustotal.com/gui/file/81aeb11b8e7ecadf218d90ac555310a8f2b21b478335834b31d62c89b03fa95e/detection"
     echo ""
     echo "It will be safe if you download files from Google Drive"
     echo "https://drive.google.com/file/d/184KGay4O9dWI_yjuyhTbAWtLlStOvfDo/view?usp=drivesdk"
