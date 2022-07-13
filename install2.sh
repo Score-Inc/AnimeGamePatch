@@ -99,7 +99,7 @@ zNextStep2() {
         echo "Okay download it by yourself!"
         echo "Dont forget save download to /sdcard/Download"
         echo "Download from github here for the link!"
-        echo "https://github.com/ElaXan/AnimeGamePatch/releases/download/2.7/Genshin.Impact.Cert.Patch_Sign.apk"
+        echo "https://github.com/ElaXan/AnimeGamePatch/releases"
         exit
     }
     zexsign="$HOME/AnimeGamePatch/release.jks" 
