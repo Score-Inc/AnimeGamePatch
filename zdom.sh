@@ -87,7 +87,7 @@ customserver() {
 ZERR=/data/user/0/com.termux/cache/zlog
 whoMadeThis
 command cd
-if [[ -f "proxy.py" ]]; then
+if [[ ! -f "proxy.py" ]]; then
     echo "File not found for proxy.py"
     exit
 fi
