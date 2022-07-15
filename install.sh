@@ -91,7 +91,7 @@ installpipx() {
 pyensurepipx() {
   echo "ensurepath pipx"
   sleep 1
-  command python3 -m pipx ensurepath &> /sdcard/zlog.txt
+  command  &> /sdcard/zlog.txt
   checkensurepath=$?
   if [[ $? != 0 ]]; then
     echo "ensurepath pipx is failed :("
@@ -242,7 +242,7 @@ if [[ $checkpkg != 0 ]] || [[ $checkimpprog != 0 ]] || [[ $checkensure != 0 ]] |
     if [[ $checkpkg != 0 ]]; then
         pkgerrfix
     else
-        echo -e "\nThere is ERROR! Join Discord Server for Help\nhttps://discord.gg/GenshinPS"
+        echo -e "\nThere is ERROR!\nTry exit the Termux and open it again. run command bash AnimeGamePatch/install.sh\n\nor Join Discord Server for Help\nhttps://discord.gg/GenshinPS"
         exit
     fi
 else
