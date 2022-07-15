@@ -91,7 +91,7 @@ installpipx() {
 pyensurepipx() {
   echo "ensurepath pipx"
   sleep 1
-  command  &> /sdcard/zlog.txt
+  command python3 -m pipx ensurepath &> /sdcard/zlog.txt
   checkensurepath=$?
   if [[ $? != 0 ]]; then
     echo "ensurepath pipx is failed :("
