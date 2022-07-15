@@ -2,6 +2,9 @@
 For who have Android 8 or crash issue can try use this Patch.<br />
 This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)
 
+# Re-Coding !!!
+I'm trying to recoding this code. So may you will have a error code
+
 ## Download File
 Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) <br />
 Download Anime Game Patch from [Release](https://github.com/ElaXan/AnimeGamePatch/releases) <br />
