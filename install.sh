@@ -29,7 +29,7 @@ fi
 installsomeprogram() {
   echo "Install important program [PLEASE WAIT]"
   sleep 1
-  command pkg install python wget rustc-dev nano apktool apksigner -y
+  command pkg install python wget rustc-dev nano -y
   checkimpprog=$?
   if [[ $? != 0 ]]; then
     command clear
