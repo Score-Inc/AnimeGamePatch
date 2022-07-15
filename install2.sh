@@ -182,6 +182,7 @@ editproxypy() {
     echo "Edit failed :("
   else
     echo "Edit success"
+    touch $errpath/edproxpysucc &> /sdcard/zlog2.txt
   fi
 }
 
@@ -323,6 +324,7 @@ resultsinstall() {
         "Y" | "y" ) cd; cd .config/zex; rm *;;
         "N" | "n" ) echo "Okay!"; exit;;
     esac
+  fi
   zNextStep2
 }
 
