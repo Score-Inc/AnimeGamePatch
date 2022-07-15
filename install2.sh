@@ -137,16 +137,9 @@ exportcargo() {
   export CARGO_BUILD_TARGET=aarch64-linux-android &> /sdcard/zlog.txt
   checkexport=$?
   if [[ $? != 0 ]]; then
-    command touch $errpath/expcargerr &> /sdcard/zlog2.txt
-    logsavedcredit "expcargerr"
     echo "Failed to export :("
   else
     echo "Export done!"
-    command touch $errpath/expcargesucc &> /sdcard/zlog2.txt
-    logsavedcredit "expcargesucc"
-    if [[ -f $errpath/expcargerr ]]; then
-      rm $errpath/expcargerr
-    fi
   fi
 }
 
@@ -156,20 +149,9 @@ installmitmproxy() {
   command pipx install mitmproxy
   checkpipxmitm=$?
   if [[ $? != 0 ]]; then
-    if [[ ! -f $errpath/insinsmitmerr ]]; then
-      command touch $errpath/insinsmitmerr &> /sdcard/zlog2.txt
-      logsavedcredit "insinsmitmerr"
-      echo "Install failed :("
-    else
-      echo "Install failed :("
-    fi
+    echo "Install failed :("
   else
     echo "Install success"
-    command touch $errpath/insinsmitmsucc
-    logsavedcredit "insinsmitmsucc"
-    if [[ -f $errpath/insinsmitmerr ]]; then
-      rm $errpath/insinsmitmerr &> /sdcard/zlog2.txt
-    fi
   fi
 }
 
@@ -179,20 +161,9 @@ downloadproxypy() {
   command wget https://gist.githubusercontent.com/exzork/8bbf5975bb9efab0a9c8a03a01dadd5e/raw/c2574d6f66798e65f2ed4709a69b43c6cecf60be/proxy.py &> /sdcard/zlog2.txt
   checkwgetdownload=$?
   if [[ $? != 0 ]]; then
-    if [[ ! -f $errpath/downproxyerr ]]; then
-      echo "Download failed :("
-      command touch $errpath/downproxyerr &> /sdcard/zlog2.txt
-      logsavedcredit "downproxyerr"
-    else
-      echo "Download failed :("
-    fi
+    echo "Download failed :("
   else
     echo "Download Success"
-    command touch $errpath/downproxysucc &> /sdcard/zlog2.txt
-    logsavedcredit "downproxysucc"
-    if [[ -f $errpath/downproxyerr ]]; then
-      rm $errpath/downproxyerr &> /sdcard/zlog2.txt
-    fi
   fi
 }
 
