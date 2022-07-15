@@ -242,7 +242,7 @@ if [[ $checkpkg != 0 ]] || [[ $checkimpprog != 0 ]] || [[ $checkensure != 0 ]] |
     if [[ $checkpkg != 0 ]]; then
         pkgerrfix
     else
-        echo -e "\nThere is ERROR!\nTry exit the Termux and open it again. run command bash AnimeGamePatch/install.sh\n\nor Join Discord Server for Help\nhttps://discord.gg/GenshinPS"
+        echo -e "\nThere is ERROR!\nTry exit the Termux and open it again.\n1. try run command manualy for python3 -m pip install --user pipx\nThen run command bash AnimeGamePatch/install.sh\n\nor Join Discord Server for Help\nhttps://discord.gg/GenshinPS"
         exit
     fi
 else
