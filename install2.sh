@@ -352,6 +352,13 @@ resultsinstall() {
   termux-open-url http://mitm.it
   echo "CTRL + C Key for Continue"
   mitmdump --ssl-insecure > /sdcard/zlog.txt
+  if [[ $? != 0 ]]; then
+    echo "Error, will trying to remove the save that you already download it?"
+    read -p "Enter Y or N : " removeSaveFile
+    case $removdSaveFile in
+        "Y" | "y" ) cd; cd .config/zex; rm *;;
+        "N" | "n" ) echo "Okay!"; exit;;
+    esac
   zNextStep2
 }
 
