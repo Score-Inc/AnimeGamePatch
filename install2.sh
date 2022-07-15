@@ -180,15 +180,8 @@ editproxypy() {
   checkeditfile=$?
   if [[ $? != 0 ]]; then
     echo "Edit failed :("
-    touch $errpath/edproxpyerr &> /sdcard/zlog2.txt
-    logsavedcredit "edproxpyerr"
   else
     echo "Edit success"
-    touch $errpath/edproxpysucc &> /sdcard/zlog2.txt
-    logsavedcredit "edproxpysucc"
-    if [[ -f $errpath/edproxpyerr ]]; then
-      rm $errpath/edproxpyerr
-    fi
   fi
 }
 
