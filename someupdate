@@ -25,6 +25,12 @@ updateScript1() {
        command clear
        echo "Update success!"
        sleep 1s
+       echo "Settings permission!"
+       chmod +x $binary
+       sleep 1s
+       echo "Done!"
+       sleep 1s
+       command clear
        echo "Please enter command zex again!"
        exit
     fi
