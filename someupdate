@@ -26,5 +26,6 @@ updateScript1() {
        echo "Update success!"
        sleep 1s
        echo "Please enter command zex again!"
+       exit
     fi
 }
