@@ -32,18 +32,18 @@ bash AnimeGamePatch/install2.sh
 ![](img/apnmobiledata.png)
 
 * For WiFi just follow this picture : 
-**Step 1**
-![](img/wifiproxy1.png)
+<br />**Step 1**
+![Never](img/wifiproxy1.png)
 **Step 2**
-![](img/wifiproxy2.png)
+![Gonna](img/wifiproxy2.png)
 **Step 3**
-![](img/wifiproxy3.png)
+![Give](img/wifiproxy3.png)
 **Step 4**
-![](img/wifiproxy4.png)
+![You](img/wifiproxy4.png)
 **Step 5**
-![](img/wifiproxy5.png)
+![UP](img/wifiproxy5.png)
 **Step 6**
-![](img/wifiproxy6.png)
+![HEHE](img/wifiproxy6.png)
 
 ## FAQ
 Q. How to play again? Does i need to follow [this](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux) step again?
