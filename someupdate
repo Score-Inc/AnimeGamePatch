@@ -3,3 +3,9 @@ updateNotif="1. Add some code"
 updateNote="There is new version to"
 link=null
 printLatest="This is Latest Version ($versionBashIn1)"
+whatTheFuckEditVersion="Something wrong with version.\nThis version different from the server\n\nYou Edit it?"
+updateScript1() {
+    command cd
+    rm AnimeGamePatch/install.sh
+    wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/install.sh
+}
