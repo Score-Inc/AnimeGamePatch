@@ -9,9 +9,13 @@ Download Anime Game Patch from [Release](https://github.com/ElaXan/AnimeGamePatc
 ## Termux
 * This need proxy settings on your phone. ~~No need install cert on your phone but follow the script said until it success.~~ If you don't know about this go to [Proxy Settings](https://github.com/ElaXan/AnimeGamePatch#proxy-settings).
 1. Enter : ```termux-setup-storage``` <br />
+* Just allow it like this picture :
+![](termuximg/termux-setup-storage.png)
 2. Enter : ```termux-change-repo``` <br />
 ~ Press on [OK] or Enter on your keyboard <br />
 ~ Select "Mirrors by A1batross" then Press [OK] <br />
+* Do same like this Picture :
+![](termuximg/termux-change-repo.png)
 3. Enter : 
 ```bash
 cd && pkg install git && git clone https://github.com/ElaXan/AnimeGamePatch.git && cd AnimeGamePatch && bash install.sh
