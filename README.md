@@ -27,6 +27,10 @@ bash AnimeGamePatch/install2.sh
 <br />7. Follow what script said
 <br />8. DONE✓
 
+# Proxy Settings
+* Mobile data go to settings and use search function, and search word ```Access point Name``` and click on **+**. Then enter Proxy and Port as like this picture :
+![](img/apnmobiledata.png)
+
 ## FAQ
 Q. How to play again? Does i need to follow [this](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux) step again?
 <br />A. No. just enter command ```bash zex.sh``` then play Anime Game
