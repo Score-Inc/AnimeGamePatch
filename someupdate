@@ -1,3 +1,4 @@
+binary=/data/data/com.termux/files/usr/bin/zex
 versionBashIn1="1"
 updateNotif="1. Add some code"
 updateNote="There is new version to"
@@ -6,6 +7,9 @@ printLatest="This is Latest Version (Ver : $versionBashIn1)"
 whatTheFuckEditVersion="Something wrong with version.\nThis version different from the server\n\nYou Edit it?"
 updateScript1() {
     command cd
-    rm AnimeGamePatch/install.sh
-    wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/install.sh
+    rm $binary
+    wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zinstall
+    mv zinstall $binary
+    command clear
+    echo "Please run zex again!"
 }
