@@ -13,7 +13,7 @@ updateScript1() {
     mkdir $updateDir
     cd $updateDir
     echo "Update Script!"
-    git clone https://github.com/ElaXan/AnimeGamePatch.git
+    git clone https://github.com/ElaXan/AnimeGamePatch.git &> /dev/null
     if [[ $? != 0 ]]; then
        echo "Can't do update Script. Make sure you internet is ON or stable"
        exit
