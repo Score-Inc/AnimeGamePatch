@@ -12,11 +12,19 @@ updateScript1() {
     rm $binary
     mkdir $updateDir
     cd $updateDir
-    git clone https://github.com/ElaXan/AnimeGamePatch.git
-    cd AnimeGamePatch
-    mv zinstall $binary
-    command cd
-    rm -rf $updateDir
-    command clear
-    echo "Please enter command zex again!"
+    echo "Update Script!"
+    git clone https://github.com/ElaXan/AnimeGamePatch.git $> /dev/null
+    if [[ $? != 0 ]]; then
+       echo "Can't do update Script. Make sure you internet is ON or stable"
+       exit
+    else
+       cd AnimeGamePatch
+       mv zinstall $binary
+       command cd
+       rm -rf $updateDir
+       command clear
+       echo "Update success!"
+       sleep 1s
+       echo "Please enter command zex again!"
+    fi
 }
