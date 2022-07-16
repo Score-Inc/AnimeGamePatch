@@ -2,7 +2,7 @@ versionBashIn1="1"
 updateNotif="1. Add some code"
 updateNote="There is new version to"
 link=null
-printLatest="This is Latest Version ($versionBashIn1)"
+printLatest="This is Latest Version (Ver : $versionBashIn1)"
 whatTheFuckEditVersion="Something wrong with version.\nThis version different from the server\n\nYou Edit it?"
 updateScript1() {
     command cd
