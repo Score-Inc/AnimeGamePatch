@@ -18,7 +18,7 @@ Download Anime Game Patch from [Release](https://github.com/ElaXan/AnimeGamePatc
 ![](termuximg/termux-change-repo.png)
 3. Enter : 
 ```bash
-cd && pkg install git && git clone https://github.com/ElaXan/AnimeGamePatch.git && cd AnimeGamePatch && bash install.sh
+cd; pkg install git; git clone https://github.com/ElaXan/AnimeGamePatch.git; cd AnimeGamePatch; binary="/data/data/com.termux/files/usr/bin/zex" && mv zex $binary; chmod 775 $binary; echo "Please enter command zex for run the code!"
 ```
 ~ If ask "motd (Y/I/N/O/D/Z) [default=N] ?" <br />
 Press ```N``` on your keyboard then Enter on your Keyboard <br />
