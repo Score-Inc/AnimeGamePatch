@@ -21,12 +21,7 @@ blackColor="$(printf '\033[0;30m')"
 whiteColor="$(printf '\033[0;37m')"
 
 whoMadeThis() {
-echo -e "========================================\n
-               ZEX HERE\n
-----------------------------------------\n
-Script was made by @ElashXander (Telegram)\n
-----------------------------------------\n
-========================================"
+echo -e "========================================\n               ZEX HERE\n----------------------------------------\nScript was made by @ElashXander (Telegram)\n----------------------------------------\nStill doing code, add code for check there is Update.\n========================================"
 }
 
 errpath=$HOME/.config/zex
