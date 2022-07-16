@@ -194,7 +194,7 @@ runProgram() {
         if [[ $checkensure = 1 ]]; then
           zcheckensure="${greenColorBold}ensure already upgrade${whiteColor}"
         else
-          zcheckensure="Upgrade Failed (Error)"
+          zcheckensure="${redColorBold}Upgrade Failed (Error)${whiteColor}"
         fi
     else
         zcheckensure="${greenColorBold}Upgrade Successfully${whiteColor}"
@@ -204,14 +204,14 @@ runProgram() {
         if [[ $checkpypipx = 1 ]]; then
           zcheckpypipx="${greenColorBold}already installed${whiteColor}"
         else
-          zcheckpypipx="Install Failed (Error)"
+          zcheckpypipx="${redColorBold}Install Failed (Error)${whiteColor}"
         fi
     else
         zcheckpypipx="${greenColorBold}Install Successfully${whiteColor}"
     fi
 
     if [[ $checkensurepath != 0 ]]; then
-        zcheckensurepath="Add path Failed (Error)"
+        zcheckensurepath="${redColorBold}Add path Failed (Error)${whiteColor}"
     else
         zcheckensurepath="${greenColorBold}Add path Successfully${whiteColor}"
     fi
@@ -222,21 +222,28 @@ pkgyfix() {
         echo "Unknown Error"
         exit
     else
+        pkgyfixlog="1"
+        rm -rf $errpath/*
         runProgram
     fi
 }
 
 pkgerrfix() {
-    echo -e "\nThere is ERROR\n"
-    read -p "Want try to fix it? (y/n) : " pkgfixerr
-    case $pkgfixerr in
+    if [[ $pkgyfixlog = "1" ]]; then
+      echo "${redColorBold}Can't fix the error!${whiteColor}"
+      exit
+    else
+      echo -e "\nThere is ERROR\n"
+      read -p "Want try to fix it? (y/n) : " pkgfixerr
+      case $pkgfixerr in
         "y" ) pkgyfix
             ;;
         "n" ) echo "Okay!, try fix by yourself using termux-change-repo"
             ;;
-        * ) echo "Please enter y/n !"; pkgerrfix
+        * ) echo "wrongInput!"
             ;;
-    esac
+      esac
+    fi
 }
 whoMadeThis
 runProgram
