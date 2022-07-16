@@ -7,7 +7,7 @@ Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) <br 
 Download Anime Game Patch from [Release](https://github.com/ElaXan/AnimeGamePatch/releases) (Outdated!) <br />
 
 ## Termux
-* This need proxy settings on your phone. ~~No need install cert on your phone but follow the script said until it success.~~ If you don't know about this go to google how to set proxy on your phone. Mobile Data just change the APN (Access Point Name)
+* This need proxy settings on your phone. ~~No need install cert on your phone but follow the script said until it success.~~ If you don't know about this go to [Proxy Settings](https://github.com/ElaXan/AnimeGamePatch#proxy-settings).
 1. Enter : ```termux-setup-storage``` <br />
 2. Enter : ```termux-change-repo``` <br />
 ~ Press on [OK] or Enter on your keyboard <br />
