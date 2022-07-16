@@ -3,7 +3,7 @@
 command clear
 
 whoMadeThis() {
-    echo -e "========================================\n               ZEX HERE\n----------------------------------------\nScript was made by @ElashXander (Telegram)\n----------------------------------------\nAny support join Discord\nhttps://discord.gg/UfAC8dBD4p\n========================================"
+    echo -e "========================================\n               ZEX HERE\n----------------------------------------\nScript was made by @ElashXander (Telegram)\n----------------------------------------\nStill doing code, add code for check there is Update.\n========================================"
 }
 
 certfile() {
