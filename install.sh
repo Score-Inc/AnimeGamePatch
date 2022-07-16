@@ -1,6 +1,25 @@
 #!/bin/bash
 
 clear
+
+greenColorBack="$(printf '\033[4;42m')"
+redColorBack="$(printf '\033[4;41m')"
+yellowColorBack="$(printf '\033[4;43m')"
+whiteColorBack="$(printf '\033[4;47m')"
+blueColorBack="$(printf '\033[4;44m')"
+purpleColorBack="$(printf '\033[4;45m')"
+cyanColorBack="$(printf '\033[4;46m')"
+blackColorBack="$(printf '\033[4;40m')"
+greenColorBold="$(printf '\033[1;32m')"
+redColorBold="$(printf '\033[1;31m')"
+yellowColorBold="$(printf '\033[1;33m')"
+whiteColorBold="$(printf '\033[1;37m')"
+blueColorBold="$(printf '\033[1;34m')"
+purpleColorBold="$(printf '\033[1;35m')"
+cyanColorBold="$(printf '\033[1;36m')"
+blackColor="$(printf '\033[0;30m')"
+whiteColor="$(printf '\033[0;37m')"
+
 whoMadeThis() {
 echo -e "========================================\n
                ZEX HERE\n
@@ -156,45 +175,45 @@ runProgram() {
     fi
     sleep 1
     if [[ $checkpkg != 0 ]]; then
-        zcheckpkg="Failed Update (Error)"
+        zcheckpkg="${redColorBold}Failed Update (Error)${whiteColor}"
     else
-        zcheckpkg="Update Successfully"
+        zcheckpkg="${greenColorBold}Update Successfully${whiteColor}"
     fi
 
     if [[ $checkimpprog != 0 ]]; then
         if [[ $checkimpprog = 1 ]]; then
-          zcheckimpprog="Program already installed"
+          zcheckimpprog="${greenColorBold}Program already installed${whiteColor}"
         else
-          zcheckimpprog="Install Failed (Error)"
+          zcheckimpprog="${redColorBold}Install Failed (Error)${whiteColor}"
         fi
     else
-        zcheckimpprog="Install Successfully"
+        zcheckimpprog="${greenColorBold}Install Successfully${whiteColor}"
     fi
 
     if [[ $checkensure != 0 ]]; then
         if [[ $checkensure = 1 ]]; then
-          zcheckensure="ensure already upgrade"
+          zcheckensure="${greenColorBold}ensure already upgrade${whiteColor}"
         else
           zcheckensure="Upgrade Failed (Error)"
         fi
     else
-        zcheckensure="Upgrade Successfully"
+        zcheckensure="${greenColorBold}Upgrade Successfully${whiteColor}"
     fi
 
     if [[ $checkpypipx != 0 ]]; then
         if [[ $checkpypipx = 1 ]]; then
-          zcheckpypipx="pipx already installed"
+          zcheckpypipx="${greenColorBold}already installed${whiteColor}"
         else
           zcheckpypipx="Install Failed (Error)"
         fi
     else
-        zcheckpypipx="Install Successfully"
+        zcheckpypipx="${greenColorBold}Install Successfully${whiteColor}"
     fi
 
     if [[ $checkensurepath != 0 ]]; then
         zcheckensurepath="Add path Failed (Error)"
     else
-        zcheckensurepath="Add path Successfully"
+        zcheckensurepath="${greenColorBold}Add path Successfully${whiteColor}"
     fi
 }
 pkgyfix() {
