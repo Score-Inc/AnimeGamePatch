@@ -26,7 +26,7 @@ Press ```N``` on your keyboard then Enter on your Keyboard <br />
 5. Open Termux<br />
 6. Enter :
 ```bash
-bash AnimeGamePatch/install2.sh
+zex ins
 ```
 <br />7. Follow what script said
 <br />8. DONE✓
