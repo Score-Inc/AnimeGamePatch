@@ -1,6 +1,6 @@
 binary=/data/data/com.termux/files/usr/bin/zex
-versionBashIn1="1.6"
-updateNotif="1. Fix Code"
+versionBashIn1="1.7"
+updateNotif="1. Fix Code\n2. make it force to install avoid error"
 updateNote="There is new version to"
 link=null
 printLatest="This is Latest Version (Ver : $versionBashIn1)"
