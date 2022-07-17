@@ -16,6 +16,8 @@ updateScript1() {
     git clone https://github.com/ElaXan/AnimeGamePatch.git &> /dev/null
     if [[ $? != 0 ]]; then
        echo "Can't do update Script. Make sure you internet is ON or stable"
+       rm $updateDir
+       command cd
        exit
     else
        cd AnimeGamePatch
