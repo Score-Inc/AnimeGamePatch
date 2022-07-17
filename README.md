@@ -2,6 +2,10 @@
 For who have Android 8 or crash issue can try use this Patch.<br />
 This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)
 
+# This just for only install mitmproxy
+Maybe for now just for install mitmproxy and change a server as you want<br />
+This good for beginner/who don't know about Termux
+
 ## Download File
 Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) <br />
 Download Anime Game Patch from [Release](https://github.com/ElaXan/AnimeGamePatch/releases) (Outdated!) <br />
