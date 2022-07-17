@@ -15,6 +15,11 @@ nameScript=$(basename $0)
 
 install1() {
 
+if [[ $noInternet = true ]]; then
+    echo "${redColorBold}Need internet for install. please enable your internet and run ${nameScript} ins again"
+    exit
+fi
+
 errpath=$HOME/.config/zex
 
 logsavedcredit() {
@@ -34,7 +39,7 @@ fi
 installsomeprogram() {
   echo "${cyanColorUnder}Install important program [PLEASE WAIT]${whiteColor}"
   sleep 1
-  command pkg install python wget rustc-dev nano -y
+  pkg install python wget rustc-dev nano -y
   checkimpprog=$?
   if [[ $? != 0 ]]; then
     command clear
@@ -50,7 +55,7 @@ installsomeprogram() {
 ensurepipup() {
   echo "${cyanColorUnder}Ensurepip${whiteColor}"
   sleep 1
-  command python3 -m ensurepip --upgrade &> /sdcard/zlog.txt
+  python3 -m ensurepip --upgrade &> /sdcard/zlog.txt
   checkensure=$?
   if [[ $? != 0 ]]; then
     echo "${redColorBold}ensurepip Upgrade failed :(${whiteColor}"
@@ -63,7 +68,7 @@ installpipx() {
   command cd
   echo "Install pipx"
   sleep 1
-  command python3 -m pip install --user pipx &> /sdcard/zlog.txt
+  python3 -m pip install --user pipx &> /sdcard/zlog.txt
   checkpypipx=$?
   if [[ $? != 0 ]]; then
     echo "${redColorBold}Install pipx Failed :(${whiteColor}"
@@ -95,23 +100,9 @@ runProgram() {
         checkpkg=$?
     fi
     command cd
-    rustcdev=$(pkg list-installed 2> /dev/null | grep "^.*rustc-dev" | sed "s/.*/rustc-dev/g")
-    progPkg=$(command -v python &> /dev/null && command -v wget $> /dev/null && command -v nano &> /dev/null && [[ $rustcdev = "rustc-dev" ]])
-    if $progPkg; then
-      command clear
-      whoMadeThis
-      echo "${greenColorUnder}Program already installed${whiteColor}"
-      sleep 1s
-      checkimpprog=1
-    else
-      if [[ $noInternet = true ]]; then
-        echo "${redColorBold}Skip install (Need internet for install Program!)${whiteColor}"
-        sleep 1s
-      else
-        installsomeprogram
-      fi
-    fi
-        
+	command clear
+	whoMadeThis
+    installsomeprogram
     sleep 1
     if $progPkg; then
       command clear
@@ -396,7 +387,7 @@ installmitmproxy() {
   fi
   echo -e "Install mitmproxy with pipx (This may take long time)\n[Make Coffee For Waiting This Shit]"
   sleep 1
-  command pipx install mitmproxy
+  command pipx install --force mitmproxy
   checkpipxmitm=$?
   if [[ $? != 0 ]]; then
     echo "Install failed :("
@@ -408,7 +399,7 @@ installmitmproxy() {
 downloadproxypy() {
   echo "Download proxy.py"
   command cd
-  command wget https://gist.githubusercontent.com/exzork/8bbf5975bb9efab0a9c8a03a01dadd5e/raw/c2574d6f66798e65f2ed4709a69b43c6cecf60be/proxy.py &> /sdcard/zlog2.txt
+  wget https://gist.githubusercontent.com/exzork/8bbf5975bb9efab0a9c8a03a01dadd5e/raw/c2574d6f66798e65f2ed4709a69b43c6cecf60be/proxy.py &> /sdcard/zlog2.txt
   checkwgetdownload=$?
   if [[ $? != 0 ]]; then
     echo "Download failed :("
@@ -423,7 +414,7 @@ editproxypy() {
   sleep 1
   command cd
   if [[ -f "proxy.py" ]]; then
-    sed -i 's/genshin.exzork.me/hk.elashxander.my.id/g' proxy.py
+    sed -i 's/genshin.exzork.me/sg.game.yuuki.me/g' proxy.py
   else
     echo "File not found!"
   fi
@@ -480,13 +471,7 @@ else
   downloadproxypy
 fi
 sleep 1
-if [[ -f $errpath/edproxpysucc ]]; then
-  echo -e "File already edited\nOr use ${nameScript} dom for change domain"
-  checkeditfile=1
-  sleep 1
-else
-  editproxypy
-fi
+editproxypy
 sleep 2
 clear
 if [[ $checkexport != 0 ]]; then
@@ -529,6 +514,10 @@ else
     zcheckeditfile="${greenColorBold}Edit Proxy Successfully${whiteColor}"
 fi
 resultsinstall() {
+  if ! command -v mitmdump &> /dev/null; then
+        echo -e "${redColorBold}mitmdump not installled.\n${yellowColor}Feel free dm me at Telegram, username : @ElashXander. if you need fix this issue!${whiteColor}"
+        exit
+  fi
   echo "Please Setting your WiFi or mobile data to Proxy"
   echo "Hostname : 127.0.0.1"
   echo "Port : 8080"
@@ -829,7 +818,7 @@ whoMadeThis() {
     echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n$isThisLatestVersion\n========================================"
 }
 
-versionBash1="1.6"
+versionBash1="1.7"
 
 greenColorBack="$(printf '\033[4;42m')"
 redColorBack="$(printf '\033[4;41m')"
