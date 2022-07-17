@@ -31,6 +31,23 @@ zex ins2
 <br />7. Follow what script said
 <br />8. DONE✓
 
+# Command
+```
+zex: invalid option
+    zex Usage : zex ins / dom / ins2 / run
+
+    ins : Install program at begining
+    ins2 : when you already using zex ins then use ins2
+    dom : change a server/domain
+    run : run a mitmproxy                               
+This script was made by @ElashXander (Telegram) this not easy to use this but, why not to try learn this?
+```
+
+```zex ins``` : for install / update program<br />
+```zex ins2``` : install mitmproxy<br />
+```zex run``` : run a proxy for play Anime Game<br />
+```zex dom``` : change a domain/server<br />
+
 # Proxy Settings
 * Mobile data go to settings and use search function, and search word ```Access point Name``` and click on **+**. Then enter Proxy and Port as like this picture :
 ![](img/apnmobiledata.png)
