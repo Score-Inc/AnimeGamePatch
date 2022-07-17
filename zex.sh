@@ -88,21 +88,32 @@ runProgram() {
     sleep 2
     echo "${cyanColorUnder}Update and Upgrade PKG${whiteColor}"
     sleep 1
-    command pkg upgrade -y
-    checkpkg=$?
+    if [[ $noInternet = true ]]; then
+        echo "${redColorBold}Skip upgrade PKG (No Internet)${whiteColor}"
+    else
+        command pkg upgrade -y
+        checkpkg=$?
+    fi
     command cd
     rustcdev=$(pkg list-installed 2> /dev/null | grep "^.*rustc-dev" | sed "s/.*/rustc-dev/g")
-    if command -v python && command -v wget && command -v nano && [[ $rustcdev = "rustc-dev" ]]; then
+    progPkg=$(command -v python &> /dev/null && command -v wget $> /dev/null && command -v nano &> /dev/null && [[ $rustcdev = "rustc-dev" ]])
+    if $progPkg; then
       command clear
       whoMadeThis
       echo "${greenColorUnder}Program already installed${whiteColor}"
+      sleep 1s
       checkimpprog=1
     else
-      installsomeprogram
+      if [[ $noInternet = true ]]; then
+        echo "${redColorBold}Skip install (Need internet for install Program!)${whiteColor}"
+        sleep 1s
+      else
+        installsomeprogram
+      fi
     fi
         
     sleep 1
-    if [[ $checkimpprog = 1 ]]; then
+    if $progPkg; then
       command clear
       whoMadeThis
       echo "${cyanColorUnder}Update and Upgrade PKG${whiteColor}"
@@ -340,34 +351,12 @@ zNextStep2() {
     clear
     whoMadeThis
     sleep 1
-    echo "        IMPORTANT"
-    echo "When you install Genshin, Google Play Store Will Blocked to install reason Genshin Apk Unknown Developer. REASON WHY?? Because Genshin APK Sign by my Signature."
-    echo ""
-    echo "Just do allow for install"
-    echo ""
-    echo "No Virus, Already check with VirusTotal"
-    echo "Here for the Link"
-    echo "https://www.virustotal.com/gui/file/81aeb11b8e7ecadf218d90ac555310a8f2b21b478335834b31d62c89b03fa95e/detection"
-    echo ""
-    echo "It will be safe if you download files from Google Drive"
-    echo "https://drive.google.com/file/d/184KGay4O9dWI_yjuyhTbAWtLlStOvfDo/view?usp=drivesdk"
-    echo ""
-    echo "  @ElashXander (Telegram)"
-    echo "========================================"
-    read -p "Enter for Continue"
-    echo -e "You can install Genshin with name Genshin.apk in /sdcard/Download\nDon't close the Termux!"
-    sleep 1
+    echo -e "Please install Cert that you download it to your phone is Settings!.\nCA Certificate in Security. If you not do that, this will not work.\nAnd Please don't share you Certificate to other. May certificate will not work again"
     echo "Cleaning [PLEASE WAIT!!]"
-    rm -rf "$where_the_apk/zexhere"
-    rm -rf "$where_the_apk/Genshin.apk.idsig"
-    rm -rf "$where_the_apk/zex.apk"
     rm -rf "/sdcard/zlog.txt"
     rm -rf "/sdcard/zlog2.txt"
     echo "All Done!!!"
     sleep 1
-    echo "Install Genshin Impact with name Genshin.apk in /sdcard/Download"
-    echo "If already install and you open it."
-    echo "Please Close it"
     echo "Need Hostname: 127.0.0.1 and Port : 8080 if not will not work"
     echo ""
     echo "if you want play again. Just run ${nameScript} run"
@@ -484,7 +473,7 @@ else
   installmitmproxy
 fi
 sleep 1
-if [[ -f $errpath/downproxysucc ]] || [[ -f $HOME/proxy.py ]]; then
+if [[ -f $HOME/proxy.py ]]; then
   echo "proxy.py already downloaded"
   checkwgetdownload=1
 else
@@ -819,6 +808,11 @@ esac
 
 # ================== zex.sh START ================== #
 zexsh() {
+if [[ $noInternet = true ]]; then
+    command clear
+    echo -e "${redColorBold}This internet required,\nplease turn on your internet for run mitmdump!${whiteColor}"
+    exit
+fi
 if command -v mitmdump &> /dev/null; then
     command cd
     mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
@@ -835,7 +829,7 @@ whoMadeThis() {
     echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n$isThisLatestVersion\n========================================"
 }
 
-versionBash1="1.5"
+versionBash1="1.6"
 
 greenColorBack="$(printf '\033[4;42m')"
 redColorBack="$(printf '\033[4;41m')"
@@ -865,6 +859,7 @@ source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/so
 if [[ $versionBashIn1 = "" ]]; then
     echo -e "${redColorBold}Can't connect to server!\n\nScript will run without check Update!${whiteColor}"
     isThisLatestVersion="${redColorBold}Can't connect to server!\n\nScript will run without check Update!${whiteColor}"
+    noInternet=true
     sleep 1.5
     read -p "Press enter for continue!"
 elif [[ $versionBash1 > $versionBashIn1 ]]; then
@@ -888,6 +883,7 @@ elif [[ $versionBash1 < $versionBashIn1 ]]; then
     newUpdateScript
 elif [[ $versionBash1 = $versionBashIn1 ]]; then
     isThisLatestVersion=${greenColorBold}$printLatest${whiteColor}
+    noInternet=false
 fi
 
 case $userInput1 in
@@ -895,7 +891,7 @@ case $userInput1 in
     "dom" | "changedomain" ) zdomsh;;
     "ins2" | "install2" ) install2;;
     "run" | "proxy" ) zexsh;;
-    * ) echo -e "${nameScript}: invalid option\n\n${nameScript} Usage : ${nameScript} ins / dom / ins2 / run\n\n    ins : Install program at begining\n    ins2 : when you already using zex ins then use ins2\n    dom : change a server/domain\n    run : run a mitmproxy\n\nThis script was made by @ElashXander (Telegram) this not easy to use this but, why not to try learn this?"; exit;;
+    * ) echo -e "${nameScript} $userInput1 : invalid option\n\n${nameScript} Usage : ${nameScript} ins / dom / ins2 / run\n\n    ins : Install program at begining\n    ins2 : when you already using zex ins then use ins2\n    dom : change a server/domain\n    run : run a mitmproxy\n\nThis script was made by @ElashXander (Telegram) this not easy to use this but, why not to try learn this?"; exit;;
 esac
 
 
