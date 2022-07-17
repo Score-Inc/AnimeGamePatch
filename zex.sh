@@ -277,6 +277,13 @@ fi
 
 # ================== install2.sh ==================
 install2() {
+
+if ! command -v pipx &> /dev/null; then
+    echo "pipx not found!"
+    echo "Please enter ${nameScript} ins for install pipx!"
+    exit
+fi
+
 command clear
 
 certfile() {
@@ -394,7 +401,7 @@ exportcargo() {
 }
 
 installmitmproxy() {
-  if ! command -v pipx; then
+  if ! command -v pipx &> /dev/null; then
     echo -e "${redColorBold}command pipx not found!\n${yellowColorBold}Please use ${nameScript} ins for install pipx"
     exit
   fi
@@ -495,42 +502,42 @@ sleep 2
 clear
 if [[ $checkexport != 0 ]]; then
     if [[ $checkexport = 1 ]]; then
-      zcheckexport="Already do Export (Success)"
+      zcheckexport="${greenColorBold}Already do Export (Success)${whiteColor}"
     else
-    zcheckexport="Export Failed (Error)"
+    zcheckexport="${redColorBold}Export Failed (Error)${whiteColor}"
     fi
 else
-    zcheckexport="Export Successfully"
+    zcheckexport="${greenColorBold}Export Successfully${whiteColor}"
 fi
 
 if [[ $checkpipxmitm != 0 ]]; then
     if [[ $checkpipxmitm = 1 ]]; then
-      zcheckpipxmitm="mitmproxy already installed"
+      zcheckpipxmitm="${greenColorBold}Already installed${whiteColor}"
     else
-      zcheckpipxmitm="Install mitmproxy Failed (Error)"
+      zcheckpipxmitm="${redColorBold}Install mitmproxy Failed (Error)${whiteColor}"
     fi
 else
-    zcheckpipxmitm="Install mitmproxy Successfully"
+    zcheckpipxmitm="${greenColor}Install mitmproxy Successfully${whiteColor}"
 fi
 
 if [[ $checkwgetdownload != 0 ]]; then
     if [[ $checkwgetdownload = 1 ]]; then
-      zcheckwgetdownload="proxy.py already downloaded"
+      zcheckwgetdownload="${greenColorBold}proxy.py already downloaded${whiteColor}"
     else
-      zcheckwgetdownload="Download Proxy Failed (Error)"
+      zcheckwgetdownload="${redColorBold}Download Proxy Failed (Error)${whiteColor}"
     fi
 else
-    zcheckwgetdownload="Download Proxy Successfully"
+    zcheckwgetdownload="${greenColorBold}Download Proxy Successfully${whiteColor}"
 fi
 
 if [[ $checkeditfile != 0 ]]; then
     if [[ $checkeditfile = 1 ]]; then
-      zcheckeditfile="proxy.py already edited"
+      zcheckeditfile="${greenColorBold}proxy.py already edited${whiteColor}"
     else
-      zcheckeditfile="Edit Proxy Failed (Error)"
+      zcheckeditfile="${redColorBold}Edit Proxy Failed (Error)${whiteColor}"
     fi
 else
-    zcheckeditfile="Edit Proxy Successfully"
+    zcheckeditfile="${greenColorBold}Edit Proxy Successfully${whiteColor}"
 fi
 resultsinstall() {
   echo "Please Setting your WiFi or mobile data to Proxy"
@@ -812,7 +819,7 @@ esac
 
 # ================== zex.sh START ================== #
 zexsh() {
-if command -v mitmdump &> /dev/null ; then
+if command -v mitmdump &> /dev/null; then
     command cd
     mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
     exit
@@ -828,7 +835,7 @@ whoMadeThis() {
     echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n$isThisLatestVersion\n========================================"
 }
 
-versionBash1="1.5"
+versionBash1="1"
 
 greenColorBack="$(printf '\033[4;42m')"
 redColorBack="$(printf '\033[4;41m')"
