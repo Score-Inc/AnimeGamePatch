@@ -2,8 +2,6 @@
 For who have Android 8 or crash issue can try use this Patch.<br />
 This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)
 
-# Still doing testing. So you will get error
-
 ## Download File
 Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) <br />
 Download Anime Game Patch from [Release](https://github.com/ElaXan/AnimeGamePatch/releases) (Outdated!) <br />
@@ -20,7 +18,7 @@ Download Anime Game Patch from [Release](https://github.com/ElaXan/AnimeGamePatc
 ![](termuximg/termux-change-repo.png)
 3. Enter : 
 ```bash
-cd; pkg install git; git clone https://github.com/ElaXan/AnimeGamePatch.git; cd AnimeGamePatch; binary="/data/data/com.termux/files/usr/bin/zex" && mv zex $binary; chmod 775 $binary; echo "Please enter command zex for run the code!"
+cd; pkg install git; git clone https://github.com/ElaXan/AnimeGamePatch.git; cd AnimeGamePatch; binary="/data/data/com.termux/files/usr/bin/zex" && mv zex.sh $binary; chmod 775 $binary; clear; echo "Please enter command zex for run the code!"
 ```
 ~ If ask "motd (Y/I/N/O/D/Z) [default=N] ?" <br />
 Press ```N``` on your keyboard then Enter on your Keyboard <br />
