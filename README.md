@@ -7,7 +7,7 @@ Maybe for now just for install mitmproxy and change a server as you want<br />
 This good for beginner/who don't know about Termux
 
 ## Download File
-Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) <br />
+Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) [Recommend] <br /><br />
 Download Anime Game Patch from [Release](https://github.com/ElaXan/AnimeGamePatch/releases) (Outdated!) <br />
 
 ## Termux
