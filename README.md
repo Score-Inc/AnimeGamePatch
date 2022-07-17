@@ -30,7 +30,7 @@ zex ins
 ```
 ~ If ask "motd (Y/I/N/O/D/Z) [default=N] ?" <br />
 Press ```N``` on your keyboard then Enter on your Keyboard <br />
-<br />4. If done install and ask exit. Exit/Close Termux using command ```exit 0``` then enter <br />
+<br />5. If done install and ask exit. Exit/Close Termux using command ```exit 0``` then enter <br />
 6. Open Termux<br />
 7. Enter :
 ```bash
