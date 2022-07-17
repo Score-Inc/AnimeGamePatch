@@ -19,7 +19,7 @@ updateScript1() {
        exit
     else
        cd AnimeGamePatch
-       mv zinstall $binary
+       mv zex.sh $binary
        command cd
        rm -rf $updateDir
        command clear
