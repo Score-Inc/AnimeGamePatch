@@ -76,10 +76,10 @@ This script was made by @ElashXander (Telegram) this not easy to use this but, w
 
 ## FAQ
 Q. How to play again? Does i need to follow [this](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux) step again?
-<br />A. No. just enter command ```bash zex.sh``` then play Anime Game
+<br />A. No. just enter command ```zex run``` then play Anime Game
 <br />
 <br />Q. I want to play other server. How to change server?
-<br />A. Using command ```bash zdom.sh``` and enter the server you want play!
+<br />A. Using command ```zex dom``` and enter the server you want play!
 <br />
 <br />Q. Why it said "Password error" or trying enter username and password?
 <br />A. Check your Proxy settings on your phone
@@ -89,6 +89,9 @@ Q. How to play again? Does i need to follow [this](https://github.com/ElaXan/Ani
 <br />
 <br />Q. Why i got Data Error?
 <br />A. Because you may the proxy not setting to<br /> Hostname : **127.0.0.1**<br />Port : **8080**<br />Try settings proxy and run ```bash zex.sh```
+<br />
+<br />Q. Why 0% Stuck loading?
+<br />A. Your data is missing, check it on settings app info, if less than 15GB (I think) you need to download again from original server
 <br />
 <br />Q. Why i got error when i install from [Termux](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux)?
 <br />A. Try change your repo termux using ```termux-change-repo``` and follow [this](https://github.com/ElaXan/AnimeGamePatch#termux) step again<br />
