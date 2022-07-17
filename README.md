@@ -20,16 +20,20 @@ Download Anime Game Patch from [Release](https://github.com/ElaXan/AnimeGamePatc
 ```bash
 cd; pkg install git; git clone https://github.com/ElaXan/AnimeGamePatch.git; cd AnimeGamePatch; binary="/data/data/com.termux/files/usr/bin/zex" && mv zex.sh $binary; chmod 775 $binary; clear; echo "Please enter command zex for run the code!"
 ```
+4. Enter :
+```bash
+zex ins
+```
 ~ If ask "motd (Y/I/N/O/D/Z) [default=N] ?" <br />
 Press ```N``` on your keyboard then Enter on your Keyboard <br />
 <br />4. If done install and ask exit. Exit/Close Termux using command ```exit 0``` then enter <br />
-5. Open Termux<br />
-6. Enter :
+6. Open Termux<br />
+7. Enter :
 ```bash
 zex ins2
 ```
-<br />7. Follow what script said
-<br />8. DONE✓
+<br />8. Follow what script said
+<br />9. DONE✓
 
 # Command
 ```
