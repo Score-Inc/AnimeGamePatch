@@ -8,7 +8,7 @@ This good for beginner/who don't know about Termux
 
 ## Download File
 Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) [Recommend] <br /><br />
-Download Anime Game Patch from [Release](https://github.com/ElaXan/AnimeGamePatch/releases) (Outdated!) <br />
+Download Anime Game Patch 2.8 from [Release](https://github.com/ElaXan/AnimeGamePatch/releases) <br />
 
 ## Termux
 * This need proxy settings on your phone. ~~No need install cert on your phone but follow the script said until it success.~~ If you don't know about this go to [Proxy Settings](https://github.com/ElaXan/AnimeGamePatch#proxy-settings).
