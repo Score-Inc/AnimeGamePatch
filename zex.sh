@@ -104,17 +104,10 @@ runProgram() {
 	whoMadeThis
     installsomeprogram
     sleep 1
-    if $progPkg; then
-      command clear
-      whoMadeThis
-      echo "${cyanColorUnder}Update and Upgrade PKG${whiteColor}"
-      echo "${greenColorUnder}Program already installed${whiteColor}"
-    else
-      command clear
-      whoMadeThis
-      echo "${cyanColorUnder}Update and Upgrade PKG${whiteColor}"
-      echo "${greenColorUnder}Install important program${whiteColor}"
-    fi
+    command clear
+    whoMadeThis
+    echo "${cyanColorUnder}Update and Upgrade PKG${whiteColor}"
+    echo "${greenColorUnder}Install important program${whiteColor}"
     sleep 1
     if [[ -f $errpath/enpipsucc ]]; then
       echo "${greenColorUnder}ensurepip already upgrade${whiteColor}"
@@ -313,7 +306,7 @@ zNextStep2() {
     mkdir $pathmynickname
     clear
     whoMadeThis
-    if [ -x "/data/data/com.termux/files/home/.local/bin/mitmdump" ]; then
+    if command -v mitmdump &> /dev/null; then
         echo "file \"mitmdump\" is found!"
         sleep 2s
     else
@@ -623,19 +616,27 @@ changeServer() {
         domainChange="hk.elashxander.my.id"
     fi
     if [[ $inpsrv = "1" ]]; then
-        changeServerDOWN
-    else
-        changeServer2
+        if [[ $downServerYuukiSG = 1 ]]; then
+            changeServerDOWN
+        else
+            changeServer2
+        fi
     fi
+
     if [[ $inpsrv = "2" ]]; then
-        changeServerDOWN
-    else
-        changeServer2
+        if [[ $downServerYuukiDE = 1 ]]; then
+            changeServerDOWN
+        else
+            changeServer2
+        fi
     fi
+
     if [[ $inpsrv = "3" ]]; then
-        changeServerDOWN
-    else
-        changeServer2
+        if [[ $downServerMINE = 1 ]]; then
+            changeServerDOWN
+        else
+            changeServer2
+        fi
     fi
 }
 
@@ -669,7 +670,7 @@ customserver() {
     echo -e "Custom Domain!\nExample : elashxander.my.id\n\n"
     command read -p "Enter custom Domain : " domain
     domain=$(echo $domain | sed "s/http.*\/\///g") # Thanks to Charon Baglari
-    curl -Is 1 https://$domain &> /dev/null
+    curl -Ism 1 -f https://$domain &> /dev/null
     if [[ $? != 0 ]]; then
         echo -e "Server is can't to be access!\n"
         read -p "You sure want change to $domain? (y/n/r) : " youSureBruh
@@ -704,17 +705,17 @@ else
     echo "${redColorBold}File not found for proxy.py${whiteColor}"
 fi
 
-checkServerYuukiSG=command curl -Is 1 https://sg.game.yuuki.me &> /dev/null
+checkServerYuukiSG=command curl -Ism 1 -f https://sg.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiSG=$?
-checkServerYuukiDE=command curl -Is 1 https://de.game.yuuki.me &> /dev/null
+checkServerYuukiDE=command curl -Ism 1 -f https://de.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiDE=$?
-checkServerMINE=command curl -Is 1 https://hk.elashxander.my.id &> /dev/null
+checkServerMINE=command curl -Ism 1 -f https://hk.elashxander.my.id &> /dev/null
 resultsCheckServerMINE=$?
 
-if [[ $resultsCheckServerYuukiSG = 6 ]]; then
+if [[ $resultsCheckServerYuukiSG = 28 ]]; then
     statusServerYuukiSG="${redColorBold}[DOWN]${whiteColor}"
     downServerYuukiSG=1
-elif [[ $resultsCheckServerYuukiSG = 28 ]]; then
+elif [[ $resultsCheckServerYuukiSG = 6 ]]; then
     statusServerYuukiSG="${yellowColorBold}[CAN'T CONNECT]${whiteColor}"
     downServerYuukiSG=1
 elif [[ $resultsCheckServerYuukiSG = 0 ]]; then
@@ -722,10 +723,10 @@ elif [[ $resultsCheckServerYuukiSG = 0 ]]; then
     downServerYuukiSG=0
 fi
 
-if [[ $resultsCheckServerYuukiDE = 6 ]]; then
+if [[ $resultsCheckServerYuukiDE = 28 ]]; then
     statusServerYuukiDE="${redColorBold}[DOWN]${whiteColor}"
     downServerYuukiDE=1
-elif [[ $resultsCheckServerYuukiDE = 28 ]]; then
+elif [[ $resultsCheckServerYuukiDE = 6 ]]; then
     statusServerYuukiDE="${yellowColorBold}[CAN'T CONNECT]${whiteColor}"
     downServerYuukiDE=1
 elif [[ $resultsCheckServerYuukiDE = 0 ]]; then
@@ -733,10 +734,10 @@ elif [[ $resultsCheckServerYuukiDE = 0 ]]; then
     downServerYuukiDE=0
 fi
 
-if [[ $resultsCheckServerMINE = 6 ]]; then
+if [[ $resultsCheckServerMINE = 28 ]]; then
     statusServerMINE="${redColorBold}[DOWN]${whiteColor}"
     downServerMINE=1
-elif [[ $resultsCheckServerMINE = 28 ]]; then
+elif [[ $resultsCheckServerMINE = 6 ]]; then
     statusServerMINE="${yellowColorBold}[CAN'T CONNECT]${whiteColor}"
     downServerMINE=1
 elif [[ $resultsCheckServerMINE = 0 ]]; then
@@ -818,7 +819,7 @@ whoMadeThis() {
     echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n$isThisLatestVersion\n========================================"
 }
 
-versionBash1="1.7"
+versionBash1="1.8"
 
 greenColorBack="$(printf '\033[4;42m')"
 redColorBack="$(printf '\033[4;41m')"
@@ -842,7 +843,7 @@ cyanColorUnder="$(printf '\033[4;36m')"
 greenColorUnder="$(printf '\033[4;32m')"
 redColorUnder="$(printf '\033[4;31m')"
 
-# PLEASE DON'T EDIT THIS, THIS LOAD SOME CODE TO SERVER
+# PLEASE DON'T EDIT THIS, THIS LOAD SOME CODE FROM SERVER
 source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate)
 # source $HOME/AnimeGamePatch/someupdate
 if [[ $versionBashIn1 = "" ]]; then
