@@ -1,5 +1,12 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
+# SCRIPT NOT ENCRYPTED FOR YOU CAN LEARN THE CODE BASH / SHELL SCRIPT.
+# THIS CODE IS FREE
+# CODE STILL DEVELOPMENT FOR FIX SOME CODE AND ADD CODE.
+
+
+# THANKS TO @CharonCB21 (Telagram) for Helping me about this
+
 userInput1=$1
 nameScript=$(basename $0)
 
@@ -387,6 +394,10 @@ exportcargo() {
 }
 
 installmitmproxy() {
+  if ! command -v pipx; then
+    echo -e "${redColorBold}command pipx not found!\n${yellowColorBold}Please use ${nameScript} ins for install pipx"
+    exit
+  fi
   echo -e "Install mitmproxy with pipx (This may take long time)\n[Make Coffee For Waiting This Shit]"
   sleep 1
   command pipx install mitmproxy
@@ -440,27 +451,6 @@ deleteProgramY() {
 
 clear
 
-clearOrWhat="$1"
-
-if [[ $clearOrWhat = "clear" ]]; then
-  echo -e "You want clear the some program?. This will delete\n- apktool\n- apksigner\n- rustc-dev (java)\n"
-  echo -e "Enter Y for delete this program"
-  read -p "or N for not delete this : " deleteProgram
-  case $deleteProgram in
-    "y" | "Y" | "yes" ) deleteProgramY;;
-    "n" | "n" | "no" ) echo "Okay will not be delete the program"; exit;;
-    * ) echo "Wrong input!"; exit;;
-  esac
-elif [[ $clearOrWhat = "" ]]; then
-  command clear
-  noClear=true
-elif [[ noClear = true ]]; then
-  command clear
-else
-  echo "Wrong input!"
-  exit
-fi
-
 errpath=$HOME/.config/zex
 if [[ -d $errpath ]]; then
   echo "Folder already created!"
@@ -472,14 +462,15 @@ command clear
 
 whoMadeThis
 sleep 0.3 
-if [[ -f $errpath/expcargesucc ]]; then
+expchek=$(export | grep "CARGO_BUILD_TARGET=\"aarch64-linux-android\"" | sed "s/.*/aarch64-linux-android/g")
+if [[ $expchek = "aarch64-linux-android" ]]; then
   echo "Already export cargo"
   checkexport=1
 else
   exportcargo
 fi
 sleep 1
-if [[ -f $errpath/insinsmitmsucc ]]; then
+if command -v mitmproxy ; then
   echo "Mitmproxy already installed"
   checkpipxmitm=1
 else
@@ -860,6 +851,7 @@ cyanColorUnder="$(printf '\033[4;36m')"
 greenColorUnder="$(printf '\033[4;32m')"
 redColorUnder="$(printf '\033[4;31m')"
 
+# PLEASE DON'T EDIT THIS, THIS LOAD SOME CODE TO SERVER
 source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate)
 # source $HOME/AnimeGamePatch/someupdate
 if [[ $versionBashIn1 = "" ]]; then
