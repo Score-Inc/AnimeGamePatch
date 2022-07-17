@@ -1,5 +1,5 @@
 binary=/data/data/com.termux/files/usr/bin/zex
-versionBashIn1="1.5"
+versionBashIn1="1.6"
 updateNotif="1. Add server Yuuki in change domain function\n2. Fix Code"
 updateNote="There is new version to"
 link=null
