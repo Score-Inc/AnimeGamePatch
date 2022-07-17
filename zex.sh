@@ -470,7 +470,7 @@ else
   exportcargo
 fi
 sleep 1
-if command -v mitmproxy ; then
+if command -v mitmproxy &> /dev/null ; then
   echo "Mitmproxy already installed"
   checkpipxmitm=1
 else
@@ -812,7 +812,8 @@ esac
 
 # ================== zex.sh START ================== #
 zexsh() {
-if command -v mitmdump; then
+if command -v mitmdump &> /dev/null ; then
+    command cd
     mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
     exit
 else
