@@ -188,4 +188,3 @@ case $inpsrv in
     "4" ) customserver;;
     * ) echo "Wrong Input!";;
 esac
-}
