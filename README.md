@@ -45,7 +45,7 @@ zex ins2
 <br />9. DONE✓
 
 # Command
-#### File name zex in /usr/bin
+#### zex
 ```
 zex: invalid option
     zex Usage : zex ins / dom / ins2 / run
@@ -56,17 +56,22 @@ zex: invalid option
     run : run a mitmproxy                               
 This script was made by @ElashXander (Telegram) this not easy to use this but, why not to try learn this?
 ```
-
-```zex ins``` : for install / update program<br />
-```zex ins2``` : install mitmproxy<br />
-```zex run``` : run a proxy for play Anime Game<br />
-```zex dom``` : change a domain/server<br />
+#### zex ins
+for install / update program
+#### zex ins2
+for install mitmproxy
+#### zex run
+run a proxy for play Anime Game
+#### zex dom
+change a domain/server
 
 # Proxy Settings
-#### Mobile data go to settings and use search function, and search word ```Access point Name``` and click on **+**. Then enter Proxy and Port as like this picture :
+#### Mobile data
+go to settings and use search function, and search word ```Access point Name``` and click on **+**. Then enter Proxy and Port as like this picture :
 ![](img/apnmobiledata.png)
 
-#### For WiFi just follow this picture : 
+#### WiFi
+For WiFi just follow this picture : 
 <br />**Step 1**
 ![Never](img/wifiproxy1.png)
 **Step 2**
