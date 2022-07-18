@@ -1,6 +1,8 @@
 command clear
 command cd
 
+# do not use curl **** | bash it make IDK error
+
 greenColorBack="$(printf '\033[4;42m')"
 redColorBack="$(printf '\033[4;41m')"
 yellowColorBack="$(printf '\033[4;43m')"
