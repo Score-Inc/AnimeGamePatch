@@ -10,6 +10,11 @@
 userInput1=$1
 nameScript=$(basename $0)
 
+if [[ $forceStop = true ]]; then
+    echo "$NoteStopScript"
+    exit
+fi
+
 
 # ================== Install.sh START ================== #
 
@@ -82,14 +87,14 @@ installpipx() {
 }
 
 pyensurepipx() {
-  echo "${cyanColorUnder}ensurepath pipx${whiteColor}"
+  echo "${cyanColorUnder}Make pipx executable${whiteColor}"
   sleep 1
   command python3 -m pipx ensurepath &> /sdcard/zlog.txt
   checkensurepath=$?
   if [[ $? != 0 ]]; then
-    echo "${redColorBold}ensurepath pipx is failed :(${whiteColor}"
+    echo "${redColorBold}pipx executable Failed :(${whiteColor}"
   else
-    echo "${greenColorBold}ensurepath pipx is success :)${whiteColor}"
+    echo "${greenColorBold}pipx executable success :)${whiteColor}"
   fi
 }
 
@@ -463,7 +468,7 @@ sleep 0.3
 # may this will be confused for you if don't know shell code
 # so here when you already export CARGO_BUILD_TARGET or not
 # if yes will be skip this.
-expchek=$(export | grep "CARGO_BUILD_TARGET" | sed "s/.*/aarch64-linux-android/g")
+expchek=$(export | grep "CARGO_BUILD_TARGET" | sed "s/declare -x CARGO_BUILD_TARGET=//g" | sed "s/\"//g")
 if [[ $expchek = "aarch64-linux-android" ]]; then
   echo "Already export cargo"
   checkexport=1
@@ -724,18 +729,27 @@ customserver() {
 ZERR=/data/user/0/com.termux/cache/zlog
 whoMadeThis
 command cd
-
 if [[ -f "proxy.py" ]]; then
-    echo -e "${greenColorBold}File target edit to proxy.py${whiteColor}"
+    serverUsing=$(cat proxy.py | grep "default = \"" | sed "s/.*= //g" | sed "s/\"//g" | sed "s/,//g")
 else
-    echo "${redColorBold}File not found for proxy.py${whiteColor}"
+    serverUsing=""
 fi
 
-checkServerYuukiSG=command curl -Ism 2 -f https://sg.game.yuuki.me &> /dev/null
+if [[ $serverUsing = "" ]]; then
+    serverUsing="${redColorBold}There is no Server${whiteColor}"
+fi
+
+if [[ -f "proxy.py" ]]; then
+    echo -e "${greenColorBold}File target edit to proxy.py\n\n${cyanColorBold}Current Server : $serverUsing${whiteColor}"
+else
+    echo "${redColorBold}Can't display : proxy.py file not found${whiteColor}"
+fi
+
+checkServerYuukiSG=command curl -Ism 3 -f https://sg.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiSG=$?
-checkServerYuukiDE=command curl -Ism 2 -f https://de.game.yuuki.me &> /dev/null
+checkServerYuukiDE=command curl -Ism 3 -f https://de.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiDE=$?
-checkServerMINE=command curl -Ism 2 -f https://hk.elashxander.my.id &> /dev/null
+checkServerMINE=command curl -Ism 3 -f https://hk.elashxander.my.id &> /dev/null
 resultsCheckServerMINE=$?
 
 if [[ $resultsCheckServerYuukiSG = 28 ]]; then
@@ -743,7 +757,7 @@ if [[ $resultsCheckServerYuukiSG = 28 ]]; then
     downServerYuukiSG=1
 elif [[ $resultsCheckServerYuukiSG = 6 ]]; then
     statusServerYuukiSG="${yellowColorBold}[CAN'T CONNECT]${whiteColor}"
-    downServerYuukiSG=1
+    downServerYuukiSG=0
 elif [[ $resultsCheckServerYuukiSG = 0 ]]; then
     statusServerYuukiSG="${greenColorBold}[RUNNING]${whiteColor}"
     downServerYuukiSG=0
@@ -754,7 +768,7 @@ if [[ $resultsCheckServerYuukiDE = 28 ]]; then
     downServerYuukiDE=1
 elif [[ $resultsCheckServerYuukiDE = 6 ]]; then
     statusServerYuukiDE="${yellowColorBold}[CAN'T CONNECT]${whiteColor}"
-    downServerYuukiDE=1
+    downServerYuukiDE=0
 elif [[ $resultsCheckServerYuukiDE = 0 ]]; then
     statusServerYuukiDE="${greenColorBold}[RUNNING]${whiteColor}"
     downServerYuukiDE=0
@@ -765,7 +779,7 @@ if [[ $resultsCheckServerMINE = 28 ]]; then
     downServerMINE=1
 elif [[ $resultsCheckServerMINE = 6 ]]; then
     statusServerMINE="${yellowColorBold}[CAN'T CONNECT]${whiteColor}"
-    downServerMINE=1
+    downServerMINE=0
 elif [[ $resultsCheckServerMINE = 0 ]]; then
     statusServerMINE="${greenColorBold}[RUNNING]${whiteColor}"
     downServerMINE=0
@@ -773,10 +787,11 @@ fi
 
 downServer=$(expr $downServerYuukiSG + $downServerYuukiDE + $downServerMINE)
 
-if [[ $resultsCheckServerYuukiSG != 0 ]] || [[ $resultsCheckServerYuukiDE != 0 ]] || [[ $resultsCheckServerMINE != 0 ]]; then
-    echo -e "\nThere is $downServer server DOWN\n${yellowColorBold}May this your internet problem so check it manual!${whiteColor}\n========================================"
-    
-else
+if [[ $resultsCheckServerYuukiSG = 28 ]] || [[ $resultsCheckServerYuukiDE = 28 ]] || [[ $resultsCheckServerMINE = 28 ]]; then
+    echo -e "\nThere is $downServer server DOWN\n${yellowColorBold}${whiteColor}\n========================================"
+elif [[ $resultsCheckServerYuukiSG = 6 ]] || [[ $resultsCheckServerYuukiDE = 6 ]] || [[ $resultsCheckServerMINE = 6 ]]; then
+    echo "========================================"
+elif [[ $resultsCheckServerYuukiSG = 0 ]] || [[ $resultsCheckServerYuukiDE = 0 ]] || [[ $resultsCheckServerMINE = 0 ]]; then
     echo "========================================"
 fi
 
