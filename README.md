@@ -92,23 +92,23 @@ This script was made by @ElashXander (Telegram) this not easy to use this but, w
 ![UP](imgcert/installcert5.png)
 
 # FAQ
-### Q. How to play again? Does i need to follow [this](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux) step again?
-A. No. just enter command ```zex run``` then play Anime Game
+#### How to play again? Does i need to follow [this](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux) step again?
+No. just enter command ```zex run``` then play Anime Game
 
-### Q. I want to play other server. How to change server?
-A. Using command ```zex dom``` and enter the server you want play!
+#### I want to play other server. How to change server?
+Using command ```zex dom``` and enter the server you want play!
 
-### Q. Why it said "Password error" or trying enter username and password?
-A. Check your Proxy settings on your phone
+#### Why it said "Password error" or trying enter username and password?
+Check your Proxy settings on your phone
 
-### Q. Why am I still on the original server?
-A. Hmmm.. check your proxy on Settings. Set proxy to<br />Hostname : **127.0.0.1**<br />Port : **8080**<br />After set the Proxy go back to Termux and run command ```bash zex.sh```
+#### Why am I still on the original server?
+Hmmm.. check your proxy on Settings. Set proxy to<br />Hostname : **127.0.0.1**<br />Port : **8080**<br />After set the Proxy go back to Termux and run command ```bash zex.sh```
 
-### Q. Why i got Data Error?
-A. Because you may the proxy not setting to<br /> Hostname : **127.0.0.1**<br />Port : **8080**<br />Try settings proxy and run ```bash zex.sh```
+#### Why i got Data Error?
+Because you may the proxy not setting to<br /> Hostname : **127.0.0.1**<br />Port : **8080**<br />Try settings proxy and run ```bash zex.sh```
 
-### Q. Why 0% Stuck loading?
-A. Your data is missing, check it on settings app info, if less than 15GB (I think) you need to download again from original server
+#### Why 0% Stuck loading?
+Your data is missing, check it on settings app info, if less than 15GB (I think) you need to download again from original server
 
-### Q. Why i got error when i install from [Termux](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux)?
-A. Try change your repo termux using ```termux-change-repo``` and follow [this](https://github.com/ElaXan/AnimeGamePatch#termux) step again<br />
+#### Why i got error when i install from [Termux](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux)?
+Try change your repo termux using ```termux-change-repo``` and follow [this](https://github.com/ElaXan/AnimeGamePatch#termux) step again<br />
