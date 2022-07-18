@@ -925,7 +925,7 @@ whoMadeThis() {
     echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n$isThisLatestVersion\n========================================"
 }
 
-versionBash1="1.9"
+versionBash1="2.0"
 
 greenColorBack="$(printf '\033[4;42m')"
 redColorBack="$(printf '\033[4;41m')"
