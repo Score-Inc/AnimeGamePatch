@@ -79,7 +79,7 @@ This script was made by @ElashXander (Telegram) this not easy to use this but, w
 **Step 6**
 ![HEHE](img/wifiproxy6.png)
 
-#### Install certificate on your phone
+# Install certificate on your phone
 * First open settings and search "CA Certificate" then follow this picture step by step
 ![Never](imgcert/installcert1.png)
 * Step 2
