@@ -27,7 +27,7 @@ This need proxy settings on your phone. ~~No need install cert on your phone but
 ![](termuximg/termux-change-repo.png)
 3. Enter : 
 ```bash
-cd; pkg install git && git clone https://github.com/ElaXan/AnimeGamePatch.git && cd AnimeGamePatch && binary="/data/data/com.termux/files/usr/bin/zex"; mv zex.sh $binary; chmod 775 $binary; clear; echo "Please enter command zex for run the code!"
+curl -Ls https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/install.sh | bash
 ```
 4. Enter :
 ```bash
