@@ -74,6 +74,9 @@ This script was made by @ElashXander (Telegram) this not easy to use this but, w
 **Step 6**
 ![HEHE](img/wifiproxy6.png)
 
+# Install certificate on your phone
+* First open settings and search "CA Certificate" then follow this picture step by step
+
 ## FAQ
 Q. How to play again? Does i need to follow [this](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux) step again?
 <br />A. No. just enter command ```zex run``` then play Anime Game
