@@ -76,6 +76,15 @@ This script was made by @ElashXander (Telegram) this not easy to use this but, w
 
 # Install certificate on your phone
 * First open settings and search "CA Certificate" then follow this picture step by step
+![Never](imgcert/installcert1.png)
+* Step 2
+![Gonna](imgcert/installcert2.png)
+* Step 3
+![Give](imgcert/installcert3.png)
+* Step 4
+![You](imgcert/installcert4.png)
+* Step 5 (Done install certificate)
+![UP](imgcert/installcert5.png)
 
 ## FAQ
 Q. How to play again? Does i need to follow [this](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux) step again?
