@@ -4,16 +4,19 @@ This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)<br />
 <br />Feel free dm me on [Telegram](https://t.me/ElashXander) If you want need help how to use this or have issue install
 
 
-## This just for only install mitmproxy
+#### This just for only install mitmproxy
 Maybe for now just for install mitmproxy and change a server as you want<br />
 This good for beginner/who don't know about Termux
 
-## Download File
+#### Download File
 Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) [Recommend] <br /><br />
 Download Anime Game Patch 2.8 from [Release](https://github.com/ElaXan/AnimeGamePatch/releases) <br />
 
-## Termux
-* This need proxy settings on your phone. ~~No need install cert on your phone but follow the script said until it success.~~ If you don't know about this go to [Proxy Settings](https://github.com/ElaXan/AnimeGamePatch#proxy-settings).
+# Termux
+#### Information
+This need proxy settings on your phone. ~~No need install cert on your phone but follow the script said until it success.~~ If you don't know about this go to [Proxy Settings](https://github.com/ElaXan/AnimeGamePatch#proxy-settings).
+
+#### How to use?
 1. Enter : ```termux-setup-storage``` <br />
 * Just allow it like this picture :
 ![](termuximg/termux-setup-storage.png)
@@ -59,10 +62,10 @@ This script was made by @ElashXander (Telegram) this not easy to use this but, w
 ```zex dom``` : change a domain/server<br />
 
 # Proxy Settings
-* Mobile data go to settings and use search function, and search word ```Access point Name``` and click on **+**. Then enter Proxy and Port as like this picture :
+#### Mobile data go to settings and use search function, and search word ```Access point Name``` and click on **+**. Then enter Proxy and Port as like this picture :
 ![](img/apnmobiledata.png)
 
-* For WiFi just follow this picture : 
+#### For WiFi just follow this picture : 
 <br />**Step 1**
 ![Never](img/wifiproxy1.png)
 **Step 2**
@@ -76,7 +79,7 @@ This script was made by @ElashXander (Telegram) this not easy to use this but, w
 **Step 6**
 ![HEHE](img/wifiproxy6.png)
 
-# Install certificate on your phone
+#### Install certificate on your phone
 * First open settings and search "CA Certificate" then follow this picture step by step
 ![Never](imgcert/installcert1.png)
 * Step 2
@@ -88,24 +91,24 @@ This script was made by @ElashXander (Telegram) this not easy to use this but, w
 * Step 5 (Done install certificate)
 ![UP](imgcert/installcert5.png)
 
-## FAQ
-Q. How to play again? Does i need to follow [this](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux) step again?
-<br />A. No. just enter command ```zex run``` then play Anime Game
-<br />
-<br />Q. I want to play other server. How to change server?
-<br />A. Using command ```zex dom``` and enter the server you want play!
-<br />
-<br />Q. Why it said "Password error" or trying enter username and password?
-<br />A. Check your Proxy settings on your phone
-<br />
-<br />Q. Why am I still on the original server?
-<br />A. Hmmm.. check your proxy on Settings. Set proxy to<br />Hostname : **127.0.0.1**<br />Port : **8080**<br />After set the Proxy go back to Termux and run command ```bash zex.sh```
-<br />
-<br />Q. Why i got Data Error?
-<br />A. Because you may the proxy not setting to<br /> Hostname : **127.0.0.1**<br />Port : **8080**<br />Try settings proxy and run ```bash zex.sh```
-<br />
-<br />Q. Why 0% Stuck loading?
-<br />A. Your data is missing, check it on settings app info, if less than 15GB (I think) you need to download again from original server
-<br />
-<br />Q. Why i got error when i install from [Termux](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux)?
-<br />A. Try change your repo termux using ```termux-change-repo``` and follow [this](https://github.com/ElaXan/AnimeGamePatch#termux) step again<br />
+# FAQ
+### Q. How to play again? Does i need to follow [this](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux) step again?
+A. No. just enter command ```zex run``` then play Anime Game
+
+### Q. I want to play other server. How to change server?
+A. Using command ```zex dom``` and enter the server you want play!
+
+### Q. Why it said "Password error" or trying enter username and password?
+A. Check your Proxy settings on your phone
+
+### Q. Why am I still on the original server?
+A. Hmmm.. check your proxy on Settings. Set proxy to<br />Hostname : **127.0.0.1**<br />Port : **8080**<br />After set the Proxy go back to Termux and run command ```bash zex.sh```
+
+### Q. Why i got Data Error?
+A. Because you may the proxy not setting to<br /> Hostname : **127.0.0.1**<br />Port : **8080**<br />Try settings proxy and run ```bash zex.sh```
+
+### Q. Why 0% Stuck loading?
+A. Your data is missing, check it on settings app info, if less than 15GB (I think) you need to download again from original server
+
+### Q. Why i got error when i install from [Termux](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux)?
+A. Try change your repo termux using ```termux-change-repo``` and follow [this](https://github.com/ElaXan/AnimeGamePatch#termux) step again<br />
