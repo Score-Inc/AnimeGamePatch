@@ -85,6 +85,11 @@ For WiFi just follow this picture :
 ![HEHE](img/wifiproxy6.png)
 
 # Install certificate on your phone
+#### Download certificate
+Go to [mitm.it](http://mitm.it) but settings proxy on your phone, see [here](https://github.com/ElaXan/AnimeGamePatch#proxy-settings) for how to do that
+And run ```mitmdump --ssl-insecure``` on Termux then open [mitm.it](http://mitm.it)
+
+#### Install Certificate 
 * First open settings and search "CA Certificate" then follow this picture step by step
 ![Never](imgcert/installcert1.png)
 * Step 2
