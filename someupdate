@@ -9,10 +9,15 @@ updateScript1() {
     command cd
     updateDir=$HOME/updatezex
     scriptUpdate=$updateDir/zinstall
-    rm $binary
+    if [[ -f $binary ]]; then
+       rm $binary
+    fi
     mkdir $updateDir
     cd $updateDir
     echo "Update Script!"
+    if ! command -v git &> /dev/null; then
+       pkg install git
+    fi
     git clone https://github.com/ElaXan/AnimeGamePatch.git &> /dev/null
     if [[ $? != 0 ]]; then
        echo "Can't do update Script. Make sure you internet is ON or stable"
