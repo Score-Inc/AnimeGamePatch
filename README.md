@@ -45,7 +45,6 @@ zex ins2
 <br />9. DONE✓
 
 # Command
-#### zex
 ```
 zex: invalid option
     zex Usage : zex ins / dom / ins2 / run
