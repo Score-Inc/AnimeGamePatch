@@ -4,7 +4,7 @@ This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)<br />
 <br />Feel free dm me on [Telegram](https://t.me/ElashXander) If you want need help how to use this or have issue install
 
 
-#### This just for only install mitmproxy
+#### This just for install mitmproxy
 Maybe for now just for install mitmproxy and change a server as you want<br />
 This good for beginner/who don't know about Termux
 
