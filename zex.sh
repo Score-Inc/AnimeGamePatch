@@ -13,6 +13,7 @@ nameScript=$(basename $0)
 
 # ================== Install.sh START ================== #
 
+# Function will be run when you type zex ins
 install1() {
 
 if [[ $noInternet = true ]]; then
@@ -22,9 +23,12 @@ fi
 
 errpath=$HOME/.config/zex
 
+# well this code to but not used
+# this just for detect that already install program, now not using it
 logsavedcredit() {
   command echo "Code made by @ElashXander (Telegram)" > $errpath/$1
 }
+
 if [[ ! -d $HOME/.config ]]; then
   mkdir $HOME/.config
 fi
@@ -217,16 +221,20 @@ if [[ $checkpypipx = 1 ]]; then
   checkpypipx=0
 fi
 
+# if there is results with code number not 0 will print/echo there is ERROR
 if [[ $checkpkg != 0 ]] || [[ $checkimpprog != 0 ]] || [[ $checkensure != 0 ]] || [[ $checkpypipx != 0 ]] || [[ $checkensurepath != 0 ]]; then
     echo -e "Results :\nUpdate and Upgrade PKG = $zcheckpkg\n\nInstall important program = $zcheckimpprog\n\nEnsurepip = $zcheckensure\n\nInstall pipx = $zcheckpypipx\n\nensure pipx = $zcheckensurepath"
     sleep 2
+    # IDK but code not testing yet because always working when do Update PKG
     if [[ $checkpkg != 0 ]]; then
         pkgerrfix
     else
+        # echo When there is error
         echo -e "\nThere is ERROR!\nTry exit the Termux and open it again.\n1. try run command manualy for python3 -m pip install --user pipx\nThen run command zex install"
         exit
     fi
 else
+    # When all number code is 0, then will said ALL IS SUCCESS install
     echo -e "Results :\nUpdate and Upgrade PKG = $zcheckpkg\n\nInstall important program = $zcheckimpprog\n\nEnsurepip = $zcheckensure\n\nInstall pipx = $zcheckpypipx\n\nensure pipx = $zcheckensurepath"
     sleep 2
     echo -e "\nDone for now. Please exit the termux or make new session"
@@ -270,9 +278,19 @@ fi
 
 
 
-# ================== install2.sh ==================
+# ================== install2.sh START ==================
+
+# Function will be called when you type zex ins2
 install2() {
 
+# When you have not connected to Internet will be stop to install
+# Check at bottom for $noInternet
+if [[ $noInternet = true ]]; then
+    echo "${redColorBold}Need internet for install. please enable your internet and run ${nameScript} ins again"
+    exit
+fi
+
+# When pipx not installed program will be stop and asking you to install it first
 if ! command -v pipx &> /dev/null; then
     echo "pipx not found!"
     echo "Please enter ${nameScript} ins for install pipx!"
@@ -281,6 +299,8 @@ fi
 
 command clear
 
+# This code when you download a cert and asking path (where is it)
+# not using code this for now
 certfile() {
     echo -e "Please download for android and save the certificate to /sdcard/Download\n"
     echo "Where the cert you download?"
@@ -306,6 +326,7 @@ zNextStep2() {
     mkdir $pathmynickname
     clear
     whoMadeThis
+    # When mitmdump not installed or not, if not will be stop and asking you to install it.
     if command -v mitmdump &> /dev/null; then
         echo "file \"mitmdump\" is found!"
         sleep 2s
@@ -326,6 +347,7 @@ zNextStep2() {
     fi
     sleep 2
     
+    # Run mitmdump but now move to zex run. This just for first time install this
     zRunProgram() {
         command cd
         mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
@@ -337,6 +359,7 @@ zNextStep2() {
     sleep 1
     echo -e "Please install Cert that you download it to your phone is Settings!.\nCA Certificate in Security. If you not do that, this will not work.\nAnd Please don't share you Certificate to other. May certificate will not work again"
     echo "Cleaning [PLEASE WAIT!!]"
+    # Remove the log but not using it right now
     rm -rf "/sdcard/zlog.txt"
     rm -rf "/sdcard/zlog2.txt"
     echo "All Done!!!"
@@ -364,7 +387,7 @@ logsavedcredit() {
 exportcargo() {
   echo "Export CARGO_BUILD_TARGET"
   sleep 1
-  export CARGO_BUILD_TARGET=aarch64-linux-android &> /sdcard/zlog.txt
+  export CARGO_BUILD_TARGET=aarch64-linux-android
   checkexport=$?
   if [[ $? != 0 ]]; then
     echo "Failed to export :("
@@ -406,9 +429,11 @@ editproxypy() {
   echo "Edit proxy.py"
   sleep 1
   command cd
+  # if file proxy.py found then program will be edit the proxy.py
   if [[ -f "proxy.py" ]]; then
     sed -i 's/genshin.exzork.me/sg.game.yuuki.me/g' proxy.py
   else
+    # when file proxy.py is not found
     echo "File not found!"
   fi
   checkeditfile=$?
@@ -420,6 +445,7 @@ editproxypy() {
   fi
 }
 
+# not really using it for now...
 deleteProgramY() {
   read -p "Are you sure? (y/n) : " areYouSure
   case $areYouSure in
@@ -442,14 +468,21 @@ command clear
 
 whoMadeThis
 sleep 0.3 
-expchek=$(export | grep "CARGO_BUILD_TARGET=\"aarch64-linux-android\"" | sed "s/.*/aarch64-linux-android/g")
+
+# may this will be confused for you if don't know shell code
+# so here when you already export CARGO_BUILD_TARGET or not
+# if yes will be skip this.
+expchek=$(export | grep "CARGO_BUILD_TARGET" | sed "s/.*/aarch64-linux-android/g")
 if [[ $expchek = "aarch64-linux-android" ]]; then
   echo "Already export cargo"
   checkexport=1
 else
+  # when CARGO_BUILD_TARGET not yet export with aarch64-linux-android
   exportcargo
 fi
 sleep 1
+# When you seconds time using zex ins2 then when you success install mitmproxy
+# will be skip it
 if command -v mitmproxy &> /dev/null ; then
   echo "Mitmproxy already installed"
   checkpipxmitm=1
@@ -457,6 +490,7 @@ else
   installmitmproxy
 fi
 sleep 1
+# If you run seconds time for zex ins2 and file proxy.py detect on Termux data, then will be skip it
 if [[ -f $HOME/proxy.py ]]; then
   echo "proxy.py already downloaded"
   checkwgetdownload=1
@@ -608,6 +642,7 @@ changeServer() {
     command clear
     whoMadeThis
     domainChange=$inpsrv
+    # You can add more server here. But edit code bellow too not only this
     if [[ $domainChange = "1" ]]; then
         domainChange="sg.game.yuuki.me"
     elif [[ $domainChange = "2" ]]; then
@@ -819,6 +854,7 @@ whoMadeThis() {
     echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n$isThisLatestVersion\n========================================"
 }
 
+# Version Script
 versionBash1="1.8"
 
 greenColorBack="$(printf '\033[4;42m')"
@@ -859,7 +895,7 @@ elif [[ $versionBash1 > $versionBashIn1 ]]; then
 elif [[ $versionBash1 < $versionBashIn1 ]]; then
     newUpdateScript() {
         clear
-        echo -e "$updateNote $versionBashIn1\n\nWhat new update? :\n$updateNotif\n"
+        echo -e "$updateNote $versionBashIn1\n\nWhat is new/update? :\n$updateNotif\n"
         sleep 1s
         read -p "Want to update? (y/n)" wantUpdateScript
         while true; do
@@ -876,11 +912,16 @@ elif [[ $versionBash1 = $versionBashIn1 ]]; then
     noInternet=false
 fi
 
+# SubCommand here
+# You can edit as you want (IF YOU KNOW SHELL CODE)
+# If you want make to UI 1,2,3,4 install without zex ins for example. You can do it (I SAID AGAIN IF YOU KNOW SHELL CODE)
+
 case $userInput1 in
-    "ins" | "install" ) install1;;
-    "dom" | "changedomain" ) zdomsh;;
-    "ins2" | "install2" ) install2;;
-    "run" | "proxy" ) zexsh;;
+    "ins" | "install" ) install1;; # if enter command zex ins 
+    "dom" | "changedomain" ) zdomsh;; # if enter command zex dom
+    "ins2" | "install2" ) install2;; # if enter command zex ins
+    "run" | "proxy" ) zexsh;; # if enter command zex run
+    # if enter command not same like above will said error input with code * )
     * ) echo -e "${nameScript} $userInput1 : invalid option\n\n${nameScript} Usage : ${nameScript} ins / dom / ins2 / run\n\n    ins : Install program at begining\n    ins2 : when you already using zex ins then use ins2\n    dom : change a server/domain\n    run : run a mitmproxy\n\nThis script was made by @ElashXander (Telegram) this not easy to use this but, why not to try learn this?"; exit;;
 esac
 
