@@ -17,9 +17,11 @@ chmod +x $ZPATH
 command cd
 rm -rf AnimeGamePatch
 if ! command -v zex &> /dev/null; then
+    clear
     echo "Install Failed!"
     exit
 else
+    clear
     echo "Install Success!"
     echo "Now you can enter command zex ins"
 fi
