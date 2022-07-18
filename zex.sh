@@ -43,7 +43,7 @@ fi
 installsomeprogram() {
   echo "${cyanColorUnder}Install important program [PLEASE WAIT]${whiteColor}"
   sleep 1
-  pkg install python wget rustc-dev nano -y
+  pkg install python wget rustc-dev -y
   checkimpprog=$?
   if [[ $? != 0 ]]; then
     command clear
@@ -70,7 +70,7 @@ ensurepipup() {
 
 installpipx() {
   command cd
-  echo "Install pipx"
+  echo "${cyanColorUnder}Install pipx${whiteColor}"
   sleep 1
   python3 -m pip install --user pipx &> /sdcard/zlog.txt
   checkpypipx=$?
@@ -113,25 +113,16 @@ runProgram() {
     echo "${cyanColorUnder}Update and Upgrade PKG${whiteColor}"
     echo "${greenColorUnder}Install important program${whiteColor}"
     sleep 1
-    if [[ -f $errpath/enpipsucc ]]; then
-      echo "${greenColorUnder}ensurepip already upgrade${whiteColor}"
-      checkensure=1
-    else
-      ensurepipup
-    fi
+    ensurepipup
     sleep 1
-    if [[ -f $errpath/inspipxsucc ]]; then
+    if command -v pipx &> /dev/null; then
       echo "${greenColorUnder}Already install pipx${whiteColor}"
       checkpypipx=1
     else
       installpipx
     fi
     sleep 1
-    if [[ -f $errpath/pyensurepipx ]]; then
-      echo "${greenColorUnder}Skip for ensurepipx${whiteColor}"
-    else
-      pyensurepipx
-    fi
+    pyensurepipx
     sleep 1
     if [[ $checkpkg != 0 ]]; then
         zcheckpkg="${redColorBold}Failed Update (Error)${whiteColor}"
@@ -178,7 +169,7 @@ runProgram() {
 pkgyfix() {
     command sed -i "s/.*/deb https:\/\/termux.astra.in.ua\/apt\/termux-main stable main/g" /data/user/0/com.termux/files/usr/etc/apt/sources.list
     if [[ $? != 0 ]]; then
-        echo "Unknown Error"
+        echo "${redColorBold}Unknown Error${whiteColor}"
         exit
     else
         pkgyfixlog="1"
@@ -292,8 +283,8 @@ fi
 
 # When pipx not installed program will be stop and asking you to install it first
 if ! command -v pipx &> /dev/null; then
-    echo "pipx not found!"
-    echo "Please enter ${nameScript} ins for install pipx!"
+    echo "${redColorBold}pipx not found!${yellowColorBold}"
+    echo "Please enter ${nameScript} ins for install pipx!${whiteColor}"
     exit
 fi
 
@@ -385,14 +376,14 @@ logsavedcredit() {
 
 
 exportcargo() {
-  echo "Export CARGO_BUILD_TARGET"
+  echo "${cyanColorUnder}Export CARGO_BUILD_TARGET${whiteColor}"
   sleep 1
   export CARGO_BUILD_TARGET=aarch64-linux-android
   checkexport=$?
   if [[ $? != 0 ]]; then
-    echo "Failed to export :("
+    echo "${redColorBold}Failed to export :(${whiteColor}"
   else
-    echo "Export done!"
+    echo "${greenColorBold}Export done!${whiteColor}"
   fi
 }
 
@@ -401,7 +392,7 @@ installmitmproxy() {
     echo -e "${redColorBold}command pipx not found!\n${yellowColorBold}Please use ${nameScript} ins for install pipx"
     exit
   fi
-  echo -e "Install mitmproxy with pipx (This may take long time)\n[Make Coffee For Waiting This Shit]"
+  echo -e "${cyanColorUnder}Install mitmproxy with pipx (This may take long time)${whiteColor}\n[Make Coffee For Waiting This Shit]"
   sleep 1
   command pipx install --force mitmproxy
   checkpipxmitm=$?
@@ -426,7 +417,7 @@ downloadproxypy() {
 
 editproxypy() {
   sleep 1
-  echo "Edit proxy.py"
+  echo "${cyanColorUnder}Edit proxy.py${whiteColor}"
   sleep 1
   command cd
   # if file proxy.py found then program will be edit the proxy.py
@@ -434,13 +425,13 @@ editproxypy() {
     sed -i 's/genshin.exzork.me/sg.game.yuuki.me/g' proxy.py
   else
     # when file proxy.py is not found
-    echo "File not found!"
+    echo "${redColorBold}File not found!${whiteColor}"
   fi
   checkeditfile=$?
   if [[ $? != 0 ]]; then
-    echo "Edit failed :("
+    echo "${redColorBold}Edit failed :(${whiteColor}"
   else
-    echo "Edit success"
+    echo "${greenColorBold}Edit success${whiteColor}"
     touch $errpath/edproxpysucc &> /sdcard/zlog2.txt
   fi
 }
@@ -484,7 +475,7 @@ sleep 1
 # When you seconds time using zex ins2 then when you success install mitmproxy
 # will be skip it
 if command -v mitmproxy &> /dev/null ; then
-  echo "Mitmproxy already installed"
+  echo "${greenColorBold}Mitmproxy already installed${whiteColor}"
   checkpipxmitm=1
 else
   installmitmproxy
@@ -492,7 +483,7 @@ fi
 sleep 1
 # If you run seconds time for zex ins2 and file proxy.py detect on Termux data, then will be skip it
 if [[ -f $HOME/proxy.py ]]; then
-  echo "proxy.py already downloaded"
+  echo "${greenColorBold}proxy.py already downloaded${whiteColor}"
   checkwgetdownload=1
 else
   downloadproxypy
@@ -592,7 +583,7 @@ if [[ $checkeditfile = 1 ]]; then
 fi
 
 if [[ $checkexport != 0 ]] || [[ $checkpipxmitm != 0 ]] || [[ $checkwgetdownload != 0 ]] || [[ $checkeditfile != 0 ]]; then
-  echo -e "There is Error\nJoin Discord Server and tag @Helper for Help\nhttps://discord.gg/GenshinPS"
+  echo -e "There is Error\nChat me on Telegram for fix this issue. https://t.me/ElashXander"
   exit
 else
   resultsinstall
@@ -676,11 +667,11 @@ changeServer() {
 }
 
 changeServerDOWN() {
-    echo -e "Server is down\n"
-    read -p "Are you sure want change to $domainChange? (y/n) : " serverDownSure
+    echo -e "${redColorBold}Server is down${whiteColor}\n"
+    read -p "${yellowColorBole}Are you sure want change to ${greenColorBold}$domainChange${whiteColor}? (y/n) : " serverDownSure
     case $serverDownSure in
         "y" | "Y" ) changeServer2;;
-        "n" | "N" ) echo "Change domain cancelled by user!"; exit;;
+        "n" | "N" ) echo "${yellowColorBold}Change domain cancelled by user!${whiteColor}"; exit;;
         * ) echo "Wrong input!"; exit
     esac
 }
@@ -705,7 +696,7 @@ customserver() {
     echo -e "Custom Domain!\nExample : elashxander.my.id\n\n"
     command read -p "Enter custom Domain : " domain
     domain=$(echo $domain | sed "s/http.*\/\///g") # Thanks to Charon Baglari
-    curl -Ism 1 -f https://$domain &> /dev/null
+    curl -Ism 2 -f https://$domain &> /dev/null
     if [[ $? != 0 ]]; then
         echo -e "Server is can't to be access!\n"
         read -p "You sure want change to $domain? (y/n/r) : " youSureBruh
@@ -740,11 +731,11 @@ else
     echo "${redColorBold}File not found for proxy.py${whiteColor}"
 fi
 
-checkServerYuukiSG=command curl -Ism 1 -f https://sg.game.yuuki.me &> /dev/null
+checkServerYuukiSG=command curl -Ism 2 -f https://sg.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiSG=$?
-checkServerYuukiDE=command curl -Ism 1 -f https://de.game.yuuki.me &> /dev/null
+checkServerYuukiDE=command curl -Ism 2 -f https://de.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiDE=$?
-checkServerMINE=command curl -Ism 1 -f https://hk.elashxander.my.id &> /dev/null
+checkServerMINE=command curl -Ism 2 -f https://hk.elashxander.my.id &> /dev/null
 resultsCheckServerMINE=$?
 
 if [[ $resultsCheckServerYuukiSG = 28 ]]; then
@@ -838,14 +829,79 @@ if [[ $noInternet = true ]]; then
     echo -e "${redColorBold}This internet required,\nplease turn on your internet for run mitmdump!${whiteColor}"
     exit
 fi
-if command -v mitmdump &> /dev/null; then
-    command cd
-    mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
-    exit
+
+mitmProxyRun() {
+    if command -v mitmdump &> /dev/null; then
+        command cd
+        mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
+        exit
+    else
+        echo -e "${redColorBold}mitmproxy not found!\nPlease download it using ${nameScript} ins\n"
+        exit
+    fi
+}
+
+logsavedzexsh() {
+    echo "$1" > $logPathData
+    echo "File Saved to $logPathData"
+    sleep 1s
+}
+
+OriginalPackage() {
+    logsavedzexsh "com.miHoYo.GenshinImpact"
+    mitmProxyRun
+}
+
+renamePackage() {
+    openLog=$(cat $logPathData)
+}
+
+DifferentPackage() {
+    command clear
+    whoMadeThis
+    echo -e "Please enter package for different package\n\nExample : com.miHoYo.GenshinImpact\n"
+    read -p "Package : " diffaskingPackage
+    if [[ $diffaskingPackage = "" ]]; then
+        echo "Please Enter a Package!"
+        sleep 1s
+        DifferentPackage
+    fi
+    if [[ ! -d "$GenshinData/$diffaskingPackage" ]]; then
+        echo "Folder $diffaskingPackage not found in $GenshinData"
+        sleep 1.5s
+        DifferentPackage
+    else
+        logsavedzexsh "$diffaskingPackage"
+        renamePackage
+    fi
+}
+
+askingPackage() {
+    command clear
+    whoMadeThis
+    echo -e "What you using version Genshin?\n\nDifferent Package or same like original\n\n1. Original Package\n2. Different Package\n3. Skip this one (But always asking every you use this Command)\n"
+    read -p "Answer here : " imAskingYou
+    while true; do
+    case $imAskingYou in
+        "1" ) OriginalPackage; break;;
+        "2" ) DifferentPackage; break;;
+        "3" ) echo "Okay! we skip this"; sleep 1.5s; mitmProxyRun; break;;
+        "4" ) echo "Wrong Input!"; sleep 1.5s; continue;;
+    esac
+    done
+}
+
+ignoreFunction() {
+GenshinData=/sdcard/Android/data
+logPathData=$HOME/.termux/zex
+if [[ ! -f $logPathData ]]; then
+    askingPackage
 else
-    echo -e "${redColorBold}mitmproxy not found!\nPlease download it using ${nameScript} ins\n"
-    exit
+    skipAsking
 fi
+}
+mitmProxyRun
+
 }
 # ================== zex.sh END ================== #
 
@@ -854,8 +910,7 @@ whoMadeThis() {
     echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n$isThisLatestVersion\n========================================"
 }
 
-# Version Script
-versionBash1="1.8"
+versionBash1="1.9"
 
 greenColorBack="$(printf '\033[4;42m')"
 redColorBack="$(printf '\033[4;41m')"
