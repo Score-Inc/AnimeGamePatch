@@ -90,15 +90,15 @@ Go to [mitm.it](http://mitm.it) but settings proxy on your phone, see [here](htt
 And run ```mitmdump --ssl-insecure``` on Termux then open [mitm.it](http://mitm.it)
 
 #### Install Certificate 
-* First open settings and search "CA Certificate" then follow this picture step by step
+First open settings and search "CA Certificate" then follow this picture step by step
 ![Never](imgcert/installcert1.png)
-* Step 2
+Step 2
 ![Gonna](imgcert/installcert2.png)
-* Step 3
+Step 3
 ![Give](imgcert/installcert3.png)
-* Step 4
+Step 4
 ![You](imgcert/installcert4.png)
-* Step 5 (Done install certificate)
+Step 5 (Done install certificate)
 ![UP](imgcert/installcert5.png)
 
 # FAQ
