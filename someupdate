@@ -4,7 +4,7 @@ updateNotif="1. Add current server in zex dom function!\n2. Fix code"
 updateNote="There is new version to"
 link=null
 printLatest="This is Latest Version (Ver : $versionBashIn1)"
-whatTheFuckEditVersion="Something wrong with version.\nThis version different from the server\n\nServer Latest Version : $versionBashIn1?\nVersion Script : $versionBash1"
+whatTheFuckEditVersion="Something wrong with version.\nThis version different from the server\n\nServer Latest Version : $versionBashIn1\nVersion Script : $versionBash1\n\n version too latest from server"
 updateScript1() {
     command cd
     updateDir=$HOME/updatezex
