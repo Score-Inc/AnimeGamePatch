@@ -115,7 +115,7 @@ Check your Proxy settings on your phone
 Hmmm.. check your proxy on Settings. Set proxy to<br />Hostname : **127.0.0.1**<br />Port : **8080**<br />After set the Proxy go back to Termux and run command ```bash zex.sh```
 
 #### Why i got Data Error?
-Because you may the proxy not setting to<br /> Hostname : **127.0.0.1**<br />Port : **8080**<br />Try settings proxy and run ```bash zex.sh```
+Because you may the proxy not setting to<br /> Hostname : **127.0.0.1**<br />Port : **8080**<br />Try settings proxy and run ```zex run```
 
 #### Why 0% Stuck loading?
 Your data is missing, check it on settings app info, if less than 15GB (I think) you need to download again from original server
