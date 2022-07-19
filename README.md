@@ -21,8 +21,10 @@ This need proxy settings on your phone. ~~No need install cert on your phone but
 * Just allow it like this picture :
 <img src="termuximg/termux-setup-storage.png" alt="drawing" width="400"/>
 2. Enter command : <br />
-> termux-change-repo
-~ Press on [OK] or Enter on your keyboard <br />
+
+termux-setup-storage   <<< Copy that and paste to termux
+
+<br />~ Press on [OK] or Enter on your keyboard <br />
 ~ Select "Mirrors by A1batross" then Press [OK] <br />
 * Do same like this Picture :
 <img src="termuximg/termux-change-repo.png" alt="drawing" width="400"/>
