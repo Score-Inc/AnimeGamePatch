@@ -70,7 +70,7 @@ go to settings and use search function, and search word ```Access point Name``` 
 
 
 #### WiFi
-For WiFi just follow this picture : 
+For WiFi just follow this picture : <br />
 <br />**Step 1**<br />
 <img src="img/wifiproxy1.png" alt="drawing" width="400"/><br />
 **Step 2**<br />
