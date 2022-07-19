@@ -51,25 +51,24 @@ Change server or domain
 Run mitmproxy
 
 # Proxy Settings
-#### Mobile dataS
+#### Mobile data
 go to settings and use search function, and search word ```Access point Name``` and click on **+**. Then enter Proxy and Port as like this picture :
-<img src="img/apnmobiledata.png" alt="drawing" width="400"/><br />
-
+<img src="img/apnmobiledata.png" width="350"/>
 
 #### WiFi
 For WiFi just follow this picture : <br />
 <br />**Step 1**<br />
-<img src="img/wifiproxy1.png" alt="drawing" width="400"/><br />
+<img src="img/wifiproxy1.png" width="350"/><br />
 **Step 2**<br />
-<img src="img/wifiproxy2.png" alt="drawing" width="400"/><br />
+<img src="img/wifiproxy2.png" width="350"/><br />
 **Step 3**<br />
-<img src="img/wifiproxy3.png" alt="drawing" width="400"/><br />
+<img src="img/wifiproxy3.png" width="350"/><br />
 **Step 4**<br />
-<img src="img/wifiproxy4.png" alt="drawing" width="400"/><br />
+<img src="img/wifiproxy4.png" width="350"/><br />
 **Step 5**<br />
-<img src="img/wifiproxy5.png" alt="drawing" width="400"/><br />
+<img src="img/wifiproxy5.png" width="350"/><br />
 **Step 6**<br />
-<img src="img/wifiproxy6.png" alt="drawing" width="400"/>
+<img src="img/wifiproxy6.png" width="350"/>
 
 # Install certificate on your phone
 #### Download certificate
@@ -78,15 +77,15 @@ And run ```mitmdump --ssl-insecure``` on Termux then open [mitm.it](http://mitm.
 
 #### Install Certificate 
 First open settings and search "CA Certificate" then follow this picture step by step<br />
-<img src="imgcert/installcert1.png" alt="drawing" width="400"/><br />
-Step 2<br />
-<img src="imgcert/installcert2.png" alt="drawing" width="400"/><br />
-Step 3<br />
-<img src="imgcert/installcert3.png" alt="drawing" width="400"/><br />
-Step 4<br />
-<img src="imgcert/installcert4.png" alt="drawing" width="400"/><br />
-Step 5 (Done install certificate)<br />
-<img src="imgcert/installcert5.png" alt="drawing" width="400"/>
+<img src="imgcert/installcert1.png" width="350"/><br />
+**Step 2**<br />
+<img src="imgcert/installcert2.png" width="350"/><br />
+**Step 3**<br />
+<img src="imgcert/installcert3.png" width="350"/><br />
+**Step 4**<br />
+<img src="imgcert/installcert4.png" width="350"/><br />
+**Step 5**(Done install certificate)<br />
+<img src="imgcert/installcert5.png" width="350"/>
 
 # FAQ
 #### How to play again? Does i need to follow [this](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux) step again?
