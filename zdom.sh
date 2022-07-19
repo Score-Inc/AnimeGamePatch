@@ -28,6 +28,7 @@ cyanColorUnder="$(printf '\033[4;36m')"
 greenColorUnder="$(printf '\033[4;32m')"
 redColorUnder="$(printf '\033[4;31m')"
 blueColorUnder="$(printf '\033[4;34m')"
+yellowColorUnder="$(printf '\033[4;33m')"
 
 whoMadeThis() {
     echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n${blueColor}Script convert from\n${blueColorUnder}https://github.com/ElaXan/AnimeGamePatch${whiteColor}\n========================================"
@@ -89,6 +90,7 @@ changeServer2 () {
         exit
     else
         echo "The Domain changed to $domainChange"
+        echo -e "\n${yellowColorBold}Script will not get update, go to ${yellowColorUnder}https://github.com/ElaXan/AnimeGamePatch${yellowColorBold} for more information"
         rm $ZERR
         exit
     fi
@@ -120,6 +122,7 @@ customserver() {
         exit
     else
         echo "The Domain changed to $domain"
+        echo -e "\n${yellowColorBold}Script will not get update, go to ${yellowColorUnder}https://github.com/ElaXan/AnimeGamePatch${yellowColorBold} for more information"
         rm $ZERR
         exit
     fi
