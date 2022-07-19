@@ -973,7 +973,7 @@ case $userInput1 in
     "ins2" | "install2" ) install2;; # if enter command zex ins
     "run" | "proxy" ) zexsh;; # if enter command zex run
     # if enter command not same like above will said error input with code * )
-    * ) echo -e "${nameScript} $userInput1 : invalid option\n\n${nameScript} Usage : ${nameScript} ins / dom / ins2 / run\n\n    ins : Install program at begining\n    ins2 : when you already using zex ins then use ins2\n    dom : change a server/domain\n    run : run a mitmproxy\n\nThis script was made by @ElashXander (Telegram) this not easy to use this but, why not to try learn this?"; exit;;
+    * ) echo -e "${nameScript} $userInput1 : invalid option\n\n${nameScript} Usage : ${nameScript} ins / dom / ins2 / run\n\n    ins : Install program at begining\n    ins2 : when you already using zex ins then use ins2\n    dom : change a server/domain\n    run : run a mitmproxy\n\nThis script was made by @ElashXander (Telegram) this not easy to use but, why not to try learn?"; exit;;
 esac
 
 
