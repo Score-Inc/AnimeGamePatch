@@ -1,7 +1,9 @@
 command clear
 command cd
 
-# do not use curl **** | bash it make IDK error
+# do not use curl **** | bash it make error IDK
+# This script will not get any updates, because this 100% offline i mean no detect there is Update so no update for this
+# For latest version using zex dom go to https://github.com/ElaXan/AnimeGamePatch
 
 greenColorBack="$(printf '\033[4;42m')"
 redColorBack="$(printf '\033[4;41m')"
