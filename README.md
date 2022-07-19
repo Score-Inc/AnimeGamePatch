@@ -28,44 +28,16 @@ termux-setup-storage   <<< Copy that and paste to termux
 ~ Select "Mirrors by A1batross" then Press [OK] <br />
 * Do same like this Picture :
 <img src="termuximg/termux-change-repo.png" alt="drawing" width="400"/>
-3. Enter command : 
-```bash
-curl -Ls https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/install.sh | bash
-```
-4. Enter command :
-```bash
-zex ins
-```
+3. Enter command : <br />
+curl -Ls https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/install.sh | bash <br />
+<br />
+4. Enter command : <br />
+zex <<< enter this command to termux<br />
+
 ~ If ask "motd (Y/I/N/O/D/Z) [default=N] ?" <br />
-Enter on your Keyboard <br />
-<br />5. If done install and ask exit. Exit/Close Termux using command ```exit 0``` then enter <br />
-6. Open Termux<br />
-7. Enter command :
-```bash
-zex ins2
-```
-<br />8. Follow what script said
-<br />9. DONE✓
-
-# Command
-```
-zex: invalid option
-    zex Usage : zex ins / dom / ins2 / run
-
-    ins : Install program at begining
-    ins2 : when you already using zex ins then use ins2
-    dom : change a server/domain
-    run : run a mitmproxy                               
-This script was made by @ElashXander (Telegram) this not easy to use this but, why not to try learn this?
-```
-#### zex ins
-for install / update program
-#### zex ins2
-for install mitmproxy
-#### zex run
-run a proxy for play Anime Game
-#### zex dom
-change a domain/server
+press Enter on your Keyboard <br />
+<br />5. Follow what script said
+<br />6. DONE✓
 
 # Proxy Settings
 #### Mobile dataS
