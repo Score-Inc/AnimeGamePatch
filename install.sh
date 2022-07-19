@@ -23,5 +23,6 @@ if ! command -v zex &> /dev/null; then
 else
     clear
     echo "Install Success!"
-    echo "Now you can enter command zex ins"
+    sleep 1s
+    zex
 fi
