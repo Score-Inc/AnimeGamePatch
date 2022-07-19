@@ -514,7 +514,7 @@ if [[ $checkpipxmitm != 0 ]]; then
       zcheckpipxmitm="${redColorBold}Install mitmproxy Failed (Error)${whiteColor}"
     fi
 else
-    zcheckpipxmitm="${greenColor}Install mitmproxy Successfully${whiteColor}"
+    zcheckpipxmitm="${greenColorBold}Install mitmproxy Successfully${whiteColor}"
 fi
 
 if [[ $checkwgetdownload != 0 ]]; then
@@ -849,74 +849,40 @@ mitmProxyRun() {
     if command -v mitmdump &> /dev/null; then
         command cd
         mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
+        if [[ $? != 0 ]]; then
+            if [[ $killMitms = 2 ]]; then
+                echo "${redColorBold}I can't fix this error. Try restart your phone!"
+                exit
+            fi
+
+            if [[ $killMitms = 1 ]]; then
+                echo "${yellowColorBold}Trying seconds method!${whiteColor}"
+                killMitmd=$(ps ax > $HOME/z.log; grep "mitmdump" $HOME/z.log | sed "s/ pts\/1.*false//g")
+                kill $killMitmd
+                rm $HOME/z.log
+                sleep 0.5
+                echo "${greenColorBold}Trying run again...${whiteColor}"
+                sleep 1s
+                killMitms=2
+                mitmProxyRun
+            fi
+
+            echo "${yellowColorBold}Trying fix this Issue!"
+            sleep 1s
+            pkill -9 mitmdump
+            sleep 0.5
+            echo "${greenColorBold}Trying run again...${whiteColor}"
+            killMitms=1
+            clear
+            mitmProxyRun
+        fi
         exit
     else
         echo -e "${redColorBold}mitmproxy not found!\nPlease download it using ${nameScript} ins\n"
         exit
     fi
 }
-
-logsavedzexsh() {
-    echo "$1" > $logPathData
-    echo "File Saved to $logPathData"
-    sleep 1s
-}
-
-OriginalPackage() {
-    logsavedzexsh "com.miHoYo.GenshinImpact"
-    mitmProxyRun
-}
-
-renamePackage() {
-    openLog=$(cat $logPathData)
-}
-
-DifferentPackage() {
-    command clear
-    whoMadeThis
-    echo -e "Please enter package for different package\n\nExample : com.miHoYo.GenshinImpact\n"
-    read -p "Package : " diffaskingPackage
-    if [[ $diffaskingPackage = "" ]]; then
-        echo "Please Enter a Package!"
-        sleep 1s
-        DifferentPackage
-    fi
-    if [[ ! -d "$GenshinData/$diffaskingPackage" ]]; then
-        echo "Folder $diffaskingPackage not found in $GenshinData"
-        sleep 1.5s
-        DifferentPackage
-    else
-        logsavedzexsh "$diffaskingPackage"
-        renamePackage
-    fi
-}
-
-askingPackage() {
-    command clear
-    whoMadeThis
-    echo -e "What you using version Genshin?\n\nDifferent Package or same like original\n\n1. Original Package\n2. Different Package\n3. Skip this one (But always asking every you use this Command)\n"
-    read -p "Answer here : " imAskingYou
-    while true; do
-    case $imAskingYou in
-        "1" ) OriginalPackage; break;;
-        "2" ) DifferentPackage; break;;
-        "3" ) echo "Okay! we skip this"; sleep 1.5s; mitmProxyRun; break;;
-        "4" ) echo "Wrong Input!"; sleep 1.5s; continue;;
-    esac
-    done
-}
-
-ignoreFunction() {
-GenshinData=/sdcard/Android/data
-logPathData=$HOME/.termux/zex
-if [[ ! -f $logPathData ]]; then
-    askingPackage
-else
-    skipAsking
-fi
-}
 mitmProxyRun
-
 }
 # ================== zex.sh END ================== #
 
@@ -925,7 +891,7 @@ whoMadeThis() {
     echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n$isThisLatestVersion\n========================================"
 }
 
-versionBash1="2.0"
+versionBash1="2.1"
 
 greenColorBack="$(printf '\033[4;42m')"
 redColorBack="$(printf '\033[4;41m')"
@@ -949,6 +915,15 @@ cyanColorUnder="$(printf '\033[4;36m')"
 greenColorUnder="$(printf '\033[4;32m')"
 redColorUnder="$(printf '\033[4;31m')"
 
+pathZex=$PREFIX/bin/zex
+
+fixVersionScripts() {
+    openZex=$(cat $pathZex | grep "versionBash1=")
+    sed -e "s/$openZex/versionBash1=\"$versionBashIn1\"/g" $pathZex
+    echo "Try to enter command zex again!"
+    exit
+}
+
 # PLEASE DON'T EDIT THIS, THIS LOAD SOME CODE FROM SERVER
 source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate)
 # source $HOME/AnimeGamePatch/someupdate
@@ -961,7 +936,13 @@ if [[ $versionBashIn1 = "" ]]; then
 elif [[ $versionBash1 > $versionBashIn1 ]]; then
     clear
     echo -e "$whatTheFuckEditVersion"
-    exit
+    echo -e "\nWant to fix this?\n"
+    read -p "Enter input (y/n) : " fixVersionScript
+    case $fixVersionScript in
+        "y" ) fixVersionScripts;;
+        "n" ) exit;;
+        * ) echo "Wrong Input!"; exit;;
+    esac
 elif [[ $versionBash1 < $versionBashIn1 ]]; then
     newUpdateScript() {
         clear
