@@ -90,7 +90,7 @@ changeServer2 () {
         exit
     else
         echo "The Domain changed to $domainChange"
-        echo -e "\n${yellowColorBold}Script will not get update, go to ${yellowColorUnder}https://github.com/ElaXan/AnimeGamePatch${yellowColorBold} for more information"
+        echo -e "\n${yellowColorBold}Script will not get update,\ngo to ${yellowColorUnder}https://github.com/ElaXan/AnimeGamePatch${yellowColorBold} for more information"
         rm $ZERR
         exit
     fi
@@ -122,7 +122,7 @@ customserver() {
         exit
     else
         echo "The Domain changed to $domain"
-        echo -e "\n${yellowColorBold}Script will not get update, go to ${yellowColorUnder}https://github.com/ElaXan/AnimeGamePatch${yellowColorBold} for more information"
+        echo -e "\n${yellowColorBold}Script will not get update,\ngo to ${yellowColorUnder}https://github.com/ElaXan/AnimeGamePatch${yellowColorBold} for more information"
         rm $ZERR
         exit
     fi
