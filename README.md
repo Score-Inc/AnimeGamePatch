@@ -16,19 +16,21 @@ Download Anime Game Patch 2.8 from [Release](https://github.com/ElaXan/AnimeGame
 This need proxy settings on your phone. ~~No need install cert on your phone but follow the script said until it success.~~ If you don't know about this go to [Proxy Settings](https://github.com/ElaXan/AnimeGamePatch#proxy-settings).
 
 #### How to use?
-1. Enter : ```termux-setup-storage``` <br />
+1. Enter command : <br />
+> termux-setup-storage
 * Just allow it like this picture :
 <img src="termuximg/termux-setup-storage.png" alt="drawing" width="400"/>
-2. Enter : ```termux-change-repo``` <br />
+2. Enter command : <br />
+> termux-change-repo
 ~ Press on [OK] or Enter on your keyboard <br />
 ~ Select "Mirrors by A1batross" then Press [OK] <br />
 * Do same like this Picture :
 <img src="termuximg/termux-change-repo.png" alt="drawing" width="400"/>
-3. Enter : 
+3. Enter command : 
 ```bash
 curl -Ls https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/install.sh | bash
 ```
-4. Enter :
+4. Enter command :
 ```bash
 zex ins
 ```
@@ -36,7 +38,7 @@ zex ins
 Enter on your Keyboard <br />
 <br />5. If done install and ask exit. Exit/Close Termux using command ```exit 0``` then enter <br />
 6. Open Termux<br />
-7. Enter :
+7. Enter command :
 ```bash
 zex ins2
 ```
