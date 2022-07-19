@@ -15,29 +15,40 @@ Download Anime Game Patch 2.8 from [Release](https://github.com/ElaXan/AnimeGame
 #### Information
 This need proxy settings on your phone. ~~No need install cert on your phone but follow the script said until it success.~~ If you don't know about this go to [Proxy Settings](https://github.com/ElaXan/AnimeGamePatch#proxy-settings).
 
-#### How to use?
+### How to use?
 1. Enter command : <br />
-> termux-setup-storage
+```termux-setup-storage```
 * Just allow it like this picture :
-<img src="termuximg/termux-setup-storage.png" alt="drawing" width="400"/>
+<img src="termuximg/termux-setup-storage.png" width="350">
 2. Enter command : <br />
 
-termux-setup-storage   <<< Copy that and paste to termux
-
+```termux-change-repo```
 <br />~ Press on [OK] or Enter on your keyboard <br />
 ~ Select "Mirrors by A1batross" then Press [OK] <br />
 * Do same like this Picture :
-<img src="termuximg/termux-change-repo.png" alt="drawing" width="400"/>
+<img src="termuximg/termux-change-repo.png" width="350"/>
 3. Enter command : <br />
-curl -Ls https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/install.sh | bash <br />
+
+```bash
+curl -Ls https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/install.sh | bash
+```
 <br />
 4. Enter command : <br />
-zex <<< enter this command to termux<br />
 
-~ If ask "motd (Y/I/N/O/D/Z) [default=N] ?" <br />
+```zex```
+<br />~ If ask "motd (Y/I/N/O/D/Z) [default=N] ?" <br />
 press Enter on your Keyboard <br />
 <br />5. Follow what script said
 <br />6. DONE✓
+
+# Commands
+Comamnds for ```zex```
+#### zex 1
+install program and mitmproxy
+#### zex 2
+Change server or domain
+#### zex 3
+Run mitmproxy
 
 # Proxy Settings
 #### Mobile dataS
