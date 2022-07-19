@@ -1,6 +1,7 @@
 binary=/data/data/com.termux/files/usr/bin/zex
 versionBashIn1="2.1"
 updateNotif="1. Add code when version too latest than Server\n2. Fix error using command zex run \"Address already in used\""
+# updateNotif="1. Make code no need to Exit termux when already install pipx\n\n2. Make UI or selection for install / changedomain / run mitmproxy\n\n3. Add some code in zex run for fix issue error \"Address already in used\""
 updateNote="There is new version to"
 link=null
 printLatest="This is Latest Version (Ver : $versionBashIn1)"
