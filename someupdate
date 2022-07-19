@@ -1,7 +1,6 @@
 binary=/data/data/com.termux/files/usr/bin/zex
-versionBashIn1="2.0"
-updateNotif="1. Add code for zex dom current version!\n2. Fix code"
-# updateNotif="1. Add code when version too latest than Server\n2. Fix error using command zex run \"Address already in used\""
+versionBashIn1="2.1"
+updateNotif="1. Add code when version too latest than Server\n2. Fix error using command zex run \"Address already in used\""
 updateNote="There is new version to"
 link=null
 printLatest="This is Latest Version (Ver : $versionBashIn1)"
