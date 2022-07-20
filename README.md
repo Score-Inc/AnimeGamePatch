@@ -42,7 +42,7 @@ press Enter on your Keyboard <br />
 <br />5. Follow what script said
 <br />6. DONE✓
 
-# Commands
+# Shortcut Commands
 Comamnds for ```zex```
 #### zex 1
 install program and mitmproxy
