@@ -989,7 +989,7 @@ case $userInput1 in
     "2" | "dom" ) zdomsh;;
     "1" | "install" ) install1;;
     # if enter command not same like above will said error input with code * )
-    * ) UIMenu;;
+    * ) clear; UIMenu;;
 esac
 
 
