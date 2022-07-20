@@ -342,8 +342,7 @@ zNextStep2() {
     # Run mitmdump but now move to zex run. This just for first time install this
     zRunProgram() {
         command cd
-        command cd .local/bin
-        ./mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
+        ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
         exit
     }
 
@@ -534,8 +533,7 @@ fi
 binaryMitm=$HOME/.local/bin
 resultsinstall() {
   command cd
-  command cd .local/bin
-  if [[ ! -f "mitmdump" ]]; then
+  if [[ ! -f $binaryMitm/mitmdump ]]; then
         echo -e "${redColorBold}mitmdump not installled. or ERROR install\n${yellowColor}Feel free dm me at Telegram, username : @ElashXander. if you need fix this issue!${whiteColor}"
         exit
   fi
@@ -557,8 +555,7 @@ resultsinstall() {
   termux-open-url http://mitm.it
   echo "CTRL + C Key for Continue"
   command cd
-  command cd .local/bin
-  ./mitmdump --ssl-insecure > /sdcard/zlog.txt
+  ./.local/bin/mitmdump --ssl-insecure > /sdcard/zlog.txt
   if [[ $? != 0 ]]; then
     echo "Error, will trying to remove the save that you already download it?"
     read -p "Enter Y or N : " removeSaveFile
@@ -854,11 +851,9 @@ fi
 
 mitmProxyRun() {
     command cd
-    command cd .local/bin
-    if [[ -f "mitmdump" ]]; then
+    if [[ -f ./.local/bin/mitmdump ]]; then
         command cd
-        command cd .local/bin
-        ./mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
+        ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
         if [[ $? != 0 ]]; then
             if [[ $killMitms = 2 ]]; then
                 echo "${redColorBold}I can't fix this error. Try restart your phone!"
@@ -901,7 +896,7 @@ whoMadeThis() {
     echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n$isThisLatestVersion\n========================================"
 }
 
-versionBash1="2.3"
+versionBash1="2.3.1"
 
 greenColorBack="$(printf '\033[4;42m')"
 redColorBack="$(printf '\033[4;41m')"
