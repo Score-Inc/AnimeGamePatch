@@ -4,6 +4,9 @@
 # THIS CODE IS FREE
 # CODE STILL DEVELOPMENT FOR FIX SOME CODE AND ADD CODE.
 
+# Update
+# Now make to like UI or choose without zex ins
+# No need exit termux when have pipx already installed
 
 # THANKS TO @CharonCB21 (Telagram) for Helping me about this
 
@@ -25,7 +28,7 @@ if [[ $noInternet = true ]]; then
     echo "${redColorBold}Need internet for install. please enable your internet and run ${nameScript} ins again"
     exit
 fi
-
+command clear
 errpath=$HOME/.config/zex
 
 # well this code to but not used
@@ -38,13 +41,6 @@ if [[ ! -d $HOME/.config ]]; then
   mkdir $HOME/.config
 fi
 
-if [[ -d $errpath ]]; then
-  echo "Folder already created!"
-  sleep 0.5
-  command clear
-else
-  mkdir $errpath
-fi
 installsomeprogram() {
   echo "${cyanColorUnder}Install important program [PLEASE WAIT]${whiteColor}"
   sleep 1
@@ -53,10 +49,12 @@ installsomeprogram() {
   if [[ $? != 0 ]]; then
     command clear
     whoMadeThis
+    echo -e "${cyanColorBold}Install program${whiteColor}\n========================================"
     echo "${redColorBold}Install failed :(${whiteColor}"
   else
     command clear
     whoMadeThis
+    echo -e "${cyanColorBold}Install program${whiteColor}\n========================================"
     echo "${greenColorBold}Install success :)${whiteColor}"
   fi
 }
@@ -111,10 +109,12 @@ runProgram() {
     command cd
 	command clear
 	whoMadeThis
+    echo -e "${cyanColorBold}Install program${whiteColor}\n========================================"
     installsomeprogram
     sleep 1
     command clear
     whoMadeThis
+    echo -e "${cyanColorBold}Install program${whiteColor}\n========================================"
     echo "${cyanColorUnder}Update and Upgrade PKG${whiteColor}"
     echo "${greenColorUnder}Install important program${whiteColor}"
     sleep 1
@@ -201,9 +201,11 @@ pkgerrfix() {
     fi
 }
 whoMadeThis
+echo -e "${cyanColorBold}Install program${whiteColor}\n========================================"
 runProgram
 clear
 whoMadeThis
+echo -e "${cyanColorBold}Install program${whiteColor}\n========================================"
 sleep 1
 if [[ $checkimpprog = 1 ]]; then
   checkimpprog=0
@@ -226,17 +228,16 @@ if [[ $checkpkg != 0 ]] || [[ $checkimpprog != 0 ]] || [[ $checkensure != 0 ]] |
         pkgerrfix
     else
         # echo When there is error
-        echo -e "\nThere is ERROR!\nTry exit the Termux and open it again.\n1. try run command manualy for python3 -m pip install --user pipx\nThen run command zex install"
+        echo -e "\nThere is ERROR!\nTry exit the Termux and open it again."
         exit
     fi
 else
     # When all number code is 0, then will said ALL IS SUCCESS install
     echo -e "Results :\nUpdate and Upgrade PKG = $zcheckpkg\n\nInstall important program = $zcheckimpprog\n\nEnsurepip = $zcheckensure\n\nInstall pipx = $zcheckpypipx\n\nensure pipx = $zcheckensurepath"
     sleep 2
-    echo -e "\nDone for now. Please exit the termux or make new session"
-    echo "Exit : Exit then open it again enter the command ${nameScript} ins2"
-    echo -e "\nSession : Make new session then enter the command ${nameScript} ins2"
-    exit
+    echo ""
+    read -p "Press enter for contiinue install mitmproxy"
+    install2
 fi
 }
 # ================== install.sh END ================== #
@@ -287,11 +288,7 @@ if [[ $noInternet = true ]]; then
 fi
 
 # When pipx not installed program will be stop and asking you to install it first
-if ! command -v pipx &> /dev/null; then
-    echo "${redColorBold}pipx not found!${yellowColorBold}"
-    echo "Please enter ${nameScript} ins for install pipx!${whiteColor}"
-    exit
-fi
+
 
 command clear
 
@@ -322,13 +319,12 @@ zNextStep2() {
     mkdir $pathmynickname
     clear
     whoMadeThis
+    echo -e "${cyanColorBold}Install mitmproxy${whiteColor}\n========================================"
     # When mitmdump not installed or not, if not will be stop and asking you to install it.
-    if command -v mitmdump &> /dev/null; then
-        echo "file \"mitmdump\" is found!"
-        sleep 2s
+    if [[ -f $pipxPath ]]; then
+        skipThis=1
     else
-        echo "Please exit termux, open, and enter the command"
-        echo "${nameScript} ins2"
+        echo "pipx: not found"
         exit
     fi
     if [[ -f "/sdcard/Download/mitmproxy-ca-cert.cer" ]]; then
@@ -346,12 +342,13 @@ zNextStep2() {
     # Run mitmdump but now move to zex run. This just for first time install this
     zRunProgram() {
         command cd
-        mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
+        ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
         exit
     }
 
     clear
     whoMadeThis
+    echo -e "${cyanColorBold}Install mitmproxy${whiteColor}\n========================================"
     sleep 1
     echo -e "Please install Cert that you download it to your phone is Settings!.\nCA Certificate in Security. If you not do that, this will not work.\nAnd Please don't share you Certificate to other. May certificate will not work again"
     echo "Cleaning [PLEASE WAIT!!]"
@@ -393,13 +390,14 @@ exportcargo() {
 }
 
 installmitmproxy() {
-  if ! command -v pipx &> /dev/null; then
+  pipxPath=$HOME/.local/bin/pipx
+  if [[ ! -f $pipxPath ]]; then
     echo -e "${redColorBold}command pipx not found!\n${yellowColorBold}Please use ${nameScript} ins for install pipx"
     exit
   fi
   echo -e "${cyanColorUnder}Install mitmproxy with pipx (This may take long time)${whiteColor}\n[Make Coffee For Waiting This Shit]"
   sleep 1
-  command pipx install --force mitmproxy
+  $pipxPath install --force mitmproxy
   checkpipxmitm=$?
   if [[ $? != 0 ]]; then
     echo "Install failed :("
@@ -454,15 +452,11 @@ deleteProgramY() {
 clear
 
 errpath=$HOME/.config/zex
-if [[ -d $errpath ]]; then
-  echo "Folder already created!"
-  sleep 0.5
-else
-  command mkdir $errpath
-fi
+
 command clear
 
 whoMadeThis
+echo -e "${cyanColorBold}Install mitmproxy${whiteColor}\n========================================"
 sleep 0.3 
 
 # may this will be confused for you if don't know shell code
@@ -479,7 +473,7 @@ fi
 sleep 1
 # When you seconds time using zex ins2 then when you success install mitmproxy
 # will be skip it
-if command -v mitmproxy &> /dev/null ; then
+if command -v mitmproxys &> /dev/null ; then
   echo "${greenColorBold}Mitmproxy already installed${whiteColor}"
   checkpipxmitm=1
 else
@@ -536,9 +530,11 @@ if [[ $checkeditfile != 0 ]]; then
 else
     zcheckeditfile="${greenColorBold}Edit Proxy Successfully${whiteColor}"
 fi
+binaryMitm=$HOME/.local/bin
 resultsinstall() {
-  if ! command -v mitmdump &> /dev/null; then
-        echo -e "${redColorBold}mitmdump not installled.\n${yellowColor}Feel free dm me at Telegram, username : @ElashXander. if you need fix this issue!${whiteColor}"
+  command cd
+  if [[ ! -f $binaryMitm/mitmdump ]]; then
+        echo -e "${redColorBold}mitmdump not installled. or ERROR install\n${yellowColor}Feel free dm me at Telegram, username : @ElashXander. if you need fix this issue!${whiteColor}"
         exit
   fi
   echo "Please Setting your WiFi or mobile data to Proxy"
@@ -558,7 +554,7 @@ resultsinstall() {
   sleep 2
   termux-open-url http://mitm.it
   echo "CTRL + C Key for Continue"
-  mitmdump --ssl-insecure > /sdcard/zlog.txt
+  ./.local/bin/mitmdump --ssl-insecure > /sdcard/zlog.txt
   if [[ $? != 0 ]]; then
     echo "Error, will trying to remove the save that you already download it?"
     read -p "Enter Y or N : " removeSaveFile
@@ -571,6 +567,7 @@ resultsinstall() {
 }
 
 whoMadeThis
+echo -e "${cyanColorBold}Install mitmproxy${whiteColor}\n========================================"
 sleep 1
 echo -e "Results:\nExport Cargo = $zcheckexport\n\nInstall mitmproxy with pipx = $zcheckpipxmitm\n\nDownload proxy.py = $zcheckwgetdownload\n\nEdit proxy.py = $zcheckeditfile\n\n"
 sleep 1
@@ -698,10 +695,15 @@ changeServer2 () {
 customserver() {
     command clear
     whoMadeThis
-    echo -e "Custom Domain!\nExample : elashxander.my.id\n\n"
+    echo -e "Custom Domain!\nExample : elashxander.my.id\nB : Back to main menu\n"
     command read -p "Enter custom Domain : " domain
-    domain=$(echo $domain | sed "s/http.*\/\///g") # Thanks to Charon Baglari
-    curl -Ism 2 -f https://$domain &> /dev/null
+    if [[ $domain = "B" ]] || [[ $domain = "b" ]] || [[ $domain = "Back" ]] || [[ $domain = "BACK" ]]; then
+        command clear
+        UIMenu
+    else
+        domain=$(echo $domain | sed "s/http.*\/\///g") # Thanks to Charon Baglari
+        curl -Ism 2 -f https://$domain &> /dev/null
+    fi
     if [[ $? != 0 ]]; then
         echo -e "Server is can't to be access!\n"
         read -p "You sure want change to $domain? (y/n/r) : " youSureBruh
@@ -795,12 +797,13 @@ elif [[ $resultsCheckServerYuukiSG = 0 ]] || [[ $resultsCheckServerYuukiDE = 0 ]
     echo "========================================"
 fi
 
-echo -e "Select Server\n1. Yuuki (Singapore) : $statusServerYuukiSG\n2. Yuuki (German) :  $statusServerYuukiDE\n3. My Server (Hongkong) : $statusServerMINE\n4. Custom\n\nExample : 1 for select Yuuki Server"
+echo -e "Select Server\n1. Yuuki (Singapore) : $statusServerYuukiSG\n2. Yuuki (German) :  $statusServerYuukiDE\n3. My Server (Hongkong) : $statusServerMINE\n4. Custom\n5. BACK\n\nExample : 1 for select Yuuki Server"
 read -p "Enter input : " inpsrv
 
 case $inpsrv in
     "1" | "2" | "3" ) changeServer;;
     "4" ) customserver;;
+    "5" ) clear; UIMenu;;
     * ) echo "Wrong Input!";;
 esac
 }
@@ -846,9 +849,10 @@ if [[ $noInternet = true ]]; then
 fi
 
 mitmProxyRun() {
-    if command -v mitmdump &> /dev/null; then
+    command cd
+    if [[ -f ./.local/bin/mitmdump ]]; then
         command cd
-        mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
+        ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
         if [[ $? != 0 ]]; then
             if [[ $killMitms = 2 ]]; then
                 echo "${redColorBold}I can't fix this error. Try restart your phone!"
@@ -891,7 +895,7 @@ whoMadeThis() {
     echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n$isThisLatestVersion\n========================================"
 }
 
-versionBash1="2.1"
+versionBash1="2.2"
 
 greenColorBack="$(printf '\033[4;42m')"
 redColorBack="$(printf '\033[4;41m')"
@@ -967,17 +971,26 @@ fi
 # You can edit as you want (IF YOU KNOW SHELL CODE)
 # If you want make to UI 1,2,3,4 install without zex ins for example. You can do it (I SAID AGAIN IF YOU KNOW SHELL CODE)
 
+UIMenu() {
+  whoMadeThis
+  echo -e "${cyanColorBold}1. Install mitmproxy and other program\n2. Change Domain/Server\n3. Run Mitmproxy (zex run)\n4. ${redColorBold}Exit${whiteColor}"
+  read -p "Enter input : " enterInputUI
+  case $enterInputUI in
+    "1" ) install1;;
+    "2" ) zdomsh;;
+    "3" ) zexsh;;
+    "4" ) exit;;
+    * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
+  esac
+}
+
 case $userInput1 in
-    "ins" | "install" ) install1;; # if enter command zex ins 
-    "dom" | "changedomain" ) zdomsh;; # if enter command zex dom
-    "ins2" | "install2" ) install2;; # if enter command zex ins
-    "run" | "proxy" ) zexsh;; # if enter command zex run
+    "run" | "3" ) zexsh;; # if enter command zex run
+    "2" | "dom" ) zdomsh;;
+    "1" | "install" ) install1;;
     # if enter command not same like above will said error input with code * )
-    * ) echo -e "${nameScript} $userInput1 : invalid option\n\n${nameScript} Usage : ${nameScript} ins / dom / ins2 / run\n\n    ins : Install program at begining\n    ins2 : when you already using zex ins then use ins2\n    dom : change a server/domain\n    run : run a mitmproxy\n\nThis script was made by @ElashXander (Telegram) this not easy to use but, why not to try learn?"; exit;;
+    * ) UIMenu;;
 esac
-
-
-
 
 
 
