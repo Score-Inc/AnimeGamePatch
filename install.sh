@@ -1,21 +1,20 @@
 #!/bin/bash
 
 command cd
+folderInstall="zexIns"
 ZPATH=/data/data/com.termux/files/usr/bin/zex
-pkg install git -y
-if ! command -v git &> /dev/null; then
+pkg install wget -y
+if ! command -v wget &> /dev/null; then
     echo "failed!"
     exit
 fi
-if [[ -d $HOME/AnimeGamePatch ]]; then
-    rm -rf $HOME/AnimeGamePatch
-fi
-git clone https://github.com/ElaXan/AnimeGamePatch.git
-cd AnimeGamePatch
+mkdir $folderInstall
+cd $folderInstall
+wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex.sh
 mv zex.sh $ZPATH
 chmod +x $ZPATH
 command cd
-rm -rf AnimeGamePatch
+rm -rf $folderInstall
 if ! command -v zex &> /dev/null; then
     clear
     echo "Install Failed!"
