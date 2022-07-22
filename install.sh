@@ -4,6 +4,7 @@ command cd
 folderInstall="zexIns"
 ZPATH=/data/data/com.termux/files/usr/bin/zex
 pkg install wget -y
+pkg update
 if ! command -v wget &> /dev/null; then
     echo "failed!"
     exit
