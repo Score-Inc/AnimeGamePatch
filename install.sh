@@ -24,5 +24,5 @@ else
     clear
     echo "Install Success!"
     sleep 1s
-    zex
+    echo "Please type command zex"
 fi
