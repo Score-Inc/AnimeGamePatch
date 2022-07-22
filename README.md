@@ -35,7 +35,7 @@ This need proxy settings on your phone. ~~No need install cert on your phone but
 3. Enter command : <br />
 
 ```bash
-curl -Ls https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/install.sh | bash
+pkg update && curl -Ls https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/install.sh | bash
 ```
 <br />
 4. Enter command : <br />
