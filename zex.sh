@@ -988,7 +988,7 @@ UIMenu() {
 case $userInput1 in
     "run" | "3" ) zexsh;; # if enter command zex run
     "2" | "dom" ) zdomsh;;
-    "1" | "install" ) install1;;
+    "1" | "install" | "ins" ) install1;;
     # if enter command not same like above will said error input with code * )
     * ) clear; UIMenu;;
 esac
