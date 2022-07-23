@@ -3,6 +3,11 @@
 For who have Android 8 or crash issue can try use this Patch.<br />
 This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)<br />
 <br />Feel free dm me on [Telegram](https://t.me/ElashXander) If you want need help how to use this or have issue install
+- [x] No Root
+- [ ] Root Method
+- [x] Install Mitmproxy
+- [ ] Manual Install 
+- [x] Autoscript
 
 #### This just for install mitmproxy
 Maybe for now just for install mitmproxy and change a server as you want<br />
