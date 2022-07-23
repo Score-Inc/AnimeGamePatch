@@ -122,6 +122,7 @@ First open settings and search "CA Certificate" then follow this picture step by
 
 # FAQ
 <details markdown='1'><summary>Faq List</summary>
+
 #### How to play again? Does i need to follow [this](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux) step again?
 No. just enter command ```zex run``` then play Anime Game
 
