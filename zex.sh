@@ -4,10 +4,6 @@
 # THIS CODE IS FREE
 # CODE STILL DEVELOPMENT FOR FIX SOME CODE AND ADD CODE.
 
-# Update
-# Now make to like UI or choose without zex ins
-# No need exit termux when have pipx already installed
-
 # THANKS TO @CharonCB21 (Telagram) for Helping me about this
 
 userInput1=$1
