@@ -61,7 +61,7 @@ press Enter on your Keyboard <br />
 </details>
 
 # Shortcut Commands
-Comamnds for ```zex```
+Commands for ```zex```
 #### zex 1
 install program and mitmproxy
 #### zex 2
