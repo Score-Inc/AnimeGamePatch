@@ -1,5 +1,7 @@
 
 # AnimeGamePatch
+[EN](https://github.com/ElaXan/AnimeGamePatch/blob/main/README.md) | ID
+
 Untuk yang punya Android 8 atau masalah crash bisa coba patch ini.
 
 Patch ini pake [apk-mitm](https://github.com/shroudedcode/apk-mitm)
