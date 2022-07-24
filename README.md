@@ -7,7 +7,7 @@ This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)<br />
 <br />Feel free dm me on [Telegram](https://t.me/ElashXander) If you want need help how to use this or have issue install
 - [x] No Root
 - [ ] Root Method
-- [x] Install Mitmproxy
+- [ ] Install Mitmproxy with pipx
 - [ ] Manual Install 
 - [x] Autoscript
 
