@@ -18,7 +18,7 @@ updateScript1() {
     if ! command -v wget &> /dev/null; then
        pkg install wget
     fi
-    wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex-test.sh &> /dev/null
+    wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/testscript/zex-test.sh &> /dev/null
     if [[ $? != 0 ]]; then
        echo "Can't do update Script. Make sure you internet is ON or stable"
        rm $updateDir
