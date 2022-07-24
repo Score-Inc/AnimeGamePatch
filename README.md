@@ -18,7 +18,7 @@ This good for beginner/who don't know about Termux
 #### Download File
 Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) [Recommend]
 
-Download Anime Game Patch 2.8 from [Release](https://github.com/ElaXan/AnimeGamePatch/releases) <br />
+Download Anime Game Patch 2.8 from [Release](https://github.com/ElaXan/AnimeGamePatch/releases/tag/2.8) <br />
 
 
 # No Termux
