@@ -1,0 +1,46 @@
+binary=/data/data/com.termux/files/usr/bin/zex
+versionBashIn1="2.4"
+updateNotif="1. Now no need to install mitmproxy again using pipx\n2. Add some text and fix it too (maybe?)\n3. Now download proxy.py from grasscutter!\n4. Add download proxy.py in change server!\n5. Fix code\n\nIf you found bug, tell me I'll fix it if can"
+updateNote="There is new version to"
+link=null
+printLatest="This is Latest Version (Ver : $versionBashIn1)"
+whatTheFuckEditVersion="Something wrong with version.\nThis version different from the server\n\nServer Latest Version : $versionBashIn1\nVersion Script : $versionBash1\n\nversion too latest from server"
+updateScript1() {
+    command cd
+    updateDir=$HOME/updatezex
+    scriptUpdate=$updateDir/zinstall
+    if [[ -f $binary ]]; then
+       rm $binary
+    fi
+    mkdir $updateDir
+    cd $updateDir
+    echo "Update Script!"
+    if ! command -v wget &> /dev/null; then
+       pkg install wget
+    fi
+    wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex-test.sh &> /dev/null
+    if [[ $? != 0 ]]; then
+       echo "Can't do update Script. Make sure you internet is ON or stable"
+       rm $updateDir
+       command cd
+       exit
+    else
+       mv zex.sh $binary
+       command cd
+       rm -rf $updateDir
+       command clear
+       echo "Update success!"
+       sleep 1s
+       echo "Settings permission!"
+       chmod +x $binary
+       sleep 1s
+       echo "Done!"
+       sleep 1s
+       command clear
+       echo "Please enter command zex again!"
+       cd
+       rm proxy.py
+       rm proxy_config.py
+       exit
+    fi
+}
