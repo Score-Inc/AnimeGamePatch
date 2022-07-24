@@ -62,7 +62,7 @@ extractMitm() {
         sleep 0.5s
         cd $PREFIX/bin
         rm zex
-        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex.sh -q --show-progress
+        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex-test.sh -q --show-progress
         if [[ $? != 0 ]]; then
             clear
             whoMadeThis
@@ -72,7 +72,7 @@ extractMitm() {
             clear
             UIMenu
         fi
-        mv zex.sh zex
+        mv zex-test.sh zex
         clear
         whoMadeThis
         echo "${greenColorBold}Set permission!${whiteColor}"
