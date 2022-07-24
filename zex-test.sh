@@ -44,7 +44,7 @@ extractMitm() {
     clear
     whoMadeThis
     echo "${greenColorBold}Download mitmproxy file!${whiteColor}"
-    wget https://github.com/ElaXan/AnimeGamePatch/releases/download/mitm/mitmproxy.tar.gz
+    wget https://github.com/ElaXan/AnimeGamePatch/releases/download/mitm/mitmproxy.tar.gz -q --show-progress
     if [[ $? != 0 ]]; then
         clear
         whoMadeThis
@@ -62,7 +62,7 @@ extractMitm() {
         sleep 0.5s
         cd $PREFIX/bin
         rm zex
-        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex.sh
+        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex.sh -q --show-progress
         if [[ $? != 0 ]]; then
             clear
             whoMadeThis
@@ -94,9 +94,13 @@ extractMitm() {
         fi
         clear
         whoMadeThis
-        echo -e "${greenColorBold}Done installed!\n\nPlease exit termux then open again...${whiteColor}"
+        echo -e "${greenColorBold}Done installed!\n\nPlease exit termux then open again and enter zex command...${whiteColor}"
         command cd
-        rm proxy.py
+        if [[ -f proxy.py ]]; then
+            rm proxy.py
+        elif [[ -f proxy_config.py ]]; then
+            rm proxy_config.py
+        fi
         exit
     fi
 }
