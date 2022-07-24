@@ -62,7 +62,7 @@ extractMitm() {
         sleep 0.5s
         cd $PREFIX/bin
         rm zex
-        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex-test.sh -q --show-progress
+        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex.sh -q --show-progress
         if [[ $? != 0 ]]; then
             clear
             whoMadeThis
@@ -72,7 +72,7 @@ extractMitm() {
             clear
             UIMenu
         fi
-        mv zex-test.sh zex
+        mv zex.sh zex
         clear
         whoMadeThis
         echo "${greenColorBold}Set permission!${whiteColor}"
@@ -348,7 +348,7 @@ mitmProxyRun() {
     if [[ -f ./.local/bin/mitmdump ]]; then
         command cd
         if [[ ! -f proxy.py ]] || [[ ! -f proxy_config.py ]]; then
-            echo "${redColorBold}proxy.py not found, please download it in change server!${whiteColor}"
+            echo "${redColorBold}proxy.py not found, please download it in main menu!${whiteColor}"
             exit
         fi
         echo "${greenColorBold}Make Sure you already set the proxy and port"
@@ -409,6 +409,13 @@ mitmProxyRun() {
 
 # ================== proxy.sh START ================== #
 downloadproxy() {
+    clear
+    whoMadeThis
+    if [[ -f proxy.py ]]; then
+        rm proxy.py
+    elif [[ -f proxy_config.py ]]; then
+        rm proxy_config.py
+    fi
     echo "${greenColorBold}Download proxy.py${whiteColor}"
     sleep 1s
     wget https://raw.githubusercontent.com/Grasscutters/Grasscutter/development/proxy.py &> /dev/null
@@ -424,8 +431,13 @@ downloadproxy() {
     sed -i "s/REMOTE_HOST = \"localhost\"/REMOTE_HOST = \"sg.game.yuuki.me\"/g" proxy_config.py
     echo "${greenColorBold}Done Edit${whiteColor}"
     sleep 1s
-    echo "${greenColorBold}proxy.py successfully download!${whiteColor}"
-    echo ""
+    if [[ -f proxy.py ]] || [[ -f proxy_config.py ]]; then
+        echo "${greenColorBold}proxy.py successfully download!${whiteColor}"
+        echo ""
+    else
+        echo "${redColorBold}proxy.py failed to download!${whiteColor}"
+        echo ""
+    fi
     read -p "Press enter for back to Menu!"
     proxyMenu
 }
@@ -503,7 +515,7 @@ fixVersionScripts() {
 
 
 # PLEASE DON'T EDIT THIS, THIS LOAD SOME CODE FROM SERVER
-source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate)
+source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate-test)
 # source $HOME/AnimeGamePatch/someupdate
 if [[ $versionBashIn1 = "" ]]; then
     echo -e "${redColorBold}Can't connect to server!\n\nScript will run without check Update!${whiteColor}"
