@@ -61,8 +61,8 @@ extractMitm() {
         echo "${greenColorBold}Download zex${whiteColor}"
         cd $PREFIX/bin
         rm zex
-        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex.sh
-        mv zex.sh zex
+        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex-test.sh
+        mv zex-test.sh zex
         clear
         whoMadeThis
         echo "${greenColorBold}Set permission!${whiteColor}"
