@@ -11,7 +11,7 @@ if ! command -v wget &> /dev/null; then
 fi
 mkdir $folderInstall
 cd $folderInstall
-wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex-test.sh
+wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/testscript/zex-test.sh
 mv zex-test.sh $ZPATH
 chmod +x $ZPATH
 command cd
