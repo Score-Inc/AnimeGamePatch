@@ -434,7 +434,7 @@ fixVersionScripts() {
 
 
 # PLEASE DON'T EDIT THIS, THIS LOAD SOME CODE FROM SERVER
-source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate)
+source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate-test)
 # source $HOME/AnimeGamePatch/someupdate
 if [[ $versionBashIn1 = "" ]]; then
     echo -e "${redColorBold}Can't connect to server!\n\nScript will run without check Update!${whiteColor}"
