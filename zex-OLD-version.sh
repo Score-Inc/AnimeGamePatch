@@ -4,6 +4,9 @@
 # THIS CODE IS FREE
 # CODE STILL DEVELOPMENT FOR FIX SOME CODE AND ADD CODE.
 
+# Well maybe i will use or take code from this file if i need it
+
+
 # THANKS TO @CharonCB21 (Telagram) for Helping me about this
 
 userInput1=$1
