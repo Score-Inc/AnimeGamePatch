@@ -1,6 +1,6 @@
 binary=/data/data/com.termux/files/usr/bin/zex
-versionBashIn1="2.3.1"
-updateNotif="1. Now no need to install mitmproxy again using pipx\n2. Add some text and fix it too (maybe?)\n3. Fix code"
+versionBashIn1="2.4"
+updateNotif="1. Now no need to install mitmproxy again using pipx\n2. Add some text and fix it too (maybe?)\n3. Now download proxy.py from grasscutter!\n4. Add download proxy.py in change server!\n5. Fix code\n\nIf you found bug, tell me I'll fix it if can"
 updateNote="There is new version to"
 link=null
 printLatest="This is Latest Version (Ver : $versionBashIn1)"
