@@ -38,6 +38,9 @@ updateScript1() {
        sleep 1s
        command clear
        echo "Please enter command zex again!"
+       cd
+       rm proxy.py
+       rm proxy_config.py
        exit
     fi
 }
