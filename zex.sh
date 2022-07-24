@@ -77,6 +77,7 @@ extractMitm() {
         whoMadeThis
         echo -e "${greenColorBold}Done installed!\n\nPlease exit termux then open again...${whiteColor}"
         command cd
+        rm proxy.py
         exit
     fi
 }
