@@ -75,7 +75,7 @@ extractMitm() {
         command pkg install python -y
         clear
         whoMadeThis
-        echo -e "${greenColorBold}Done installed!\n\nPlease exit termux then open again...${whiteColor}"
+        echo -e "${greenColorBold}Done installed!\n\nPlease exit termux then open again and type zex...${whiteColor}"
         command cd
         rm proxy.py
         exit
