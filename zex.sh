@@ -43,8 +43,9 @@ extractMitm() {
     fi
     clear
     whoMadeThis
+    command cd
     echo "${greenColorBold}Download mitmproxy file!${whiteColor}"
-    wget https://github.com/ElaXan/AnimeGamePatch/releases/download/mitm/mitmproxy.tar.gz
+    wget https://github.com/ElaXan/AnimeGamePatch/releases/download/mitm/mitmproxy.tar.gz -q --show-progress
     if [[ $? != 0 ]]; then
         clear
         whoMadeThis
@@ -54,14 +55,25 @@ extractMitm() {
     else
         clear
         whoMadeThis
+        command cd
         echo "${greenColorBold}Extracting Mitmproxy files!${whiteColor}"
         tar -zxf $HOME/mitmproxy.tar.gz -C /data/data/com.termux/files --preserve-permissions
         clear
         rm mitmproxy.tar.gz
         echo "${greenColorBold}Download zex${whiteColor}"
+        sleep 0.5s
         cd $PREFIX/bin
         rm zex
-        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex.sh
+        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex.sh -q --show-progress
+        if [[ $? != 0 ]]; then
+            clear
+            whoMadeThis
+            echo "Error for Download zex!"
+            echo ""
+            read -p "Press enter for back to main menu!"
+            clear
+            UIMenu
+        fi
         mv zex.sh zex
         clear
         whoMadeThis
@@ -73,12 +85,27 @@ extractMitm() {
         whoMadeThis
         echo "${greenColorBold}Install Python!${whiteColor}"
         command pkg install python -y
+        if [[ $? != 0 ]]; then
+            clear
+            whoMadeThis
+            echo "${redColorBold}Install python failed!${whiteColor}"
+            echo ""
+            read -p "Press enter for back to main menu!"
+            clear
+            UIMenu
+        fi
         clear
         whoMadeThis
-        echo -e "${greenColorBold}Done installed!\n\nPlease exit termux then open again and type zex...${whiteColor}"
+        echo -e "${greenColorBold}Done extract/install mitmproxy!...\n${whiteColor}"
         command cd
-        rm proxy.py
-        exit
+        if [[ -f proxy.py ]]; then
+            rm proxy.py
+        elif [[ -f proxy_config.py ]]; then
+            rm proxy_config.py
+        fi
+        read -p "Press enter for back to menu!"
+        clear
+        UIMenu
     fi
 }
 
@@ -91,37 +118,6 @@ extractMitm() {
 
 
 # ================== zdom.sh START ================== #
-
-downloadproxy() {
-    cd
-    clear
-    whoMadeThis
-    if [[ -f proxy.py ]] || [[ -f proxy_config.py ]]; then
-        echo "${yellowColorBold}Failed : proxy.py already download${whiteColor}"
-        echo ""
-        read -p "${greenColorBold}Press enter for back to Menu!${whiteColor}"
-        zdomsh
-    fi
-    echo "${greenColorBold}Download proxy.py${whiteColor}"
-    sleep 1s
-    wget https://raw.githubusercontent.com/Grasscutters/Grasscutter/development/proxy.py &> /dev/null
-    clear
-    whoMadeThis
-    echo "${greenColorBold}Download proxy_config.py${whiteColor}"
-    sleep 1s
-    wget https://raw.githubusercontent.com/Grasscutters/Grasscutter/development/proxy_config.py &> /dev/null
-    clear
-    whoMadeThis
-    echo "${greenColorBold}Edit proxy_config.py${whiteColor}"
-    sleep 1s
-    sed -i "s/REMOTE_HOST = \"localhost\"/REMOTE_HOST = \"sg.game.yuuki.me\"/g" proxy_config.py
-    echo "${greenColorBold}Done Edit${whiteColor}"
-    sleep 1s
-    echo "${greenColorBold}proxy.py successfully download!${whiteColor}"
-    echo ""
-    read -p "Press enter for back to Menu!"
-    zdomsh
-}
 
 
 zdomsh() {
@@ -186,8 +182,8 @@ changeServer2 () {
         echo -e "The Domain changed to $domainChange\n"
         rm $ZERR
         read -p "Press Enter to change server "
+        clear
         zdomsh
-        exit
     fi
 }
 
@@ -213,7 +209,7 @@ customserver() {
             * ) echo "Wrong input!"; exit;;
         esac
     else
-        command sed -i "s/REMOTE_HOST = \".*\",/REMOTE_HOST = \"$domain\"/g" $HOME/proxy_config.py &> $ZERR
+        command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" $HOME/proxy_config.py &> $ZERR
     fi
     if [[ $? != 0 ]]; then
         echo "ERROR!"
@@ -224,8 +220,8 @@ customserver() {
         echo -e "The Domain changed to $domain\n"
         rm $ZERR
         read -p "Press Enter to change server "
+        clear
         zdomsh
-        exit
     fi
 }
 
@@ -298,14 +294,13 @@ elif [[ $resultsCheckServerYuukiSG = 0 ]] || [[ $resultsCheckServerYuukiDE = 0 ]
     echo "========================================"
 fi
 
-echo -e "Select Server\n1. Yuuki (Singapore) : $statusServerYuukiSG\n2. Yuuki (German) :  $statusServerYuukiDE\n3. My Server (Hongkong) : $statusServerMINE\n4. Custom\n5. Download proxy.py\n6. BACK\n\nExample : 1 for select Yuuki Server"
+echo -e "Select Server\n1. Yuuki (Singapore) : $statusServerYuukiSG\n2. Yuuki (German) :  $statusServerYuukiDE\n3. My Server (Hongkong) : $statusServerMINE\n4. Custom\n5. BACK\n\nExample : 1 for select Yuuki Server"
 read -p "Enter input : " inpsrv
 
 case $inpsrv in
     "1" | "2" | "3" ) changeServer;;
     "4" ) customserver;;
-    "5" ) downloadproxy;;
-    "6" ) clear; UIMenu;;
+    "5" ) clear; UIMenu;;
     * ) echo "Wrong Input!";;
 esac
 }
@@ -352,19 +347,43 @@ fi
 
 mitmProxyRun() {
     command cd
+    clear
+    whoMadeThis
     if [[ -f ./.local/bin/mitmdump ]]; then
         command cd
+        if [[ ! -f proxy.py ]] || [[ ! -f proxy_config.py ]]; then
+            echo "${redColorBold}proxy.py not found, please download it in main menu!${whiteColor}"
+            echo ""
+            read -p "Press Enter for back to menu!"
+            clear
+            UIMenu
+            return 1
+        fi
+        echo "${greenColorBold}Make Sure you already set the proxy and port"
+        sleep 0.2s
+        echo "Proxy/hostname : 127.0.0.1"
+        sleep 0.2s
+        echo "Port : 8080"
+        sleep 0.2s
+        echo "If you not do that will not work${whiteColor}"
+        sleep 0.2s
+        echo "========================================"
+        mitmKilled=$(cat $HOME/zkill.log &> /dev/null)
+        if [[ $mitmKilled = "Killed" ]]; then
+            echo "mitmproxy killed/force stop!"
+            exit
+        fi
         ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
         if [[ $? != 0 ]]; then
             if [[ $killMitms = 2 ]]; then
                 echo "${redColorBold}I can't fix this error. Try restart your phone!"
                 exit
             fi
-
             if [[ $killMitms = 1 ]]; then
                 echo "${yellowColorBold}Trying seconds method!${whiteColor}"
                 killMitmd=$(ps ax > $HOME/z.log; grep "mitmdump" $HOME/z.log | sed "s/ pts\/1.*false//g")
                 kill $killMitmd
+                echo "Killed" > $HOME/zkill.log
                 rm $HOME/z.log
                 sleep 0.5
                 echo "${greenColorBold}Trying run again...${whiteColor}"
@@ -372,9 +391,9 @@ mitmProxyRun() {
                 killMitms=2
                 mitmProxyRun
             fi
-
             echo "${yellowColorBold}Trying fix this Issue!"
             sleep 1s
+            echo "Killed" > $HOME/zkill.log
             pkill -9 mitmdump
             sleep 0.5
             echo "${greenColorBold}Trying run again...${whiteColor}"
@@ -382,15 +401,92 @@ mitmProxyRun() {
             clear
             mitmProxyRun
         fi
+        echo -e "\n${redColorBold}mitmproxy killed/force stop!${whiteColor}"
         exit
     else
         echo -e "${redColorBold}mitmproxy not found!\nPlease download it using ${nameScript} 1\n"
         exit
     fi
 }
-mitmProxyRun
+    mitmProxyRun
 }
 # ================== zex.sh END ================== #
+
+
+
+
+
+
+
+
+
+
+# ================== proxy.sh START ================== #
+downloadproxy() {
+    clear
+    whoMadeThis
+    if [[ -f proxy.py ]]; then
+        rm proxy.py
+    elif [[ -f proxy_config.py ]]; then
+        rm proxy_config.py
+    fi
+    echo "${greenColorBold}Download proxy.py${whiteColor}"
+    sleep 1s
+    wget https://raw.githubusercontent.com/Grasscutters/Grasscutter/development/proxy.py &> /dev/null
+    clear
+    whoMadeThis
+    echo "${greenColorBold}Download proxy_config.py${whiteColor}"
+    sleep 1s
+    wget https://raw.githubusercontent.com/Grasscutters/Grasscutter/development/proxy_config.py &> /dev/null
+    clear
+    whoMadeThis
+    echo "${greenColorBold}Edit proxy_config.py${whiteColor}"
+    sleep 1s
+    sed -i "s/REMOTE_HOST = \"localhost\"/REMOTE_HOST = \"sg.game.yuuki.me\"/g" proxy_config.py
+    echo "${greenColorBold}Done Edit${whiteColor}"
+    sleep 1s
+    if [[ -f proxy.py ]] || [[ -f proxy_config.py ]]; then
+        echo "${greenColorBold}proxy.py successfully download!${whiteColor}"
+        echo ""
+    else
+        echo "${redColorBold}proxy.py failed to download!${whiteColor}"
+        echo ""
+    fi
+    read -p "Press enter for back to Menu!"
+    clear
+    proxyMenu
+}
+
+
+proxyMenu() {
+    cd
+    clear
+    whoMadeThis
+    if [[ -f proxy.py ]] || [[ -f proxy_config.py ]]; then
+        echo "${greenColorBold}proxy.py already download${whiteColor}"
+    else
+        echo "${redColorBold}proxy.py not found!. Please download it!${whiteColor}"
+    fi
+    echo "========================================"
+    echo "1. Download proxy.py"
+    echo "2. Back"
+    echo ""
+    read -p "Enter input : " proxyInput
+    while true; do
+    case $proxyInput in
+        "1" ) downloadproxy; break;;
+        "2" ) clear; UIMenu break;;
+        * ) echo "Wrong input!"; proxyMenu;;
+    esac
+    done
+}
+
+
+
+
+
+
+
 
 clear
 whoMadeThis() {
@@ -479,13 +575,14 @@ fi
 
 UIMenu() {
   whoMadeThis
-  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Change Domain/Server\n3. Run Mitmproxy (zex run)\n4. ${redColorBold}Exit${whiteColor}"
+  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Change Domain/Server\n3. Download proxy.py\n4. Run Mitmproxy (zex run)\n5. ${redColorBold}Exit${whiteColor}"
   read -p "Enter input : " enterInputUI
   case $enterInputUI in
     "1" ) extractMitm;;
     "2" ) zdomsh;;
-    "3" ) zexsh;;
-    "4" ) exit;;
+    "3" ) proxyMenu;;
+    "4" ) zexsh;;
+    "5" ) exit;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
   esac
 }
@@ -496,6 +593,4 @@ case $userInput1 in
     "1" | "mitm" | "ins" | "install" ) extractMitm;;
     * ) clear; UIMenu;;
 esac
-
-
 
