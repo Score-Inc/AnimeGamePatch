@@ -600,17 +600,6 @@ if [[ $versionBashIn1 = "" ]]; then
     noInternet=true
     sleep 1.5
     read -p "Press enter for continue!"
-elif [[ $versionBash1 > $versionBashIn1 ]]; then
-    clear
-    echo -e "$whatTheFuckEditVersion"
-    exit
-    # echo -e "\nWant to fix this?\n"
-    # read -p "Enter input (y/n) : " fixVersionScript
-    # case $fixVersionScript in
-    #    "y" ) fixVersionScripts;;
-    #    "n" ) exit;;
-    #    * ) echo "Wrong Input!"; exit;;
-    # esac
 elif [[ $versionBash1 = $versionBashIn1 ]]; then
     isThisLatestVersion=${greenColorBold}$printLatest${whiteColor}
     noInternet=false
