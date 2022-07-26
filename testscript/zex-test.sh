@@ -1,3 +1,4 @@
+
 #!/data/data/com.termux/files/usr/bin/bash
 
 # SCRIPT NOT ENCRYPTED FOR YOU CAN LEARN THE CODE BASH / SHELL SCRIPT.
@@ -647,7 +648,7 @@ changeLog() {
     whoMadeThis
     echo "${greenColorBold}1. Add function download Genshin APKs"
     echo "2. Add some code in Custom Server"
-    echo "3. Add if you phone is Rooted or not
+    echo "3. Add if you phone is Rooted or not"
     echo "4. Fix some Code!${whiteColor}"
     echo ""
     read -p "Press enter for back to Menu!"
