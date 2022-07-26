@@ -43,6 +43,7 @@ extractMitm() {
     fi
     clear
     whoMadeThis
+    command cd
     echo "${greenColorBold}Download mitmproxy file!${whiteColor}"
     wget https://github.com/ElaXan/AnimeGamePatch/releases/download/mitm/mitmproxy.tar.gz -q --show-progress
     if [[ $? != 0 ]]; then
@@ -54,6 +55,7 @@ extractMitm() {
     else
         clear
         whoMadeThis
+        command cd
         echo "${greenColorBold}Extracting Mitmproxy files!${whiteColor}"
         tar -zxf $HOME/mitmproxy.tar.gz -C /data/data/com.termux/files --preserve-permissions
         clear
@@ -62,7 +64,7 @@ extractMitm() {
         sleep 0.5s
         cd $PREFIX/bin
         rm zex
-        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/testscript/zex-test.sh -q --show-progress
+        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex.sh -q --show-progress
         if [[ $? != 0 ]]; then
             clear
             whoMadeThis
@@ -72,7 +74,7 @@ extractMitm() {
             clear
             UIMenu
         fi
-        mv zex-test.sh zex
+        mv zex.sh zex
         clear
         whoMadeThis
         echo "${greenColorBold}Set permission!${whiteColor}"
@@ -94,14 +96,16 @@ extractMitm() {
         fi
         clear
         whoMadeThis
-        echo -e "${greenColorBold}Done installed!\n\nPlease exit termux then open again and enter zex command...${whiteColor}"
+        echo -e "${greenColorBold}Done extract/install mitmproxy!...\n${whiteColor}"
         command cd
         if [[ -f proxy.py ]]; then
             rm proxy.py
         elif [[ -f proxy_config.py ]]; then
             rm proxy_config.py
         fi
-        exit
+        read -p "Press enter for back to menu!"
+        clear
+        UIMenu
     fi
 }
 
@@ -178,8 +182,8 @@ changeServer2 () {
         echo -e "The Domain changed to $domainChange\n"
         rm $ZERR
         read -p "Press Enter to change server "
+        clear
         zdomsh
-        exit
     fi
 }
 
@@ -216,8 +220,8 @@ customserver() {
         echo -e "The Domain changed to $domain\n"
         rm $ZERR
         read -p "Press Enter to change server "
+        clear
         zdomsh
-        exit
     fi
 }
 
@@ -349,28 +353,37 @@ mitmProxyRun() {
         command cd
         if [[ ! -f proxy.py ]] || [[ ! -f proxy_config.py ]]; then
             echo "${redColorBold}proxy.py not found, please download it in main menu!${whiteColor}"
-            exit
+            echo ""
+            read -p "Press Enter for back to menu!"
+            clear
+            UIMenu
+            return 1
         fi
         echo "${greenColorBold}Make Sure you already set the proxy and port"
-        sleep 0.5s
+        sleep 0.2s
         echo "Proxy/hostname : 127.0.0.1"
-        sleep 0.5s
+        sleep 0.2s
         echo "Port : 8080"
-        sleep 1s
+        sleep 0.2s
         echo "If you not do that will not work${whiteColor}"
-        sleep 1.5s
+        sleep 0.2s
         echo "========================================"
+        mitmKilled=$(cat $HOME/zkill.log &> /dev/null)
+        if [[ $mitmKilled = "Killed" ]]; then
+            echo "mitmproxy killed/force stop!"
+            exit
+        fi
         ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
         if [[ $? != 0 ]]; then
             if [[ $killMitms = 2 ]]; then
                 echo "${redColorBold}I can't fix this error. Try restart your phone!"
                 exit
             fi
-
             if [[ $killMitms = 1 ]]; then
                 echo "${yellowColorBold}Trying seconds method!${whiteColor}"
                 killMitmd=$(ps ax > $HOME/z.log; grep "mitmdump" $HOME/z.log | sed "s/ pts\/1.*false//g")
                 kill $killMitmd
+                echo "Killed" > $HOME/zkill.log
                 rm $HOME/z.log
                 sleep 0.5
                 echo "${greenColorBold}Trying run again...${whiteColor}"
@@ -378,9 +391,9 @@ mitmProxyRun() {
                 killMitms=2
                 mitmProxyRun
             fi
-
             echo "${yellowColorBold}Trying fix this Issue!"
             sleep 1s
+            echo "Killed" > $HOME/zkill.log
             pkill -9 mitmdump
             sleep 0.5
             echo "${greenColorBold}Trying run again...${whiteColor}"
@@ -388,6 +401,7 @@ mitmProxyRun() {
             clear
             mitmProxyRun
         fi
+        echo -e "\n${redColorBold}mitmproxy killed/force stop!${whiteColor}"
         exit
     else
         echo -e "${redColorBold}mitmproxy not found!\nPlease download it using ${nameScript} 1\n"
@@ -439,6 +453,7 @@ downloadproxy() {
         echo ""
     fi
     read -p "Press enter for back to Menu!"
+    clear
     proxyMenu
 }
 
@@ -475,10 +490,10 @@ proxyMenu() {
 
 clear
 whoMadeThis() {
-    echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n$isThisLatestVersion\n========================================"
+    echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n${yellowColorBold}Development Version (Maybe there is Bug)${whiteColor}\n========================================"
 }
 
-versionBash1="2.4"
+versionBash1="2.5"
 
 greenColorBack="$(printf '\033[4;42m')"
 redColorBack="$(printf '\033[4;41m')"
@@ -515,7 +530,7 @@ fixVersionScripts() {
 
 
 # PLEASE DON'T EDIT THIS, THIS LOAD SOME CODE FROM SERVER
-source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/testscript/someupdate-test)
+source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate)
 # source $HOME/AnimeGamePatch/someupdate
 if [[ $versionBashIn1 = "" ]]; then
     echo -e "${redColorBold}Can't connect to server!\n\nScript will run without check Update!${whiteColor}"
@@ -560,14 +575,15 @@ fi
 
 UIMenu() {
   whoMadeThis
-  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Change Domain/Server\n3. Download proxy.py\n4. Run Mitmproxy (zex run)\n5. ${redColorBold}Exit${whiteColor}"
+  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Change Domain/Server\n3. Download proxy.py\n4. Run Mitmproxy (zex run)\n5. Go back to Stable Version\n6. ${redColorBold}Exit${whiteColor}"
   read -p "Enter input : " enterInputUI
   case $enterInputUI in
     "1" ) extractMitm;;
     "2" ) zdomsh;;
     "3" ) proxyMenu;;
     "4" ) zexsh;;
-    "5" ) exit;;
+    "5" ) command zex;;
+    "6" ) exit;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
   esac
 }
