@@ -488,7 +488,7 @@ downloadYesGenshin() {
     if ! command -v wget &> /dev/null; then
         pkg install wget
     fi
-    wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.8/Genshin_Impact_2.8.apks -q --show-progress;;
+    wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.8/Genshin_Impact_2.8.apks -q --show-progress
     if [[ $? != 0 ]]; then
         echo "${redColorBold}Download Failed!${whiteColor}"
         echo ""
@@ -529,7 +529,7 @@ downloadGenshin() {
         read -p "Press enter to back Menu!"
         UIMenu
     fi
-    echo "${redColorBold}File size is 238 MB... Do you want continue to download?${whiteColor}
+    echo "${redColorBold}File size is 238 MB... Do you want continue to download?${whiteColor}"
     echo ""
     read -p "Enter input (y/n) : " dwngenshin
     case $dwngenshin in
