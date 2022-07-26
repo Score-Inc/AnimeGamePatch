@@ -427,7 +427,8 @@ downloadproxy() {
     whoMadeThis
     if [[ -f proxy.py ]]; then
         rm proxy.py
-    elif [[ -f proxy_config.py ]]; then
+    fi
+    if [[ -f proxy_config.py ]]; then
         rm proxy_config.py
     fi
     echo "${greenColorBold}Download proxy.py${whiteColor}"
@@ -480,6 +481,67 @@ proxyMenu() {
     esac
     done
 }
+
+
+downloadYesGenshin() {
+    command cd
+    if ! command -v wget &> /dev/null; then
+        pkg install wget
+    fi
+    wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.8/Genshin_Impact_2.8.apks -q --show-progress;;
+    if [[ $? != 0 ]]; then
+        echo "${redColorBold}Download Failed!${whiteColor}"
+        echo ""
+        read -p "Press enter go back to Menu!"
+        UIMenu
+    else
+        echo "${greenColorBold}Download Successfully!${whiteColor}"
+        sleep 0.5s
+        echo "${greenColorBold}Move apks Genshin to /sdcard${whiteColor}"
+        sleep 0.5s
+        if [[ -f "Genshin_Impact_2.8.apks" ]]; then
+            mv Genshin_Impact_2.8.apks /sdcard
+        else
+            echo "${redColorBold}File Genshin APKs not found!"
+            echo ""
+            read -p "Press Enter for back to Menu!"
+            UIMenu
+        fi
+    fi
+    if [[ -f "/sdcard/Genshin_Impact_2.8.apks" ]]; then
+        echo "${greenColorBold}Success move to /sdcard !${whiteColor}"
+        echo ""
+        read -p "Press Enter for back to Menu!"
+        UIMenu
+    else
+        echo "${redColorBold}Failed to move Genshin APKs to /sdcard${whiteColor}"
+        echo ""
+        read -p "Press Enter for back to Menu!"
+        UIMenu
+    fi
+}
+downloadGenshin() {
+    clear
+    whoMadeThis
+    if [[ -f "/sdcard/Genshin_Impact_2.8.apks" ]]; then
+        echo "${greenColorBold}Genshin Impact.apks already exist in /sdcard !${whiteColor}"
+        echo ""
+        read -p "Press enter to back Menu!"
+        UIMenu
+    fi
+    echo "${redColorBold}File size is 238 MB... Do you want continue to download?${whiteColor}
+    echo ""
+    read -p "Enter input (y/n) : " dwngenshin
+    case $dwngenshin in
+        "y" | "Y" ) downloadYesGenshin;;
+        "n" | "N" ) UIMenu;;
+        * ) echo "Wrong Input!"; sleep 1s; UIMenu;;
+    esac
+}
+
+
+
+
 
 
 
@@ -575,15 +637,16 @@ fi
 
 UIMenu() {
   whoMadeThis
-  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Change Domain/Server\n3. Download proxy.py\n4. Run Mitmproxy (zex run)\n5. Go back to Stable Version\n6. ${redColorBold}Exit${whiteColor}"
+  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Change Domain/Server\n3. Download proxy.py\n4. Download Genshin APKs\n5. Run Mitmproxy (zex run)\n6. Go back to Stable Version\n7. ${redColorBold}Exit${whiteColor}"
   read -p "Enter input : " enterInputUI
   case $enterInputUI in
     "1" ) extractMitm;;
     "2" ) zdomsh;;
     "3" ) proxyMenu;;
-    "4" ) zexsh;;
-    "5" ) command zex;;
-    "6" ) exit;;
+    "4" ) downloadGenshin;;
+    "5" ) zexsh;;
+    "6" ) command zex;;
+    "7" ) exit;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
   esac
 }
