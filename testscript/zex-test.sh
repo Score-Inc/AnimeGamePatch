@@ -611,21 +611,6 @@ elif [[ $versionBash1 > $versionBashIn1 ]]; then
     #    "n" ) exit;;
     #    * ) echo "Wrong Input!"; exit;;
     # esac
-elif [[ $versionBash1 < $versionBashIn1 ]]; then
-    newUpdateScript() {
-        clear
-        echo -e "$updateNote $versionBashIn1\n\nWhat is new/update? :\n$updateNotif\n"
-        sleep 1s
-        read -p "Want to update? (y/n)" wantUpdateScript
-        while true; do
-        case $wantUpdateScript in
-            "y" | "Y" ) updateScript1;break;;
-            "n" | "N" ) echo "okay!, script will continue without update!"; isThisLatestVersion="Current Version : ${redColorBold}$versionBash1${whiteColor}\nLatest Version : ${greenColorBold}$versionBashIn1${whiteColor}";sleep 1s;break;;
-            * ) echo "wrong input!";sleep 1.5s;newUpdateScript;;
-        esac
-        done
-    }
-    newUpdateScript
 elif [[ $versionBash1 = $versionBashIn1 ]]; then
     isThisLatestVersion=${greenColorBold}$printLatest${whiteColor}
     noInternet=false
