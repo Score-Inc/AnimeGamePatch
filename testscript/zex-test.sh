@@ -517,7 +517,7 @@ downloadYesGenshin() {
         fi
     fi
     if [[ -f "/sdcard/Genshin_Impact_2.8.apks" ]]; then
-        echo "${greenColorBold}Success move to /sdcard !\n\nInstall with SAI Installer or other apk that support install .apks${whiteColor}"
+        echo -e "${greenColorBold}Success move to /sdcard !\n\nInstall with SAI Installer or other apk that support install .apks${whiteColor}"
         echo ""
         read -p "Press Enter for back to Menu!"
         clear
