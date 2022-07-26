@@ -642,6 +642,18 @@ elif [[ $versionBash1 = $versionBashIn1 ]]; then
     noInternet=false
 fi
 
+changeLog() {
+    clear
+    whoMadeThis
+    echo "${greenColorBold}1. Add function download Genshin APKs"
+    echo "2. Add some code in Custom Server"
+    echo "3. Add if you phone is Rooted or not
+    echo "4. Fix some Code!${whiteColor}"
+    echo ""
+    read -p "Press enter for back to Menu!"
+    UIMenu
+}
+
 # SubCommand here
 # You can edit as you want (IF YOU KNOW SHELL CODE)
 # If you want make to UI 1,2,3,4 install without zex ins for example. You can do it (I SAID AGAIN IF YOU KNOW SHELL CODE)
@@ -649,7 +661,7 @@ fi
 UIMenu() {
   clear
   whoMadeThis
-  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Change Domain/Server\n3. Download proxy.py\n4. Download Genshin APKs\n5. Run Mitmproxy (zex run)\n6. Go back to Stable Version\n7. ${redColorBold}Exit${whiteColor}"
+  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Change Domain/Server\n3. Download proxy.py\n4. Download Genshin APKs\n5. Run Mitmproxy (zex run)\n6. Go back to Stable Version\n7. Changelog\n8. ${redColorBold}Exit${whiteColor}"
   read -p "Enter input : " enterInputUI
   case $enterInputUI in
     "1" ) extractMitm;;
@@ -658,7 +670,8 @@ UIMenu() {
     "4" ) downloadGenshin;;
     "5" ) zexsh;;
     "6" ) command zex;;
-    "7" ) exit;;
+    "7" ) changeLog;;
+    "8" ) exit;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
   esac
 }
