@@ -576,6 +576,8 @@ fi
 
 DevelopmentVersion() {
     if [[ $noInternet = true ]]; then
+        clear
+        whoMadeThis
         echo "${redColorBold}This need Internet to access Development Version!${whiteColor}"
         echo ""
         read -p "Press enter for back to Menu!"
@@ -585,6 +587,7 @@ DevelopmentVersion() {
 }
 
 UIMenu() {
+  clear
   whoMadeThis
   echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Change Domain/Server\n3. Download proxy.py\n4. Run Mitmproxy (zex run)\n5. Go to Development Version\n6. ${redColorBold}Exit${whiteColor}"
   read -p "Enter input : " enterInputUI
