@@ -574,6 +574,16 @@ fi
 # You can edit as you want (IF YOU KNOW SHELL CODE)
 # If you want make to UI 1,2,3,4 install without zex ins for example. You can do it (I SAID AGAIN IF YOU KNOW SHELL CODE)
 
+DevelopmentVersion() {
+    if [[ $noInternet = true ]]; then
+        echo "${redColorBold}This need Internet to access Development Version!${whiteColor}"
+        echo ""
+        read -p "Press enter for back to Menu!"
+        UIMenu
+    fi
+    bash <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/testscript/zex-test.sh)
+}
+
 UIMenu() {
   whoMadeThis
   echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Change Domain/Server\n3. Download proxy.py\n4. Run Mitmproxy (zex run)\n5. Go to Development Version\n6. ${redColorBold}Exit${whiteColor}"
@@ -583,7 +593,7 @@ UIMenu() {
     "2" ) zdomsh;;
     "3" ) proxyMenu;;
     "4" ) zexsh;;
-    "5" ) bash <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/testscript/zex-test.sh);;
+    "5" ) DevelopmentVersion;;
     "6" ) exit;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
   esac
