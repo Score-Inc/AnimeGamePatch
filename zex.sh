@@ -427,7 +427,8 @@ downloadproxy() {
     whoMadeThis
     if [[ -f proxy.py ]]; then
         rm proxy.py
-    elif [[ -f proxy_config.py ]]; then
+    fi
+    if [[ -f proxy_config.py ]]; then
         rm proxy_config.py
     fi
     echo "${greenColorBold}Download proxy.py${whiteColor}"
@@ -575,14 +576,15 @@ fi
 
 UIMenu() {
   whoMadeThis
-  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Change Domain/Server\n3. Download proxy.py\n4. Run Mitmproxy (zex run)\n5. ${redColorBold}Exit${whiteColor}"
+  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Change Domain/Server\n3. Download proxy.py\n4. Run Mitmproxy (zex run)\n5. Go to Development Version\n6. ${redColorBold}Exit${whiteColor}"
   read -p "Enter input : " enterInputUI
   case $enterInputUI in
     "1" ) extractMitm;;
     "2" ) zdomsh;;
     "3" ) proxyMenu;;
     "4" ) zexsh;;
-    "5" ) exit;;
+    "5" ) bash <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/testscript/zex-test.sh);;
+    "6" ) exit;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
   esac
 }
