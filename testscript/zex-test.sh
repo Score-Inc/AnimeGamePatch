@@ -466,11 +466,11 @@ proxyMenu() {
     if [[ -f proxy.py ]] || [[ -f proxy_config.py ]]; then
         echo "${greenColorBold}proxy.py already download${whiteColor}"
     else
-        echo "${redColorBold}proxy.py not found!. Please download it!${whiteColor}"
+        echo "${redColorBold}proxy.py not found!${whiteColor}"
     fi
     echo "========================================"
-    echo "1. Download proxy.py"
-    echo "2. Back"
+    echo "1. ${greenColorBold}Download proxy.py${whiteColor}"
+    echo "2. ${yellowColorBold}Back${whiteColor}"
     echo ""
     read -p "Enter input : " proxyInput
     while true; do
@@ -517,7 +517,7 @@ downloadYesGenshin() {
         fi
     fi
     if [[ -f "/sdcard/Genshin_Impact_2.8.apks" ]]; then
-        echo -e "${greenColorBold}Success move to /sdcard !\n\nInstall with SAI Installer or other apk that support install .apks${whiteColor}"
+        echo "${greenColorBold}Success move to /sdcard !\n\nInstall with SAI Installer or other apk that support install .apks${whiteColor}"
         echo ""
         read -p "Press Enter for back to Menu!"
         clear
@@ -558,13 +558,6 @@ downloadGenshin() {
 
 
 
-
-
-clear
-whoMadeThis() {
-    echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n${yellowColorBold}Development Version (Maybe there is Bug)${whiteColor}\n========================================\n${greenColorBold}This only for test Script\nbefore update to Stable Version...${whiteColor}\n========================================"
-}
-
 versionBash1="2.5"
 
 greenColorBack="$(printf '\033[4;42m')"
@@ -591,6 +584,20 @@ redColorUnder="$(printf '\033[4;31m')"
 
 # IDK WHY THIS ERROR, SO I WILL FIX THIS AS SOON AS POSSIBLE
 pathZex=$PREFIX/bin/zex
+
+rootAccess=$(su -c echo "ElaXan" &> /dev/null)
+if [[ $? -eq 0 ]]; then
+    printRooted="${greenColorBold}You phone is Rooted${whiteColor}"
+    isRoot=true
+else
+    printRooted="${yellowColorBold}You phone is No Root${whiteColor}"
+    isRoot=false
+fi
+
+clear
+whoMadeThis() {
+    echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n${yellowColorBold}Development Version (Maybe there is Bug)\n${printRooted}${whiteColor}\n========================================\n${greenColorBold}This only for test Script\nbefore update to Stable Version...${whiteColor}\n========================================"
+}
 
 fixVersionScripts() {
     openZex=$(cat $pathZex | grep "versionBash1=")
