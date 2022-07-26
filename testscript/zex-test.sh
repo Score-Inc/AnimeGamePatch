@@ -60,6 +60,8 @@ extractMitm() {
         tar -zxf $HOME/mitmproxy.tar.gz -C /data/data/com.termux/files --preserve-permissions
         clear
         rm mitmproxy.tar.gz
+        clear
+        whoMadeThis
         echo "${greenColorBold}Download zex${whiteColor}"
         sleep 0.5s
         cd $PREFIX/bin
@@ -162,6 +164,12 @@ changeServer() {
 }
 
 changeServerDOWN() {
+    command cd
+    if [[ ! -f "proxy.py" ]] || [[ ! -f "proxy_config.py" ]]; then
+        echo -e "${redColorBold}Error : proxy_config.py not found\nPlease Download it at Main Menu!${whiteColor}\n"
+        read -p "Press enter for back to Main Menu!"
+        UIMenu
+    fi
     echo -e "${redColorBold}Server is down${whiteColor}\n"
     read -p "${yellowColorBold}Are you sure want change to ${greenColorBold}$domainChange${whiteColor}? (y/n) : " serverDownSure
     case $serverDownSure in
@@ -172,6 +180,12 @@ changeServerDOWN() {
 }
 
 changeServer2 () {
+    command cd
+    if [[ ! -f "proxy.py" ]] || [[ ! -f "proxy_config.py" ]]; then
+        echo -e "${redColorBold}Error : proxy_config.py not found\n\nPlease Download it at Main Menu!${whiteColor}\n"
+        read -p "Press enter for back to Main Menu!"
+        UIMenu
+    fi
     command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domainChange\"/g" $HOME/proxy_config.py &> $ZERR
     if [[ $? != 0 ]]; then
         echo "ERROR!"
@@ -188,6 +202,12 @@ changeServer2 () {
 }
 
 customserver() {
+    command cd
+    if [[ ! -f "proxy.py" ]] || [[ ! -f "proxy_config.py" ]]; then
+        echo -e "${redColorBold}Error : proxy_config.py not found\n\nPlease Download it at Main Menu!${whiteColor}\n"
+        read -p "Press enter for back to Main Menu!"
+        UIMenu
+    fi
     command clear
     whoMadeThis
     echo -e "Custom Domain!\nExample : elashxander.my.id\nB : Back to change server\n"
@@ -287,7 +307,7 @@ fi
 downServer=$(expr $downServerYuukiSG + $downServerYuukiDE + $downServerMINE)
 
 if [[ $resultsCheckServerYuukiSG = 28 ]] || [[ $resultsCheckServerYuukiDE = 28 ]] || [[ $resultsCheckServerMINE = 28 ]]; then
-    echo -e "\nThere is $downServer server DOWN\n${yellowColorBold}${whiteColor}\n========================================"
+    echo -e "\n${redColorBold}There is $downServer server DOWN${whiteColor}\n========================================"
 elif [[ $resultsCheckServerYuukiSG = 6 ]] || [[ $resultsCheckServerYuukiDE = 6 ]] || [[ $resultsCheckServerMINE = 6 ]]; then
     echo "========================================"
 elif [[ $resultsCheckServerYuukiSG = 0 ]] || [[ $resultsCheckServerYuukiDE = 0 ]] || [[ $resultsCheckServerMINE = 0 ]]; then
@@ -587,10 +607,10 @@ pathZex=$PREFIX/bin/zex
 
 rootAccess=$(su -c echo "ElaXan" &> /dev/null)
 if [[ $? -eq 0 ]]; then
-    printRooted="${greenColorBold}You phone is Rooted${whiteColor}"
+    printRooted="${greenColorBold}You're phone is Rooted${whiteColor}"
     isRoot=true
 else
-    printRooted="${yellowColorBold}You phone is No Root${whiteColor}"
+    printRooted="${yellowColorBold}You're phone is No Root${whiteColor}"
     isRoot=false
 fi
 
