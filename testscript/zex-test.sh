@@ -667,12 +667,7 @@ fi
 changeLog() {
     clear
     whoMadeThis
-    echo "${greenColorBold}1. Add function download Genshin APKs"
-    echo "2. Add some code in Custom Server"
-    echo "3. Add if you phone is Rooted or not"
-    echo "4. Fix some Code!"
-    echo "5. Add Rename Package Genshin when run mitmproxy (only rooted phone)"
-    echo "6. Add code if you using Termux from F-Droid${whiteColor}"
+    echo "${greenColorBold}NOTHING${whiteColor}"
     echo ""
     read -p "Press enter for back to Menu!"
     UIMenu
