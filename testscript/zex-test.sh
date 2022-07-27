@@ -629,9 +629,16 @@ else
     isRooted=false
 fi
 
+isFDroid=$(export > $HOME/isFdroid.zex | cat $HOME/isFdroid.zex | grep "TERMUX_APK_RELEASE" $HOME/isFdroid.zex  | sed "s/declare -x TERMUX_APK_RELEASE=//g" | sed "s/\"//g")
+if [[ $isFDroid != "F_DROID" ]]; then
+    FDroidTermux="${redColorBold}I recommend you using Termux from F-Droid${whiteColor}\n========================================"
+else
+    FDroidTermux="========================================"
+fi
+
 clear
 whoMadeThis() {
-    echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n${yellowColorBold}Development Version (Maybe there is Bug)\n${printRooted}${whiteColor}\n========================================\n${greenColorBold}This only for test Script\nbefore update to Stable Version...${whiteColor}\n========================================"
+    echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n${yellowColorBold}Development Version (Maybe there is Bug)\n${printRooted}${whiteColor}\n========================================\n${greenColorBold}This only for test Script\nbefore update to Stable Version...${whiteColor}\n$FDroidTermux"
 }
 
 fixVersionScripts() {
@@ -664,7 +671,8 @@ changeLog() {
     echo "2. Add some code in Custom Server"
     echo "3. Add if you phone is Rooted or not"
     echo "4. Fix some Code!"
-    echo "5. Add Rename Package Genshin when run mitmproxy (only rooted phone)${whiteColor}"
+    echo "5. Add Rename Package Genshin when run mitmproxy (only rooted phone)"
+    echo "6. Add code if you using Termux from F-Droid${whiteColor}"
     echo ""
     read -p "Press enter for back to Menu!"
     UIMenu
