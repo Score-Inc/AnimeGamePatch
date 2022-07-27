@@ -387,7 +387,22 @@ mitmProxyRun() {
         sleep 0.2s
         echo "If you not do that will not work${whiteColor}"
         sleep 0.2s
-        echo "========================================"
+        if [[ $isRooted = true ]]; then
+            genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | grep "zex")
+            if [[ $genshinData != "com.miHoYo.GenshinImpactzex" ]]; then
+                echo -e "${yellowColorBold}Do you want rename package Genshin?\n"
+                read -p "Enter input (y/n) : " renamePackage
+                case $renamePackage in
+                    "y" | "Y" ) cd /sdcard/Android/data; su -c mv com.miHoYo.GenshinImpact com.miHoYo.GenshinImpactzex; echo -e "${greenColor}Done Rename!${whiteColor}\n========================================"; command cd;;
+                    "n" | "N" ) echo -e "${yellowColorBold}Okay! Rename by yourself!${whiteColor}\n========================================"; sleep 0.4s;;
+                    * ) echo -e "${redColorInput}Wrong Input!\nSkip Rename!${whiteColor}\n========================================"; sleep 0.5s;;
+                esac
+            else
+                echo "========================================"
+            fi
+        else
+            echo "========================================"
+        fi
         mitmKilled=$(cat $HOME/zkill.log &> /dev/null)
         if [[ $mitmKilled = "Killed" ]]; then
             echo "mitmproxy killed/force stop!"
@@ -608,10 +623,10 @@ pathZex=$PREFIX/bin/zex
 rootAccess=$(su -c echo "ElaXan" &> /dev/null)
 if [[ $? -eq 0 ]]; then
     printRooted="${greenColorBold}You're phone is Rooted${whiteColor}"
-    isRoot=true
+    isRooted=true
 else
     printRooted="${yellowColorBold}You're phone is No Root${whiteColor}"
-    isRoot=false
+    isRooted=false
 fi
 
 clear
@@ -648,7 +663,8 @@ changeLog() {
     echo "${greenColorBold}1. Add function download Genshin APKs"
     echo "2. Add some code in Custom Server"
     echo "3. Add if you phone is Rooted or not"
-    echo "4. Fix some Code!${whiteColor}"
+    echo "4. Fix some Code!"
+    echo "5. Add Rename Package Genshin when run mitmproxy (only rooted phone)${whiteColor}"
     echo ""
     read -p "Press enter for back to Menu!"
     UIMenu
