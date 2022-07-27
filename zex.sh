@@ -14,7 +14,6 @@ if [[ $forceStop = true ]]; then
     exit
 fi
 
-
 # ================== extract.sh START ================== #
 
 # Extract Mitmproxy
@@ -162,6 +161,13 @@ changeServer() {
 }
 
 changeServerDOWN() {
+    command clear
+    whoMadeThis
+    if [[ ! -f "proxy.py" ]] || [[ ! -f "proxy_config.py" ]]; then
+        echo -e "${redColorBold}Error : proxy_config.py not found\n\nPlease Download it at Main Menu!${whiteColor}\n"
+        read -p "Press enter for back to Main Menu!"
+        UIMenu
+    fi
     echo -e "${redColorBold}Server is down${whiteColor}\n"
     read -p "${yellowColorBold}Are you sure want change to ${greenColorBold}$domainChange${whiteColor}? (y/n) : " serverDownSure
     case $serverDownSure in
@@ -172,6 +178,13 @@ changeServerDOWN() {
 }
 
 changeServer2 () {
+    command clear
+    whoMadeThis
+    if [[ ! -f "proxy.py" ]] || [[ ! -f "proxy_config.py" ]]; then
+        echo -e "${redColorBold}Error : proxy_config.py not found\n\nPlease Download it at Main Menu!${whiteColor}\n"
+        read -p "Press enter for back to Main Menu!"
+        UIMenu
+    fi
     command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domainChange\"/g" $HOME/proxy_config.py &> $ZERR
     if [[ $? != 0 ]]; then
         echo "ERROR!"
@@ -190,6 +203,11 @@ changeServer2 () {
 customserver() {
     command clear
     whoMadeThis
+    if [[ ! -f "proxy.py" ]] || [[ ! -f "proxy_config.py" ]]; then
+        echo -e "${redColorBold}Error : proxy_config.py not found\n\nPlease Download it at Main Menu!${whiteColor}\n"
+        read -p "Press enter for back to Main Menu!"
+        UIMenu
+    fi
     echo -e "Custom Domain!\nExample : elashxander.my.id\nB : Back to change server\n"
     command read -p "Enter custom Domain : " domain
     if [[ $domain = "B" ]] || [[ $domain = "b" ]] || [[ $domain = "Back" ]] || [[ $domain = "BACK" ]]; then
@@ -367,7 +385,27 @@ mitmProxyRun() {
         sleep 0.2s
         echo "If you not do that will not work${whiteColor}"
         sleep 0.2s
-        echo "========================================"
+        if [[ $isRooted = true ]]; then
+            genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | grep "zex")
+            genshinDatas=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | sed "s/com.*zex//g" | grep "com")
+            if [[ $genshinDatas != "com.miHoYo.GenshinImpact" ]]; then
+                echo "========================================"
+            else
+                if [[ $genshinData != "com.miHoYo.GenshinImpactzex" ]]; then
+                    echo -e "${yellowColorBold}Do you want rename package Genshin?\n"
+                    read -p "Enter input (y/n) : " renamePackage
+                    case $renamePackage in
+                        "y" | "Y" ) cd /sdcard/Android/data; su -c mv com.miHoYo.GenshinImpact com.miHoYo.GenshinImpactzex; echo -e "${greenColor}Done Rename!${whiteColor}\n========================================"; command cd;;
+                        "n" | "N" ) echo -e "${yellowColorBold}Okay! Rename by yourself!${whiteColor}\n========================================"; sleep 0.4s;;
+                        * ) echo -e "${redColorInput}Wrong Input!\nSkip Rename!${whiteColor}\n========================================"; sleep 0.5s;;
+                    esac
+                else
+                    echo "========================================"
+                fi
+            fi
+        else
+            echo "========================================"
+        fi
         mitmKilled=$(cat $HOME/zkill.log &> /dev/null)
         if [[ $mitmKilled = "Killed" ]]; then
             echo "mitmproxy killed/force stop!"
@@ -490,11 +528,9 @@ proxyMenu() {
 
 
 clear
-whoMadeThis() {
-    echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n$isThisLatestVersion\n========================================"
-}
 
-versionBash1="2.6"
+
+versionBash1="2.7"
 
 greenColorBack="$(printf '\033[4;42m')"
 redColorBack="$(printf '\033[4;41m')"
@@ -521,11 +557,97 @@ redColorUnder="$(printf '\033[4;31m')"
 # IDK WHY THIS ERROR, SO I WILL FIX THIS AS SOON AS POSSIBLE
 pathZex=$PREFIX/bin/zex
 
+rootAccess=$(su -c echo "ElaXan" &> /dev/null)
+if [[ $? -eq 0 ]]; then
+    printRooted="${greenColorBold}You're phone is Rooted${whiteColor}"
+    isRooted=true
+else
+    printRooted="${yellowColorBold}You're phone is No Root${whiteColor}"
+    isRooted=false
+fi
+
+isFDroid=$(export > $HOME/isFdroid.zex | cat $HOME/isFdroid.zex | grep "TERMUX_APK_RELEASE" $HOME/isFdroid.zex  | sed "s/declare -x TERMUX_APK_RELEASE=//g" | sed "s/\"//g")
+if [[ $isFDroid != "F_DROID" ]]; then
+    FDroidTermux="${redColorBold}I recommend you using Termux from F-Droid${whiteColor}\n========================================"
+else
+    FDroidTermux="========================================"
+fi
+
+whoMadeThis() {
+    echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n$isThisLatestVersion\n$printRooted\n$FDroidTermux"
+}
+
 fixVersionScripts() {
     openZex=$(cat $pathZex | grep "versionBash1=")
     sed -i "s/$openZex/versionBash1=\"$versionBashIn1\"/g" $pathZex
     echo "Try to enter command zex again!"
     exit
+}
+
+downloadYesGenshin() {
+    command clear
+    whoMadeThis
+    command cd
+    if ! command -v wget &> /dev/null; then
+        pkg install wget
+    fi
+    echo "${yellowColorBold}Download Genshin apks. [PLEASE WAIT!]${whiteColor}"
+    wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.8/Genshin_Impact_2.8.apks -q --show-progress
+    if [[ $? != 0 ]]; then
+        clear
+        whoMadeThis
+        echo "${redColorBold}Download Failed!${whiteColor}"
+        echo ""
+        read -p "Press enter go back to Menu!"
+        UIMenu
+    else
+        clear
+        whoMadeThis
+        echo "${greenColorBold}Download Successfully!${whiteColor}"
+        sleep 0.5s
+        echo "${greenColorBold}Move apks Genshin to /sdcard${whiteColor}"
+        sleep 0.5s
+        if [[ -f "Genshin_Impact_2.8.apks" ]]; then
+            mv Genshin_Impact_2.8.apks /sdcard
+        else
+            echo "${redColorBold}File Genshin APKs not found!"
+            echo ""
+            read -p "Press Enter for back to Menu!"
+            clear
+            UIMenu
+        fi
+    fi
+    if [[ -f "/sdcard/Genshin_Impact_2.8.apks" ]]; then
+        echo -e "${greenColorBold}Success move to /sdcard !\n\nInstall with SAI Installer or other apk that support install .apks${whiteColor}"
+        read -p "Press Enter for back to Menu!"
+        clear
+        UIMenu
+    else
+        echo "${redColorBold}Failed to move Genshin APKs to /sdcard${whiteColor}"
+        echo ""
+        read -p "Press Enter for back to Menu!"
+        clear
+        UIMenu
+    fi
+}
+
+downloadGenshin() {
+    clear
+    whoMadeThis
+    if [[ -f "/sdcard/Genshin_Impact_2.8.apks" ]]; then
+        echo "${greenColorBold}Genshin Impact.apks already exist in /sdcard !${whiteColor}"
+        echo ""
+        read -p "Press enter to back Menu!"
+        UIMenu
+    fi
+    echo "${redColorBold}File size is 238 MB... Do you want continue to download?${whiteColor}"
+    echo ""
+    read -p "Enter input (y/n) : " dwngenshin
+    case $dwngenshin in
+        "y" | "Y" ) downloadYesGenshin;;
+        "n" | "N" ) UIMenu;;
+        * ) echo "Wrong Input!"; sleep 1s; UIMenu;;
+    esac
 }
 
 
@@ -576,8 +698,6 @@ fi
 
 DevelopmentVersion() {
     if [[ $noInternet = true ]]; then
-        clear
-        whoMadeThis
         echo "${redColorBold}This need Internet to access Development Version!${whiteColor}"
         echo ""
         read -p "Press enter for back to Menu!"
@@ -587,17 +707,18 @@ DevelopmentVersion() {
 }
 
 UIMenu() {
-  clear
+  command clear
   whoMadeThis
-  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Change Domain/Server\n3. Download proxy.py\n4. Run Mitmproxy (zex run)\n5. Go to Development Version\n6. ${redColorBold}Exit${whiteColor}"
+  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Change Domain/Server\n3. Download proxy.py\n4. Download Genshin APKs\n5. Run Mitmproxy (zex run)\n6. Go to Development Version\n7. ${redColorBold}Exit${whiteColor}"
   read -p "Enter input : " enterInputUI
   case $enterInputUI in
     "1" ) extractMitm;;
     "2" ) zdomsh;;
     "3" ) proxyMenu;;
-    "4" ) zexsh;;
-    "5" ) DevelopmentVersion;;
-    "6" ) exit;;
+    "4" ) downloadGenshin;;
+    "5" ) zexsh;;
+    "6" ) DevelopmentVersion;;
+    "7" ) exit 0;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
   esac
 }
