@@ -6,6 +6,8 @@
 
 # THANKS TO @CharonCB21 (Telagram) for Helping me about this
 
+
+
 userInput1=$1
 nameScript=$(basename $0)
 
@@ -203,13 +205,13 @@ changeServer2 () {
 
 customserver() {
     command cd
+    command clear
+    whoMadeThis
     if [[ ! -f "proxy.py" ]] || [[ ! -f "proxy_config.py" ]]; then
         echo -e "${redColorBold}Error : proxy_config.py not found\n\nPlease Download it at Main Menu!${whiteColor}\n"
         read -p "Press enter for back to Main Menu!"
         UIMenu
     fi
-    command clear
-    whoMadeThis
     echo -e "Custom Domain!\nExample : elashxander.my.id\nB : Back to change server\n"
     command read -p "Enter custom Domain : " domain
     if [[ $domain = "B" ]] || [[ $domain = "b" ]] || [[ $domain = "Back" ]] || [[ $domain = "BACK" ]]; then
@@ -389,16 +391,21 @@ mitmProxyRun() {
         sleep 0.2s
         if [[ $isRooted = true ]]; then
             genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | grep "zex")
-            if [[ $genshinData != "com.miHoYo.GenshinImpactzex" ]]; then
-                echo -e "${yellowColorBold}Do you want rename package Genshin?\n"
-                read -p "Enter input (y/n) : " renamePackage
-                case $renamePackage in
-                    "y" | "Y" ) cd /sdcard/Android/data; su -c mv com.miHoYo.GenshinImpact com.miHoYo.GenshinImpactzex; echo -e "${greenColor}Done Rename!${whiteColor}\n========================================"; command cd;;
-                    "n" | "N" ) echo -e "${yellowColorBold}Okay! Rename by yourself!${whiteColor}\n========================================"; sleep 0.4s;;
-                    * ) echo -e "${redColorInput}Wrong Input!\nSkip Rename!${whiteColor}\n========================================"; sleep 0.5s;;
-                esac
-            else
+            genshinDatas=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | sed "s/com.*zex//g" | grep "com")
+            if [[ $genshinDatas != "com.miHoYo.GenshinImpact" ]]; then
                 echo "========================================"
+            else
+                if [[ $genshinData != "com.miHoYo.GenshinImpactzex" ]]; then
+                    echo -e "${yellowColorBold}Do you want rename package Genshin?\n"
+                    read -p "Enter input (y/n) : " renamePackage
+                    case $renamePackage in
+                        "y" | "Y" ) cd /sdcard/Android/data; su -c mv com.miHoYo.GenshinImpact com.miHoYo.GenshinImpactzex; echo -e "${greenColor}Done Rename!${whiteColor}\n========================================"; command cd;;
+                        "n" | "N" ) echo -e "${yellowColorBold}Okay! Rename by yourself!${whiteColor}\n========================================"; sleep 0.4s;;
+                        * ) echo -e "${redColorInput}Wrong Input!\nSkip Rename!${whiteColor}\n========================================"; sleep 0.5s;;
+                    esac
+                else
+                    echo "========================================"
+                fi
             fi
         else
             echo "========================================"
@@ -526,7 +533,27 @@ downloadYesGenshin() {
         pkg install wget
     fi
     echo "${yellowColorBold}Download Genshin apks. [PLEASE WAIT!]${whiteColor}"
-    wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.8/Genshin_Impact_2.8.apks -q --show-progress
+    if [[ $dgenshininp = "1" ]]; then
+        if [[ -f "/sdcard/Genshin_Impact_2.8.apks" ]]; then
+            echo "${greenColorBold}Genshin_Impact_2.8.apks already exist in /sdcard !${whiteColor}"
+            echo ""
+            read -p "Press enter to back Menu!"
+            UIMenu
+        else
+            versionGenshin="2.8"
+            wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.8/Genshin_Impact_2.8.apks -q --show-progress
+        fi
+    elif [[ $dgenshininp = "2" ]]; then
+        if [[ -f "/sdcard/Genshin.Impact.Cert.Patch_Sign.apk" ]]; then
+            echo "${greenColorBold}Genshin.Impact.Cert.Patch_Sign.apk already exist in /sdcard !${whiteColor}"
+            echo ""
+            read -p "Press enter to back Menu!"
+            UIMenu
+        else
+            versionGenshin="2.7"
+            wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.7/Genshin.Impact.Cert.Patch_Sign.apk -q --show-progress
+        fi
+    fi
     if [[ $? != 0 ]]; then
         clear
         whoMadeThis
@@ -553,6 +580,14 @@ downloadYesGenshin() {
     fi
     if [[ -f "/sdcard/Genshin_Impact_2.8.apks" ]]; then
         echo "${greenColorBold}Success move to /sdcard !\n\nInstall with SAI Installer or other apk that support install .apks${whiteColor}"
+        if [[ $isRooted = true ]]; then
+            if [[ $versionGenshin = "2.8" ]]; then
+                echo "Can't do Install automatically with \"pm install\" because file name is .apks so install manually"
+            elif [[ $versionGenshin = "2.7" ]]; then
+                cd /sdcard
+                pm install Genshin.Impact.Cert.Patch_Sign.apk
+            fi
+        fi
         echo ""
         read -p "Press Enter for back to Menu!"
         clear
@@ -565,17 +600,16 @@ downloadYesGenshin() {
         UIMenu
     fi
 }
+
+
 downloadGenshin() {
     clear
     whoMadeThis
-    if [[ -f "/sdcard/Genshin_Impact_2.8.apks" ]]; then
-        echo "${greenColorBold}Genshin Impact.apks already exist in /sdcard !${whiteColor}"
-        echo ""
-        read -p "Press enter to back Menu!"
-        UIMenu
+    if [[ $dgenshininp = "1" ]]; then
+        echo "${redColorBold}File size is 238 MB... Do you want continue to download?${whiteColor}"
+    elif [[ $dgenshininp = "2" ]]; then
+        echo "${redColorBold}File size is 321 MB... Do you want continue to download?${whiteColor}"
     fi
-    echo "${redColorBold}File size is 238 MB... Do you want continue to download?${whiteColor}"
-    echo ""
     read -p "Enter input (y/n) : " dwngenshin
     case $dwngenshin in
         "y" | "Y" ) downloadYesGenshin;;
@@ -584,13 +618,21 @@ downloadGenshin() {
     esac
 }
 
-
-
-
-
-
-
-
+GenshinAPKs() {
+    clear
+    command cd
+    whoMadeThis
+    echo "1. ${greenColorBold}Genshin Impact Version 2.8${whiteColor}"
+    echo "2. ${yellowColorBold}Genshin Impact Version 2.7${whiteColor}"
+    echo "3. Back"
+    echo ""
+    read -p "Enter input : " dgenshininp
+    case $dgenshininp in
+        "1" | "2" ) downloadGenshin;;
+        "3" ) UIMenu;;
+        * ) echo "Wrong Input!"; sleep 1s; GenshinAPKs;;
+    esac
+}
 
 
 versionBash1="2.5"
@@ -620,7 +662,7 @@ redColorUnder="$(printf '\033[4;31m')"
 # IDK WHY THIS ERROR, SO I WILL FIX THIS AS SOON AS POSSIBLE
 pathZex=$PREFIX/bin/zex
 
-rootAccess=$(su -c echo "ElaXan" &> /dev/null)
+rootAccess=$(su -c echo &> /dev/null)
 if [[ $? -eq 0 ]]; then
     printRooted="${greenColorBold}You're phone is Rooted${whiteColor}"
     isRooted=true
@@ -635,6 +677,8 @@ if [[ $isFDroid != "F_DROID" ]]; then
 else
     FDroidTermux="========================================"
 fi
+
+rm $HOME/isFDroid.zex
 
 clear
 whoMadeThis() {
@@ -667,7 +711,8 @@ fi
 changeLog() {
     clear
     whoMadeThis
-    echo "${greenColorBold}NOTHING${whiteColor}"
+    echo "${greenColorBold}1. Add NOTE for Root phone in Download Genshin APKs"
+    echo "2. Add Version download Genshin for 2.7${whiteColor}"
     echo ""
     read -p "Press enter for back to Menu!"
     UIMenu
@@ -676,6 +721,17 @@ changeLog() {
 # SubCommand here
 # You can edit as you want (IF YOU KNOW SHELL CODE)
 # If you want make to UI 1,2,3,4 install without zex ins for example. You can do it (I SAID AGAIN IF YOU KNOW SHELL CODE)
+
+backStable() {
+    if ! command -v zex; then
+        echo "${redColorBold}You can't go back because \"zex\" not found!${whiteColor}"
+        echo ""
+        read -p "Press enter for back to Menu!"
+        UIMenu
+    else
+        command zex
+    fi
+}
 
 UIMenu() {
   clear
@@ -686,11 +742,11 @@ UIMenu() {
     "1" ) extractMitm;;
     "2" ) zdomsh;;
     "3" ) proxyMenu;;
-    "4" ) downloadGenshin;;
+    "4" ) GenshinAPKs;;
     "5" ) zexsh;;
-    "6" ) command zex;;
+    "6" ) backStable;;
     "7" ) changeLog;;
-    "8" ) exit;;
+    "8" ) exit 0;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
   esac
 }
