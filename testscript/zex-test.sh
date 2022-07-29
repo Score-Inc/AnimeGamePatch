@@ -367,6 +367,26 @@ if [[ $noInternet = true ]]; then
     exit
 fi
 
+changeProxy() {
+    clear
+    whoMadeThis
+    if [[ $isRooted = true ]]; then
+        echo -e "${redColorBold}mitmproxy killed/force stopped!\n\n${greenColorBold}Reset Proxy..."
+        su -c settings put global http_proxy :0
+        sleep 0.5s
+        echo "Done!${whiteColor}"
+        echo ""
+        read -p "Press enter for back to Menu!"
+        UIMenu
+        return
+    else
+        echo -e "${redColorBold}mitmproxy killed/force stopped!${whiteColor}\n"
+        read -p "Press enter for back to Menu!"
+        UIMenu
+        return
+    fi
+}
+
 mitmProxyRun() {
     command cd
     clear
@@ -407,6 +427,18 @@ mitmProxyRun() {
                     echo "========================================"
                 fi
             fi
+            echo "${greenColorBold}Change Proxy..."
+            sleep 0.3s
+            su -c settings put global http_proxy 127.0.0.1:8080
+            echo "Done${whiteColor}"
+            sleep 0.5s
+            clear
+            whoMadeThis
+            echo "${greenColorBold}Make Sure you already set the proxy and port"
+            echo "Proxy/hostname : 127.0.0.1"
+            echo "Port : 8080"
+            echo "If you not do that will not work${whiteColor}"
+            echo "========================================"
         else
             echo "========================================"
         fi
@@ -443,8 +475,7 @@ mitmProxyRun() {
             clear
             mitmProxyRun
         fi
-        echo -e "\n${redColorBold}mitmproxy killed/force stop!${whiteColor}"
-        exit
+        changeProxy
     else
         echo -e "${redColorBold}mitmproxy not found!\nPlease download it using ${nameScript} 1\n"
         exit
@@ -712,10 +743,13 @@ changeLog() {
     clear
     whoMadeThis
     echo "${greenColorBold}1. Add NOTE for Root phone in Download Genshin APKs"
-    echo "2. Add Version download Genshin for 2.7${whiteColor}"
+    echo "2. Add Version download Genshin for 2.7"
+    echo "3. Add function what difference root and no root"
+    echo "4. Add Get Certificate (Test)${whiteColor}"
     echo ""
     read -p "Press enter for back to Menu!"
     UIMenu
+    return
 }
 
 # SubCommand here
@@ -733,20 +767,84 @@ backStable() {
     fi
 }
 
+getCert() {
+    clear
+    command cd
+    whoMadeThis
+    if [[ ! -f ".local/bin/mitmproxy" ]]; then
+        echo "${redColorBold}Please install mitmproxy first at Main Menu!${whiteColor}"
+        echo ""
+        read -p "Press enter for back to Menu!"
+        UIMenu
+        return
+    fi
+    echo "${greenColorBold}Get Certificate...${whiteColor}"
+    timeout --foreground 3s ./.local/bin/mitmproxy
+    if [[ ! -d ".mitmproxy" ]]; then
+        echo "${redColorBold}Failed to get certificate!${whiteColor}"
+        echo ""
+        read -p "Press enter for back to Menu!"
+        UIMenu
+        return
+    fi
+    cd $HOME/.mitmproxy
+    if [[ -f "mitmproxy-ca-cert.cer" ]]; then
+        echo "Move certificate to /sdcard !"
+        sleep 0.5s
+        mv mitmproxy-ca-cert.cer /sdcard
+        if [[ -f "/sdcard/mitmproxy-ca-cert.cer" ]]; then
+            rm -rf $HOME/.mitmproxy
+            echo "${greenColorBold}Certificate success moved to /sdcard and name \"mitmproxy-ca-cert.cer\"${whiteColor}"
+            sleep 0.5
+            echo ""
+            read -p "Press enter for back to Menu!"
+            UIMenu
+            return
+        else
+            echo "${redColorBold}Failed move mitmproxy-ca-cert.cer to /sdcard ${whiteColor}"
+            echo ""
+            read -p "Press enter for back to Menu!"
+            UIMenu
+            return
+        fi
+    else
+        echo "${redColorBold}Failed to get certificate!${whiteColor}"
+        echo ""
+        read -p "Press enter for back to Menu!"
+        UIMenu
+        return
+    fi
+}
+
+whatDifferentRoot() {
+    clear
+    whoMadeThis
+    echo "${greenColorBold}Root can do :"
+    echo "1. Change automatically proxy so no need to set it manual!"
+    echo "2. Rename package Genshin automatically when using \"zex run\""
+    echo "And will be add in future, because I'm still looking for and learn it. not just copy paste"
+    echo ""
+    read -p "${whiteColor}Press enter for back to Menu!"
+    UIMenu
+    return
+}
+
 UIMenu() {
   clear
   whoMadeThis
-  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Change Domain/Server\n3. Download proxy.py\n4. Download Genshin APKs\n5. Run Mitmproxy (zex run)\n6. Go back to Stable Version\n7. Changelog\n8. ${redColorBold}Exit${whiteColor}"
+  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Get Certificate\n3. Change Domain/Server\n4. Download proxy.py\n5. Download Genshin APKs\n6. Run Mitmproxy (zex run)\n7. Go back to Stable Version\n8. What different Root and No Root\n9. Changelog\n0. ${redColorBold}Exit${whiteColor}"
   read -p "Enter input : " enterInputUI
   case $enterInputUI in
     "1" ) extractMitm;;
-    "2" ) zdomsh;;
-    "3" ) proxyMenu;;
-    "4" ) GenshinAPKs;;
-    "5" ) zexsh;;
-    "6" ) backStable;;
-    "7" ) changeLog;;
-    "8" ) exit 0;;
+    "2" ) getCert;;
+    "3" ) zdomsh;;
+    "4" ) proxyMenu;;
+    "5" ) GenshinAPKs;;
+    "6" ) zexsh;;
+    "7" ) backStable;;
+    "8" ) whatDifferentRoot;;
+    "9" ) changeLog;;
+    "0" ) exit 0;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
   esac
 }
