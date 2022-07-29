@@ -22,7 +22,7 @@ Download Anime Game Patch 2.8 from [Release](https://github.com/ElaXan/AnimeGame
 
 ### FOR ROOT USERS
 If you have no internet after run mitmproxy with script\
-Just enter this command and paste to termux
+Just copy this command and paste to termux
 ```bash
 su -c settings put global http_proxy :0
 ```
