@@ -1,12 +1,11 @@
 
 # AnimeGamePatch
-EN | [ID](https://github.com/ElaXan/AnimeGamePatch/blob/main/README-id.md)
 
 For who have Android 8 or crash issue can try use this Patch.<br />
 This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)<br />
 <br />Feel free dm me on [Telegram](https://t.me/ElashXander) If you want need help how to use this or have issue install
 - [x] No Root
-- [ ] Root Method
+- [x] Root
 - [ ] Install Mitmproxy with pipx
 - [ ] Manual Install 
 - [x] Autoscript
@@ -18,8 +17,15 @@ This good for beginner/who don't know about Termux
 #### Download File
 Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) [Recommend]
 
-Download Anime Game Patch 2.8 from [Release](https://github.com/ElaXan/AnimeGamePatch/releases/tag/2.8) <br />
+Download Anime Game Patch 2.8 from [Release](https://github.com/ElaXan/AnimeGamePatch/releases/tag/2.8)\
+[OR YOU CAN DOWNLOAD FROM SCRIPT]
 
+### FOR ROOT USERS
+If you have no internet after run mitmproxy with script\
+Just enter this command and paste to termux
+```bash
+su -c settings put global http_proxy :0
+```
 
 # No Termux
 No Termux or mitmproxy go to [YuukiProxy](https://github.com/ElaXan/YuukiProxy)
