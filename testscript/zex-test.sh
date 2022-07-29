@@ -401,14 +401,6 @@ mitmProxyRun() {
             UIMenu
             return 1
         fi
-        echo "${greenColorBold}Make Sure you already set the proxy and port"
-        sleep 0.2s
-        echo "Proxy/hostname : 127.0.0.1"
-        sleep 0.2s
-        echo "Port : 8080"
-        sleep 0.2s
-        echo "If you not do that will not work${whiteColor}"
-        sleep 0.2s
         if [[ $isRooted = true ]]; then
             genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | grep "zex")
             genshinDatas=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | sed "s/com.*zex//g" | grep "com")
@@ -432,14 +424,20 @@ mitmProxyRun() {
             su -c settings put global http_proxy 127.0.0.1:8080
             echo "Done${whiteColor}"
             sleep 0.5s
+            echo -e "${cyanColorBold}Important... For reset just do CTRL + C${whiteColor}"
+            sleep 2s
             clear
             whoMadeThis
-            echo "${greenColorBold}Make Sure you already set the proxy and port"
-            echo "Proxy/hostname : 127.0.0.1"
-            echo "Port : 8080"
-            echo "If you not do that will not work${whiteColor}"
             echo "========================================"
         else
+            echo "${greenColorBold}Make Sure you already set the proxy and port"
+            sleep 0.2s
+            echo "Proxy/hostname : 127.0.0.1"
+            sleep 0.2s
+            echo "Port : 8080"
+            sleep 0.2s
+            echo "If you not do that will not work${whiteColor}"
+            sleep 0.2s
             echo "========================================"
         fi
         mitmKilled=$(cat $HOME/zkill.log &> /dev/null)
@@ -447,6 +445,8 @@ mitmProxyRun() {
             echo "mitmproxy killed/force stop!"
             exit
         fi
+        
+        
         ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
         if [[ $? != 0 ]]; then
             if [[ $killMitms = 2 ]]; then
