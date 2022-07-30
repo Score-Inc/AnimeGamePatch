@@ -705,11 +705,15 @@ redColorUnder="$(printf '\033[4;31m')"
 # IDK WHY THIS ERROR, SO I WILL FIX THIS AS SOON AS POSSIBLE
 pathZex=$PREFIX/bin/zex
 
-rootAccess=$(su -c echo &> /dev/null)
-if [[ $? -eq 0 ]]; then
+su -c echo &> /dev/null
+RootDetect=$?
+if [[ $RootDetect = 0 ]]; then
     printRooted="${greenColorBold}You're phone is Rooted${whiteColor}"
     isRooted=true
-else
+elif [[ $RootDetect = 13 ]]; then
+    printRooted="${redColorBold}Root access denied${whiteColor}"
+    isRooted=false
+elif [[ $RootDetect = 1 ]]; then
     printRooted="${yellowColorBold}You're phone is No Root${whiteColor}"
     isRooted=false
 fi
@@ -758,7 +762,8 @@ changeLog() {
     echo "2. Add Version download Genshin for 2.7"
     echo "3. Add function what difference root and no root"
     echo "4. Add Get Certificate (Test)"
-    echo "5. Add code rename back data Genshin (Root)${whiteColor}"
+    echo "5. Add code rename back data Genshin (Root)"
+    echo "6. Fixed and recode for Get Certificate${whiteColor}"
     echo ""
     read -p "Press enter for back to Menu!"
     UIMenu
@@ -791,45 +796,21 @@ getCert() {
         UIMenu
         return
     fi
+    if [[ -d .mitmproxy ]]; then
+        rm -rf .mitmproxy
+    fi
+    echo "${greenColorBold}Setup...${whiteColor}"
+    timeout --foreground 10s ./.local/bin/mitmdump --ssl-insecure &> /dev/null &
+    sleep 2s
+    echo "${greenColorBold}Done...${whiteColor}"
+    sleep 1s
     echo "${greenColorBold}Get Certificate...${whiteColor}"
-    timeout --foreground 3s ./.local/bin/mitmproxy
-    if [[ ! -d ".mitmproxy" ]]; then
-        echo "${redColorBold}Failed to get certificate!${whiteColor}"
-        echo ""
-        read -p "Press enter for back to Menu!"
-        UIMenu
-        return
-    fi
-    cd $HOME/.mitmproxy
-    if [[ -f "mitmproxy-ca-cert.pem" ]]; then
-        echo "Move certificate to /sdcard !"
-        sleep 0.5s
-        if [[ -f "/sdcard/mitmproxy-ca-cert.pem" ]]; then
-            rm "/sdcard/mitmproxy-ca-cert.pem"
-        fi
-        mv mitmproxy-ca-cert.pem /sdcard
-        if [[ -f "/sdcard/mitmproxy-ca-cert.pem" ]]; then
-            rm -rf $HOME/.mitmproxy
-            echo "${greenColorBold}Certificate success moved to /sdcard and name \"mitmproxy-ca-cert.cer\"${whiteColor}"
-            sleep 0.5
-            echo ""
-            read -p "Press enter for back to Menu!"
-            UIMenu
-            return
-        else
-            echo "${redColorBold}Failed move mitmproxy-ca-cert.pem to /sdcard ${whiteColor}"
-            echo ""
-            read -p "Press enter for back to Menu!"
-            UIMenu
-            return
-        fi
-    else
-        echo "${redColorBold}Failed to get certificate!${whiteColor}"
-        echo ""
-        read -p "Press enter for back to Menu!"
-        UIMenu
-        return
-    fi
+    curl -s --proxy 127.0.0.1:8080 --cacert ~/.mitmproxy/mitmproxy-ca-cert.pem http://mitm.it/cert/cer > /sdcard/mitm.cer
+    sleep 0.5s
+    echo -e "${greenColorBold}Done get Certificate.\nSaved to /sdcard and file name \"mitm.cer\"\n${whiteColor}"
+    read -p "Press enter for back to Menu!"
+    UIMenu
+    return
 }
 
 whatDifferentRoot() {
