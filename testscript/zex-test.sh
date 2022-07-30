@@ -375,6 +375,13 @@ changeProxy() {
         su -c settings put global http_proxy :0
         sleep 0.5s
         echo "Done!${whiteColor}"
+        genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | grep "zex")
+        if [[ $genshinData = "com.miHoYo.GenshinImpactzex" ]]; then
+            echo "${greenColorBold}Rename back Data Genshin..."
+            sleep 0.5s
+            su -c mv /sdcard/Android/data/com.miHoYo.GenshinImpactzex /sdcard/Android/data/com.miHoYo.GenshinImpact
+            echo "Done!${whiteColor}"
+        fi
         echo ""
         read -p "Press enter for back to Menu!"
         UIMenu
@@ -428,7 +435,6 @@ mitmProxyRun() {
             sleep 2s
             clear
             whoMadeThis
-            echo "========================================"
         else
             echo "${greenColorBold}Make Sure you already set the proxy and port"
             sleep 0.2s
@@ -572,6 +578,9 @@ downloadYesGenshin() {
             UIMenu
         else
             versionGenshin="2.8"
+            if [[ -f "$HOME/Genshin_Impact_2.8.apks" ]]; then
+                rm "$HOME/Genshin_Impact_2.8.apks"
+            fi
             wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.8/Genshin_Impact_2.8.apks -q --show-progress
         fi
     elif [[ $dgenshininp = "2" ]]; then
@@ -582,6 +591,9 @@ downloadYesGenshin() {
             UIMenu
         else
             versionGenshin="2.7"
+            if [[ -f "$HOME/Genshin_Impact_2.8.apks" ]]; then
+                rm "$HOME/Genshin.Impact.Cert.Patch_Sign.apk"
+            fi
             wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.7/Genshin.Impact.Cert.Patch_Sign.apk -q --show-progress
         fi
     fi
@@ -745,7 +757,8 @@ changeLog() {
     echo "${greenColorBold}1. Add NOTE for Root phone in Download Genshin APKs"
     echo "2. Add Version download Genshin for 2.7"
     echo "3. Add function what difference root and no root"
-    echo "4. Add Get Certificate (Test)${whiteColor}"
+    echo "4. Add Get Certificate (Test)"
+    echo "5. Add code rename back data Genshin (Root)${whiteColor}"
     echo ""
     read -p "Press enter for back to Menu!"
     UIMenu
@@ -788,11 +801,14 @@ getCert() {
         return
     fi
     cd $HOME/.mitmproxy
-    if [[ -f "mitmproxy-ca-cert.cer" ]]; then
+    if [[ -f "mitmproxy-ca-cert.pem" ]]; then
         echo "Move certificate to /sdcard !"
         sleep 0.5s
+        if [[ -f "/sdcard/mitmproxy-ca-cert.pem" ]]; then
+            rm "/sdcard/mitmproxy-ca-cert.pem"
+        fi
         mv mitmproxy-ca-cert.cer /sdcard
-        if [[ -f "/sdcard/mitmproxy-ca-cert.cer" ]]; then
+        if [[ -f "/sdcard/mitmproxy-ca-cert.pem" ]]; then
             rm -rf $HOME/.mitmproxy
             echo "${greenColorBold}Certificate success moved to /sdcard and name \"mitmproxy-ca-cert.cer\"${whiteColor}"
             sleep 0.5
