@@ -85,18 +85,21 @@ extractMitm() {
         chmod +x zex
         sleep 1s
         echo "${greenColorBold}Done!${whiteColor}"
-        clear
-        whoMadeThis
-        echo "${greenColorBold}Install Python!${whiteColor}"
-        command pkg install python -y
-        if [[ $? != 0 ]]; then
+        if ! command -v python &> /dev/null; then
             clear
             whoMadeThis
-            echo "${redColorBold}Install python failed!${whiteColor}"
-            echo ""
-            read -p "Press enter for back to main menu!"
-            clear
-            UIMenu
+            echo "${greenColorBold}Install Python!${whiteColor}"
+            command pkg install python -y
+            if ! command -v python &> /dev/null; then
+                clear
+                whoMadeThis
+                echo "${redColorBold}Install python failed!${whiteColor}"
+                echo ""
+                read -p "Press enter for back to main menu!"
+                clear
+                UIMenu
+                return
+            fi
         fi
         clear
         whoMadeThis
@@ -104,7 +107,9 @@ extractMitm() {
         command cd
         if [[ -f proxy.py ]]; then
             rm proxy.py
-        elif [[ -f proxy_config.py ]]; then
+        fi
+
+        if [[ -f proxy_config.py ]]; then
             rm proxy_config.py
         fi
         read -p "Press enter for back to menu!"
@@ -613,6 +618,8 @@ downloadYesGenshin() {
         sleep 0.5s
         if [[ -f "Genshin_Impact_2.8.apks" ]]; then
             mv Genshin_Impact_2.8.apks /sdcard
+        elif [[ -f "Genshin.Impact.Cert.Patch_Sign.apk" ]]; then
+            mv Genshin.Impact.Cert.Patch_Sign.apk /sdcard
         else
             echo "${redColorBold}File Genshin APKs not found!"
             echo ""
@@ -758,12 +765,7 @@ fi
 changeLog() {
     clear
     whoMadeThis
-    echo "${greenColorBold}1. Add NOTE for Root phone in Download Genshin APKs"
-    echo "2. Add Version download Genshin for 2.7"
-    echo "3. Add function what difference root and no root"
-    echo "4. Add Get Certificate (Test)"
-    echo "5. Add code rename back data Genshin (Root)"
-    echo "6. Fixed and recode for Get Certificate${whiteColor}"
+    echo "${greenColorBold}NOTHING${whiteColor}"
     echo ""
     read -p "Press enter for back to Menu!"
     UIMenu
