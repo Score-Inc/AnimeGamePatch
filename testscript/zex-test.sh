@@ -591,7 +591,7 @@ downloadYesGenshin() {
             UIMenu
         else
             versionGenshin="2.7"
-            if [[ -f "$HOME/Genshin_Impact_2.8.apks" ]]; then
+            if [[ -f "$HOME/Genshin.Impact.Cert.Patch_Sign.apk" ]]; then
                 rm "$HOME/Genshin.Impact.Cert.Patch_Sign.apk"
             fi
             wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.7/Genshin.Impact.Cert.Patch_Sign.apk -q --show-progress
@@ -622,7 +622,7 @@ downloadYesGenshin() {
         fi
     fi
     if [[ -f "/sdcard/Genshin_Impact_2.8.apks" ]]; then
-        echo "${greenColorBold}Success move to /sdcard !\n\nInstall with SAI Installer or other apk that support install .apks${whiteColor}"
+        echo -e "${greenColorBold}Success move to /sdcard !\n\nInstall with SAI Installer or other apk that support install .apks${whiteColor}"
         if [[ $isRooted = true ]]; then
             if [[ $versionGenshin = "2.8" ]]; then
                 echo "Can't do Install automatically with \"pm install\" because file name is .apks so install manually"
@@ -807,7 +807,7 @@ getCert() {
         if [[ -f "/sdcard/mitmproxy-ca-cert.pem" ]]; then
             rm "/sdcard/mitmproxy-ca-cert.pem"
         fi
-        mv mitmproxy-ca-cert.cer /sdcard
+        mv mitmproxy-ca-cert.pem /sdcard
         if [[ -f "/sdcard/mitmproxy-ca-cert.pem" ]]; then
             rm -rf $HOME/.mitmproxy
             echo "${greenColorBold}Certificate success moved to /sdcard and name \"mitmproxy-ca-cert.cer\"${whiteColor}"
@@ -817,7 +817,7 @@ getCert() {
             UIMenu
             return
         else
-            echo "${redColorBold}Failed move mitmproxy-ca-cert.cer to /sdcard ${whiteColor}"
+            echo "${redColorBold}Failed move mitmproxy-ca-cert.pem to /sdcard ${whiteColor}"
             echo ""
             read -p "Press enter for back to Menu!"
             UIMenu
