@@ -16,7 +16,6 @@ if [[ $forceStop = true ]]; then
     exit
 fi
 
-
 # ================== extract.sh START ================== #
 
 # Extract Mitmproxy
@@ -81,26 +80,6 @@ extractMitm() {
                 return
             fi
         fi
-        clear
-        whoMadeThis
-        echo "${greenColorBold}Download zex${whiteColor}"
-        sleep 0.5s
-        cd $PREFIX/bin
-        rm zex
-        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex.sh -q --show-progress
-        if [[ $? != 0 ]]; then
-            clear
-            whoMadeThis
-            echo "${redColorBold}Error for Download zex!${whiteColor}"
-            exit
-        fi
-        mv zex.sh zex
-        clear
-        whoMadeThis
-        echo "${greenColorBold}Set permission!${whiteColor}"
-        chmod +x zex
-        sleep 1s
-        echo "${greenColorBold}Done!${whiteColor}"
         clear
         whoMadeThis
         echo -e "${greenColorBold}Done extract/install mitmproxy!...\n${whiteColor}"
@@ -743,11 +722,11 @@ fi
 isFDroid=$(export > $HOME/isFdroid.zex | cat $HOME/isFdroid.zex | grep "TERMUX_APK_RELEASE" $HOME/isFdroid.zex  | sed "s/declare -x TERMUX_APK_RELEASE=//g" | sed "s/\"//g")
 if [[ $isFDroid != "F_DROID" ]]; then
     FDroidTermux="${redColorBold}I recommend you using Termux from F-Droid${whiteColor}\n========================================"
+    rm $HOME/isFdroid.zex
 else
     FDroidTermux="========================================"
+    rm $HOME/isFdroid.zex
 fi
-
-rm $HOME/isFDroid.zex
 
 clear
 whoMadeThis() {
@@ -766,16 +745,6 @@ fixVersionScripts() {
 # PLEASE DON'T EDIT THIS, THIS LOAD SOME CODE FROM SERVER
 source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate)
 # source $HOME/AnimeGamePatch/someupdate
-if [[ $versionBashIn1 = "" ]]; then
-    echo -e "${redColorBold}Can't connect to server!\n\nScript will run without check Update!${whiteColor}"
-    isThisLatestVersion="${redColorBold}Can't connect to server!\n\nScript will run without check Update!${whiteColor}"
-    noInternet=true
-    sleep 1.5
-    read -p "Press enter for continue!"
-elif [[ $versionBash1 = $versionBashIn1 ]]; then
-    isThisLatestVersion=${greenColorBold}$printLatest${whiteColor}
-    noInternet=false
-fi
 
 changeLog() {
     clear
@@ -844,29 +813,43 @@ getCert() {
             whoMadeThis
         fi
     fi
+    if [[ $isRooted = true ]]; then
+        getNameCert=$(openssl x509 -inform PEM -subject_hash_old -in /sdcard/mitm.cer | head -n 1)
+        getNameCerts=$(cat $HOME/.termux/certName &)
+        pathCertRoot=/system/etc/security/cacerts/$getNameCerts.0
+        if [[ -f $pathCertRoot ]]; then
+            echo "${yellowColorBold}Certificate already installed as Root!${whiteColor}"
+            echo ""
+            read -p "Press enter for back to Menu!"
+            UIMenu
+            return
+        fi
+    fi
     echo "${greenColorBold}Setup...${whiteColor}"
     timeout --foreground 10s ./.local/bin/mitmdump --ssl-insecure &> /dev/null &
     sleep 2s
     echo "${greenColorBold}Done...${whiteColor}"
     sleep 1s
     echo "${greenColorBold}Get Certificate...${whiteColor}"
-    dates=$(date +%S)
-    if [[ $dates > 57 ]]; then
-        echo "${yellowColorBold}Wait 5s${redColorBold}"
-        sleep 5s
+    if [[ $isRooted = true ]]; then
+        dates=$(date +%S)
+        if [[ $dates > 57 ]]; then
+            echo "${yellowColorBold}Wait 5s${redColorBold}"
+            sleep 5s
+        fi
     fi
     curl -s --proxy 127.0.0.1:8080 --cacert ~/.mitmproxy/mitmproxy-ca-cert.pem http://mitm.it/cert/cer > /sdcard/mitm.cer
-    exportDate=$(date +"%H %M" | sed "s/ /:/g")
-    echo $exportDate &> $HOME/.termux/zexcert
-    sleep 0.5s
     if [[ $isRooted = true ]]; then
         if ! command -v openssl &> /dev/null; then
-            echo "${redColorBold}Skip Install Certificate...${whiteColor}"
+            echo -e "${redColorBold}Skip Install Certificate...\nopenssl not installed${whiteColor}"
             echo ""
             read -p "Press enter for back to Menu!"
             UIMenu
             return
         fi
+        exportDate=$(date +"%H %M" | sed "s/ /:/g")
+        echo -e "$exportDate\n[PLEASE DONT DELETE THIS]" &> $HOME/.termux/zexcert
+        sleep 0.5s
         echo "${greenColorBold}Install certificate...${whiteColor}"
         getNameCert=$(openssl x509 -inform PEM -subject_hash_old -in /sdcard/mitm.cer | head -n 1)
         echo -n "$getNameCert" > $HOME/.termux/certName
@@ -911,7 +894,14 @@ removeCertRoot() {
         UIMenu
         return
     fi
-    rmGetNameCert=$(cat $HOME/.termux/zexcert)
+    if [[ ! -f $HOME/.termux/zexcert ]]; then
+        echo "${redColorBold}Error : zexcert not found!${whiteColor}"
+        echo ""
+        read -p "Press enter for back to Menu!"
+        UIMenu
+        return
+    fi
+    rmGetNameCert=$(cat $HOME/.termux/zexcert | head -n 1)
     sleep 0.2s
     echo "${greenColorBold}Mount target to /${whiteColor}"
     su -c mount -o rw,remount /
