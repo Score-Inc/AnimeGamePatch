@@ -836,6 +836,11 @@ getCert() {
     if [[ -d .mitmproxy ]]; then
         rm -rf .mitmproxy
     fi
+    if [[ $isRooted = true ]]; then
+        if ! command -v openssl &> /dev/null; then
+            pkg install openssl-tool
+        fi
+    fi
     echo "${greenColorBold}Setup...${whiteColor}"
     timeout --foreground 10s ./.local/bin/mitmdump --ssl-insecure &> /dev/null &
     sleep 2s
@@ -852,6 +857,13 @@ getCert() {
     echo $exportDate &> $HOME/.termux/zexcert
     sleep 0.5s
     if [[ $isRooted = true ]]; then
+        if ! command -v openssl &> /dev/null; then
+            echo "${redColorBold}Skip Install Certificate...${whiteColor}"
+            echo ""
+            read -p "Press enter for back to Menu!"
+            UIMenu
+            return
+        fi
         echo "${greenColorBold}Install certificate...${whiteColor}"
         getNameCert=$(openssl x509 -inform PEM -subject_hash_old -in /sdcard/mitm.cer | head -n 1)
         echo -n "$getNameCert" > $HOME/.termux/certName
