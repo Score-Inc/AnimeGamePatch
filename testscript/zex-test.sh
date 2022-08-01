@@ -838,7 +838,10 @@ getCert() {
     fi
     if [[ $isRooted = true ]]; then
         if ! command -v openssl &> /dev/null; then
+            echo "${greenColorBold}Install openssl...${whiteColor}"
             pkg install openssl-tool
+            clear
+            whoMadeThis
         fi
     fi
     echo "${greenColorBold}Setup...${whiteColor}"
