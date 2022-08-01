@@ -805,88 +805,27 @@ getCert() {
     if [[ -d .mitmproxy ]]; then
         rm -rf .mitmproxy
     fi
-    if [[ $isRooted = true ]]; then
-        if ! command -v openssl &> /dev/null; then
-            echo "${greenColorBold}Install openssl...${whiteColor}"
-            pkg install openssl-tool
-            clear
-            whoMadeThis
-        fi
-    fi
-    if [[ $isRooted = true ]]; then
-        getNameCert=$(openssl x509 -inform PEM -subject_hash_old -in /sdcard/mitm.cer | head -n 1)
-        getNameCerts=$(cat $HOME/.termux/certName &)
-        pathCertRoot=/system/etc/security/cacerts/$getNameCerts.0
-        if [[ -f $pathCertRoot ]]; then
-            echo "${yellowColorBold}Certificate already installed as Root!${whiteColor}"
-            echo ""
-            read -p "Press enter for back to Menu!"
-            UIMenu
-            return
-        fi
-    fi
     echo "${greenColorBold}Setup...${whiteColor}"
     timeout --foreground 10s ./.local/bin/mitmdump --ssl-insecure &> /dev/null &
     sleep 2s
     echo "${greenColorBold}Done...${whiteColor}"
     sleep 1s
     echo "${greenColorBold}Get Certificate...${whiteColor}"
-    if [[ $isRooted = true ]]; then
-        dates=$(date +%S)
-        if [[ $dates > 57 ]]; then
-            echo "${yellowColorBold}Wait 5s${redColorBold}"
-            sleep 5s
-        fi
-    fi
     curl -s --proxy 127.0.0.1:8080 --cacert ~/.mitmproxy/mitmproxy-ca-cert.pem http://mitm.it/cert/cer > /sdcard/mitm.cer
-    if [[ $isRooted = true ]]; then
-        if ! command -v openssl &> /dev/null; then
-            echo -e "${redColorBold}Skip Install Certificate...\nopenssl not installed${whiteColor}"
-            echo ""
-            read -p "Press enter for back to Menu!"
-            UIMenu
-            return
-        fi
-        exportDate=$(date +"%H %M" | sed "s/ /:/g")
-        echo -e "$exportDate\n[PLEASE DONT DELETE THIS]" &> $HOME/.termux/zexcert
-        sleep 0.5s
-        echo "${greenColorBold}Install certificate...${whiteColor}"
-        getNameCert=$(openssl x509 -inform PEM -subject_hash_old -in /sdcard/mitm.cer | head -n 1)
-        echo -n "$getNameCert" > $HOME/.termux/certName
-        getNameCerts=$(cat $HOME/.termux/certName &)
-        pathCertRoot=/system/etc/security/cacerts/$getNameCerts.0
-        echo "${greenColorBold}Mount target to /${whiteColor}"
-        su -c mount -o rw,remount /
-        sleep 0.5s
-        echo "${greenColorBold}Success mount... Now copying certificate!${whiteColor}"
-        su -c cp /sdcard/mitm.cer $pathCertRoot
-        sleep 0.5s
-        echo "${greenColorBold}Set Permission...${whiteColor}"
-        su -c chmod 644 $pathCertRoot
-        if [[ ! -f $pathCertRoot ]]; then
-            echo "${redColorBold}Failed install certificate as Root!${whiteColor}"
-            echo ""
-            read -p "Press enter for back to Menu!"
-            UIMenu
-            return
-        else
-            echo "${greenColorBold}Certificate Success install as Root${whiteColor}"
-            echo ""
-            read -p "Press enter for back to Menu!"
-            UIMenu
-            return
-        fi
-    else
-        echo -e "${greenColorBold}Done get Certificate.\nSaved to /sdcard and file name \"mitm.cer\"\n${whiteColor}"
-        read -p "Press enter for back to Menu!"
-        UIMenu
-        return
-    fi
+    echo -e "${greenColorBold}Done get Certificate.\nSaved to /sdcard and file name \"mitm.cer\"\n${whiteColor}"
+    read -p "Press enter for back to Menu!"
+    UIMenu
+    return
 }
 
 removeCertRoot() {
     clear
     whoMadeThis
+    echo "${yellowColorBold}Do development or fixing...${whiteColor}"
+    echo ""
+    read -p "Press enter for back to Menu!"
+    UIMenu
+    return
     if [[ isRooted = false ]]; then
         echo "${redColorBold}This feature only for Rooted phone!${whiteColor}"
         echo ""
