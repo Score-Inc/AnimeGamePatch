@@ -745,12 +745,12 @@ fi
 
 isFDroid=$(export | tee "$HOME"/isFdroid.zex | grep "TERMUX_APK_RELEASE" "$HOME"/isFdroid.zex  | sed "s/declare -x TERMUX_APK_RELEASE=//g" | sed "s/\"//g")
 if [[ $isFDroid != "F_DROID" ]]; then
+    rm "$HOME"/isFDroid.zex
     FDroidTermux="${redColorBold}I recommend you using Termux from F-Droid${whiteColor}\n========================================"
 else
+    rm "$HOME"/isFDroid.zex
     FDroidTermux="========================================"
 fi
-
-rm "$HOME"/isFDroid.zex
 
 clear
 whoMadeThis() {
@@ -812,6 +812,21 @@ getCert() {
     if [[ -d .mitmproxy ]]; then
         rm -rf .mitmproxy
     fi
+    detectCertInstalled=/system/etc/security/cacerts/zexCert
+    if [[ $isRooted = true ]]; then
+        if [[ -f $detectCertInstalled ]]; then
+            echo "${redColorBold}Certificate already exist..."
+            echo "Do you want to remove it?${whiteColor}"
+            echo ""
+            echo -n "Enter input (y/n) : "
+            read -r askDeleteCert
+            case $askDeleteCert in
+                "y" | "Y" ) su -c rm $detectCertInstalled; echo "${greenColorBold}Certficiate done deleted...${whiteColor}"; sleep 1s; clear; whoMadeThis;;
+                "n" | 'N' ) echo "${greenColorBold}Cancel deleted cert by users!${whiteColor}"; sleep 1s; clear; whoMadeThis;;
+                * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; getCert;;
+            esac
+        fi
+    fi
     echo "${greenColorBold}Setup...${whiteColor}"
     timeout --foreground 10s ./.local/bin/mitmdump --ssl-insecure &> /dev/null &
     sleep 2s
@@ -841,7 +856,7 @@ getCert() {
         su -c mount -o rw,remount /
         sleep 0.5s
         echo "${greenColorBold}Success mount... Now copying certificate!${whiteColor}"
-        su -c cp /sdcard/mitm.cer "$pathCertRoot"
+        su -c mv /sdcard/mitm.cer "$pathCertRoot"
         sleep 0.5s
         echo "${greenColorBold}Set Permission...${whiteColor}"
         su -c chmod 644 "$pathCertRoot"
