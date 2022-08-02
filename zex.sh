@@ -9,12 +9,7 @@
 
 
 userInput1=$1
-nameScript=$(basename $0)
-
-if [[ $forceStop = true ]]; then
-    echo "$NoteStopScript"
-    exit
-fi
+nameScript=$(basename "$0")
 
 
 # ================== extract.sh START ================== #
@@ -27,9 +22,11 @@ extractMitm() {
     if [[ -f $mitmproxyPath ]]; then
         echo "${yellowColorBold}mitmproxy already installed!${greenColorBold}"
         sleep 1s
-        read -p "Press enter for back to Menu!${whiteColor}"
+        echo -n "Press enter for back to Menu!${whiteColor}"
+        read -r
         clear
         UIMenu
+        return
     fi
 
     if ! command -v wget &> /dev/null; then
@@ -45,10 +42,11 @@ extractMitm() {
     fi
     clear
     whoMadeThis
-    command cd
+    command cd || echo
     echo "${greenColorBold}Download mitmproxy file!${whiteColor}"
     wget https://github.com/ElaXan/AnimeGamePatch/releases/download/mitm/mitmproxy.tar.gz -q --show-progress
-    if [[ $? != 0 ]]; then
+    wgetDownloadFailed=$?
+    if [[ "$wgetDownloadFailed" != 0 ]]; then
         clear
         whoMadeThis
         echo "Failed to download mitmproxy files!"
@@ -57,26 +55,42 @@ extractMitm() {
     else
         clear
         whoMadeThis
-        command cd
+        command cd || echo
         echo "${greenColorBold}Extracting Mitmproxy files!${whiteColor}"
-        tar -zxf $HOME/mitmproxy.tar.gz -C /data/data/com.termux/files --preserve-permissions
+        tar -zxf "$HOME"/mitmproxy.tar.gz -C /data/data/com.termux/files --preserve-permissions
         clear
         rm mitmproxy.tar.gz
         clear
         whoMadeThis
-        echo "${greenColorBold}Download zex${whiteColor}"
-        sleep 0.5s
-        cd $PREFIX/bin
-        rm zex
-        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex.sh -q --show-progress
-        if [[ $? != 0 ]]; then
+        if ! command -v python &> /dev/null; then
             clear
             whoMadeThis
-            echo "Error for Download zex!"
-            echo ""
-            read -p "Press enter for back to main menu!"
+            echo "${greenColorBold}Install Python!${whiteColor}"
+            command pkg install python -y
+            if ! command -v python &> /dev/null; then
+                clear
+                whoMadeThis
+                echo "${redColorBold}Install python failed!${whiteColor}"
+                echo -n "Press enter for back to main menu!"
+                read -r
+                clear
+                UIMenu
+                return
+            fi
+        fi
+        clear
+        whoMadeThis
+        echo "${greenColorBold}Download zex${whiteColor}"
+        sleep 0.5s
+        cd "$PREFIX"/bin || echo
+        rm zex
+        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex.sh -q --show-progress
+        wgetDownloadFailed2=$?
+        if [[ "$wgetDownloadFailed2" != 0 ]]; then
             clear
-            UIMenu
+            whoMadeThis
+            echo "${redColorBold}Error for Download zex!${whiteColor}"
+            exit
         fi
         mv zex.sh zex
         clear
@@ -85,25 +99,10 @@ extractMitm() {
         chmod +x zex
         sleep 1s
         echo "${greenColorBold}Done!${whiteColor}"
-        if ! command -v python &> /dev/null; then
-            clear
-            whoMadeThis
-            echo "${greenColorBold}Install Python!${whiteColor}"
-            command pkg install python -y
-            if [[ $? != 0 ]]; then
-                clear
-                whoMadeThis
-                echo "${redColorBold}Install python failed!${whiteColor}"
-                echo ""
-                read -p "Press enter for back to main menu!"
-                clear
-                UIMenu
-            fi
-        fi
         clear
         whoMadeThis
         echo -e "${greenColorBold}Done extract/install mitmproxy!...\n${whiteColor}"
-        command cd
+        command cd || echo
         if [[ -f proxy.py ]]; then
             rm proxy.py
         fi
@@ -111,9 +110,11 @@ extractMitm() {
         if [[ -f proxy_config.py ]]; then
             rm proxy_config.py
         fi
-        read -p "Press enter for back to menu!"
+        echo -n "Press enter for back to menu!"
+        read -r
         clear
         UIMenu
+        return
     fi
 }
 
@@ -129,11 +130,11 @@ extractMitm() {
 
 
 zdomsh() {
-command clear
-command cd
+clear
+command cd || echo
 
 changeServer() {
-    command clear
+    clear
     whoMadeThis
     domainChange=$inpsrv
     # You can add more server here. But edit code bellow too not only this
@@ -170,14 +171,17 @@ changeServer() {
 }
 
 changeServerDOWN() {
-    command cd
+    command cd || echo
     if [[ ! -f "proxy.py" ]] || [[ ! -f "proxy_config.py" ]]; then
         echo -e "${redColorBold}Error : proxy_config.py not found\nPlease Download it at Main Menu!${whiteColor}\n"
-        read -p "Press enter for back to Main Menu!"
+        echo -n "Press enter for back to Main Menu!"
+        read -r
         UIMenu
+        return
     fi
     echo -e "${redColorBold}Server is down${whiteColor}\n"
-    read -p "${yellowColorBold}Are you sure want change to ${greenColorBold}$domainChange${whiteColor}? (y/n) : " serverDownSure
+    echo -n "${yellowColorBold}Are you sure want change to ${greenColorBold}$domainChange${whiteColor}? (y/n) : "
+    read -r serverDownSure
     case $serverDownSure in
         "y" | "Y" ) changeServer2;;
         "n" | "N" ) echo "${yellowColorBold}Change domain cancelled by user!${whiteColor}"; exit;;
@@ -186,66 +190,77 @@ changeServerDOWN() {
 }
 
 changeServer2 () {
-    command cd
+    command cd || echo
     if [[ ! -f "proxy.py" ]] || [[ ! -f "proxy_config.py" ]]; then
         echo -e "${redColorBold}Error : proxy_config.py not found\n\nPlease Download it at Main Menu!${whiteColor}\n"
-        read -p "Press enter for back to Main Menu!"
+        echo -n "Press enter for back to Main Menu!"
+        read -r
         UIMenu
+        return
     fi
-    command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domainChange\"/g" $HOME/proxy_config.py &> $ZERR
-    if [[ $? != 0 ]]; then
+    command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domainChange\"/g" "$HOME"/proxy_config.py &> "$ZERR"
+    ifeditfailed=$?
+    if [[ "$ifeditfailed" != 0 ]]; then
         echo "ERROR!"
-        echo -e "\nReason Error : ";command cat $ZERR
-        rm $ZERR
+        echo -e "\nReason Error : ";command cat "$ZERR"
+        rm "$ZERR"
         exit
     else
         echo -e "The Domain changed to $domainChange\n"
-        rm $ZERR
-        read -p "Press Enter to change server "
+        rm "$ZERR"
+        echo -n "Press Enter to change server "
+        read -r
         clear
         zdomsh
     fi
 }
 
 customserver() {
-    command cd
-    command clear
+    command cd || echo
+    clear
     whoMadeThis
     if [[ ! -f "proxy.py" ]] || [[ ! -f "proxy_config.py" ]]; then
         echo -e "${redColorBold}Error : proxy_config.py not found\n\nPlease Download it at Main Menu!${whiteColor}\n"
-        read -p "Press enter for back to Main Menu!"
+        echo -n "Press enter for back to Main Menu!"
+        read -r
         UIMenu
+        return
     fi
     echo -e "Custom Domain!\nExample : elashxander.my.id\nB : Back to change server\n"
-    command read -p "Enter custom Domain : " domain
+    echo -n "Enter custom Domain : "
+    read -r domain
     if [[ $domain = "B" ]] || [[ $domain = "b" ]] || [[ $domain = "Back" ]] || [[ $domain = "BACK" ]]; then
-        command clear
+        clear
         changeServer
     else
-        domain=$(echo $domain | sed "s/http.*\/\///g") # Thanks to Charon Baglari
-        curl -Ism 2 -f https://$domain &> /dev/null
+        domain=$(echo "$domain" | sed "s/http.*\/\///g") # Thanks to Charon Baglari
+        curl -Ism 2 -f https://"$domain" &> /dev/null
     fi
-    if [[ $? != 0 ]]; then
+    ifcurleditfail=$?
+    if [[ "$ifcurleditfail" != 0 ]]; then
         echo -e "Server is can't to be access!\n"
-        read -p "You sure want change to $domain? (y/n/r) : " youSureBruh
+        echo -n "You sure want change to $domain? (y/n/r) : "
+        read -r youSureBruh
         case $youSureBruh in
-            "y" | "Y" ) command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" $HOME/proxy_config.py &> $ZERR;;
+            "y" | "Y" ) command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" "$HOME"/proxy_config.py &> "$ZERR";;
             "n" | "N" ) echo "Okay! server not changed!"; exit;;
             "r" | "R" ) customserver;;
             * ) echo "Wrong input!"; exit;;
         esac
     else
-        command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" $HOME/proxy_config.py &> $ZERR
+        command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" "$HOME"/proxy_config.py &> "$ZERR"
     fi
-    if [[ $? != 0 ]]; then
+    ifeditsedfail=$?
+    if [[ "$ifeditsedfail" != 0 ]]; then
         echo "ERROR!"
-        echo -e "\nReason Error : ";command cat $ZERR
-        rm $ZERR
+        echo -e "\nReason Error : ";command cat "$ZERR"
+        rm "$ZERR"
         exit
     else
         echo -e "The Domain changed to $domain\n"
-        rm $ZERR
-        read -p "Press Enter to change server "
+        rm "$ZERR"
+        echo -n "Press Enter to change server "
+        read -r
         clear
         zdomsh
     fi
@@ -253,9 +268,9 @@ customserver() {
 
 ZERR=/data/user/0/com.termux/cache/zlog
 whoMadeThis
-command cd
+command cd || echo
 if [[ -f "proxy_config.py" ]]; then
-    serverUsing=$(cat proxy_config.py | grep "REMOTE_HOST = \"" | sed "s/.*= //g" | sed "s/\"//g")
+    serverUsing=$(echo proxy_config.py | grep "REMOTE_HOST = \"" | sed "s/.*= //g" | sed "s/\"//g")
 else
     serverUsing=""
 fi
@@ -270,11 +285,11 @@ else
     echo "${redColorBold}Can't display : proxy_config.py file not found${whiteColor}"
 fi
 
-checkServerYuukiSG=command curl -Ism 3 -f https://sg.game.yuuki.me &> /dev/null
+curl -Ism 3 -f https://sg.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiSG=$?
-checkServerYuukiDE=command curl -Ism 3 -f https://de.game.yuuki.me &> /dev/null
+curl -Ism 3 -f https://de.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiDE=$?
-checkServerMINE=command curl -Ism 3 -f https://hk.elashxander.my.id &> /dev/null
+curl -Ism 3 -f https://hk.elashxander.my.id &> /dev/null
 resultsCheckServerMINE=$?
 
 if [[ $resultsCheckServerYuukiSG = 28 ]]; then
@@ -310,7 +325,7 @@ elif [[ $resultsCheckServerMINE = 0 ]]; then
     downServerMINE=0
 fi
 
-downServer=$(expr $downServerYuukiSG + $downServerYuukiDE + $downServerMINE)
+downServer=$((downServerYuukiSG+downServerYuukiDE+downServerMINE))
 
 if [[ $resultsCheckServerYuukiSG = 28 ]] || [[ $resultsCheckServerYuukiDE = 28 ]] || [[ $resultsCheckServerMINE = 28 ]]; then
     echo -e "\n${redColorBold}There is $downServer server DOWN${whiteColor}\n========================================"
@@ -321,7 +336,8 @@ elif [[ $resultsCheckServerYuukiSG = 0 ]] || [[ $resultsCheckServerYuukiDE = 0 ]
 fi
 
 echo -e "Select Server\n1. Yuuki (Singapore) : $statusServerYuukiSG\n2. Yuuki (German) :  $statusServerYuukiDE\n3. My Server (Hongkong) : $statusServerMINE\n4. Custom\n5. BACK\n\nExample : 1 for select Yuuki Server"
-read -p "Enter input : " inpsrv
+echo -n "Enter input : "
+read -r inpsrv
 
 case $inpsrv in
     "1" | "2" | "3" ) changeServer;;
@@ -365,11 +381,6 @@ esac
 
 # ================== zex.sh START ================== #
 zexsh() {
-if [[ $noInternet = true ]]; then
-    command clear
-    echo -e "${redColorBold}This internet required,\nplease turn on your internet for run mitmdump!${whiteColor}"
-    exit
-fi
 
 changeProxy() {
     clear
@@ -380,34 +391,42 @@ changeProxy() {
         sleep 0.5s
         echo "Done!${whiteColor}"
         genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | grep "zex")
-        if [[ $genshinData = "com.miHoYo.GenshinImpactzex" ]]; then
+        zexPackage=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | sed "s/.*zex//g")
+        if [[ ${genshinData} = "com.miHoYo.GenshinImpact" ]] && [[ ${zexPackage} = "com.miHoYo.GenshinImpact" ]]; then
+            echo "${redColorBold}Skip Rename Package${whiteColor}"
+        elif [[ ${zexPackage} = "com.miHoYo.GenshinImpact" ]]; then
+            echo "${redColorBold}Skip Rename Package${whiteColor}"
+        elif [[ ${genshinData} = "com.miHoYo.GenshinImpactzex" ]]; then
             echo "${greenColorBold}Rename back Data Genshin..."
             sleep 0.5s
             su -c mv /sdcard/Android/data/com.miHoYo.GenshinImpactzex /sdcard/Android/data/com.miHoYo.GenshinImpact
             echo "Done!${whiteColor}"
         fi
         echo ""
-        read -p "Press enter for back to Menu!"
+        echo -n "Press enter for back to Menu!"
+        read -r
         UIMenu
         return
     else
         echo -e "${redColorBold}mitmproxy killed/force stopped!${whiteColor}\n"
-        read -p "Press enter for back to Menu!"
+        echo -n "Press enter for back to Menu!"
+        read -r
         UIMenu
         return
     fi
 }
 
 mitmProxyRun() {
-    command cd
+    command cd || echo
     clear
     whoMadeThis
     if [[ -f ./.local/bin/mitmdump ]]; then
-        command cd
+        command cd || echo
         if [[ ! -f proxy.py ]] || [[ ! -f proxy_config.py ]]; then
             echo "${redColorBold}proxy.py not found, please download it in main menu!${whiteColor}"
             echo ""
-            read -p "Press Enter for back to menu!"
+            echo -n "Press Enter for back to menu!"
+            read -r
             clear
             UIMenu
             return 1
@@ -420,11 +439,12 @@ mitmProxyRun() {
             else
                 if [[ $genshinData != "com.miHoYo.GenshinImpactzex" ]]; then
                     echo -e "${yellowColorBold}Do you want rename package Genshin?\n"
-                    read -p "Enter input (y/n) : " renamePackage
+                    echo -n "Enter input (y/n) : "
+                    read -r renamePackage
                     case $renamePackage in
-                        "y" | "Y" ) cd /sdcard/Android/data; su -c mv com.miHoYo.GenshinImpact com.miHoYo.GenshinImpactzex; echo -e "${greenColor}Done Rename!${whiteColor}\n========================================"; command cd;;
+                        "y" | "Y" ) cd /sdcard/Android/data || echo; su -c mv com.miHoYo.GenshinImpact com.miHoYo.GenshinImpactzex; echo -e "${greenColorBold}Done Rename!${whiteColor}\n========================================"; command cd || echo;;
                         "n" | "N" ) echo -e "${yellowColorBold}Okay! Rename by yourself!${whiteColor}\n========================================"; sleep 0.4s;;
-                        * ) echo -e "${redColorInput}Wrong Input!\nSkip Rename!${whiteColor}\n========================================"; sleep 0.5s;;
+                        * ) echo -e "${redColorBold}Wrong Input!\nSkip Rename!${whiteColor}\n========================================"; sleep 0.5s;;
                     esac
                 else
                     echo "========================================"
@@ -450,7 +470,7 @@ mitmProxyRun() {
             sleep 0.2s
             echo "========================================"
         fi
-        mitmKilled=$(cat $HOME/zkill.log &> /dev/null)
+        mitmKilled=$(cat "$HOME"/zkill.log &> /dev/null)
         if [[ $mitmKilled = "Killed" ]]; then
             echo "mitmproxy killed/force stop!"
             exit
@@ -458,17 +478,18 @@ mitmProxyRun() {
         
         
         ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
-        if [[ $? != 0 ]]; then
+        ifmitmdumpfailed=$?
+        if [[ "$ifmitmdumpfailed" != 0 ]]; then
             if [[ $killMitms = 2 ]]; then
                 echo "${redColorBold}I can't fix this error. Try restart your phone!"
                 exit
             fi
             if [[ $killMitms = 1 ]]; then
                 echo "${yellowColorBold}Trying seconds method!${whiteColor}"
-                killMitmd=$(ps ax > $HOME/z.log; grep "mitmdump" $HOME/z.log | sed "s/ pts\/1.*false//g")
-                kill $killMitmd
-                echo "Killed" > $HOME/zkill.log
-                rm $HOME/z.log
+                killMitmd=$(ps ax > "$HOME"/z.log; grep "mitmdump" "$HOME"/z.log | sed "s/ pts\/1.*false//g")
+                kill "$killMitmd"
+                echo "Killed" > "$HOME"/zkill.log
+                rm "$HOME"/z.log
                 sleep 0.5
                 echo "${greenColorBold}Trying run again...${whiteColor}"
                 sleep 1s
@@ -477,7 +498,7 @@ mitmProxyRun() {
             fi
             echo "${yellowColorBold}Trying fix this Issue!"
             sleep 1s
-            echo "Killed" > $HOME/zkill.log
+            echo "Killed" > "$HOME"/zkill.log
             pkill -9 mitmdump
             sleep 0.5
             echo "${greenColorBold}Trying run again...${whiteColor}"
@@ -536,14 +557,15 @@ downloadproxy() {
         echo "${redColorBold}proxy.py failed to download!${whiteColor}"
         echo ""
     fi
-    read -p "Press enter for back to Menu!"
+    echo -n "Press enter for back to Menu!"
+    read -r
     clear
     proxyMenu
 }
 
 
 proxyMenu() {
-    cd
+    cd || echo
     clear
     whoMadeThis
     if [[ -f proxy.py ]] || [[ -f proxy_config.py ]]; then
@@ -555,7 +577,8 @@ proxyMenu() {
     echo "1. ${greenColorBold}Download proxy.py${whiteColor}"
     echo "2. ${yellowColorBold}Back${whiteColor}"
     echo ""
-    read -p "Enter input : " proxyInput
+    echo -n "Enter input : "
+    read -r proxyInput
     while true; do
     case $proxyInput in
         "1" ) downloadproxy; break;;
@@ -567,9 +590,9 @@ proxyMenu() {
 
 
 downloadYesGenshin() {
-    command clear
+    clear
     whoMadeThis
-    command cd
+    command cd || echo
     if ! command -v wget &> /dev/null; then
         pkg install wget
     fi
@@ -578,8 +601,10 @@ downloadYesGenshin() {
         if [[ -f "/sdcard/Genshin_Impact_2.8.apks" ]]; then
             echo "${greenColorBold}Genshin_Impact_2.8.apks already exist in /sdcard !${whiteColor}"
             echo ""
-            read -p "Press enter to back Menu!"
+            echo -n "Press enter to back Menu!"
+            read -r
             UIMenu
+            return
         else
             versionGenshin="2.8"
             if [[ -f "$HOME/Genshin_Impact_2.8.apks" ]]; then
@@ -591,8 +616,10 @@ downloadYesGenshin() {
         if [[ -f "/sdcard/Genshin.Impact.Cert.Patch_Sign.apk" ]]; then
             echo "${greenColorBold}Genshin.Impact.Cert.Patch_Sign.apk already exist in /sdcard !${whiteColor}"
             echo ""
-            read -p "Press enter to back Menu!"
+            echo "Press enter to back Menu!"
+            read -r
             UIMenu
+            return
         else
             versionGenshin="2.7"
             if [[ -f "$HOME/Genshin.Impact.Cert.Patch_Sign.apk" ]]; then
@@ -601,13 +628,16 @@ downloadYesGenshin() {
             wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.7/Genshin.Impact.Cert.Patch_Sign.apk -q --show-progress
         fi
     fi
-    if [[ $? != 0 ]]; then
+    ifdownloadgenshinfailed=$?
+    if [[ "$ifdownloadgenshinfailed" != 0 ]]; then
         clear
         whoMadeThis
         echo "${redColorBold}Download Failed!${whiteColor}"
         echo ""
-        read -p "Press enter go back to Menu!"
+        echo -n "Press enter go back to Menu!"
+        read -r
         UIMenu
+        return
     else
         clear
         whoMadeThis
@@ -617,12 +647,16 @@ downloadYesGenshin() {
         sleep 0.5s
         if [[ -f "Genshin_Impact_2.8.apks" ]]; then
             mv Genshin_Impact_2.8.apks /sdcard
+        elif [[ -f "Genshin.Impact.Cert.Patch_Sign.apk" ]]; then
+            mv Genshin.Impact.Cert.Patch_Sign.apk /sdcard
         else
             echo "${redColorBold}File Genshin APKs not found!"
             echo ""
-            read -p "Press Enter for back to Menu!"
+            echo -n "Press Enter for back to Menu!"
+            read -r
             clear
             UIMenu
+            return
         fi
     fi
     if [[ -f "/sdcard/Genshin_Impact_2.8.apks" ]]; then
@@ -631,20 +665,24 @@ downloadYesGenshin() {
             if [[ $versionGenshin = "2.8" ]]; then
                 echo "Can't do Install automatically with \"pm install\" because file name is .apks so install manually"
             elif [[ $versionGenshin = "2.7" ]]; then
-                cd /sdcard
+                cd /sdcard || echo
                 pm install Genshin.Impact.Cert.Patch_Sign.apk
             fi
         fi
         echo ""
-        read -p "Press Enter for back to Menu!"
+        echo -n "Press Enter for back to Menu!"
+        read -r
         clear
         UIMenu
+        return
     else
         echo "${redColorBold}Failed to move Genshin APKs to /sdcard${whiteColor}"
         echo ""
-        read -p "Press Enter for back to Menu!"
+        echo -n "Press Enter for back to Menu!"
+        read -r
         clear
         UIMenu
+        return
     fi
 }
 
@@ -657,7 +695,8 @@ downloadGenshin() {
     elif [[ $dgenshininp = "2" ]]; then
         echo "${redColorBold}File size is 321 MB... Do you want continue to download?${whiteColor}"
     fi
-    read -p "Enter input (y/n) : " dwngenshin
+    echo -n "Enter input (y/n) : "
+    read -r dwngenshin
     case $dwngenshin in
         "y" | "Y" ) downloadYesGenshin;;
         "n" | "N" ) UIMenu;;
@@ -667,13 +706,14 @@ downloadGenshin() {
 
 GenshinAPKs() {
     clear
-    command cd
+    command cd || echo
     whoMadeThis
     echo "1. ${greenColorBold}Genshin Impact Version 2.8${whiteColor}"
     echo "2. ${yellowColorBold}Genshin Impact Version 2.7${whiteColor}"
     echo "3. Back"
     echo ""
-    read -p "Enter input : " dgenshininp
+    echo -n "Enter input : "
+    read -r dgenshininp
     case $dgenshininp in
         "1" | "2" ) downloadGenshin;;
         "3" ) UIMenu;;
@@ -681,33 +721,16 @@ GenshinAPKs() {
     esac
 }
 
+versionBash1="2.9"
 
-versionBash1="2.8"
-
-greenColorBack="$(printf '\033[4;42m')"
-redColorBack="$(printf '\033[4;41m')"
-yellowColorBack="$(printf '\033[4;43m')"
-whiteColorBack="$(printf '\033[4;47m')"
-blueColorBack="$(printf '\033[4;44m')"
-purpleColorBack="$(printf '\033[4;45m')"
-cyanColorBack="$(printf '\033[4;46m')"
-blackColorBack="$(printf '\033[4;40m')"
 greenColorBold="$(printf '\033[1;32m')"
 redColorBold="$(printf '\033[1;31m')"
 yellowColorBold="$(printf '\033[1;33m')"
-whiteColorBold="$(printf '\033[1;37m')"
-blueColorBold="$(printf '\033[1;34m')"
-purpleColorBold="$(printf '\033[1;35m')"
 cyanColorBold="$(printf '\033[1;36m')"
-blackColor="$(printf '\033[0;30m')"
 whiteColor="$(printf '\033[0;37m')"
 yellowColor="$(printf '\033[0;33m')"
-cyanColorUnder="$(printf '\033[4;36m')"
-greenColorUnder="$(printf '\033[4;32m')"
-redColorUnder="$(printf '\033[4;31m')"
 
 # IDK WHY THIS ERROR, SO I WILL FIX THIS AS SOON AS POSSIBLE
-pathZex=$PREFIX/bin/zex
 
 su -c echo &> /dev/null
 RootDetect=$?
@@ -722,14 +745,14 @@ elif [[ $RootDetect = 1 ]]; then
     isRooted=false
 fi
 
-isFDroid=$(export > $HOME/isFdroid.zex | cat $HOME/isFdroid.zex | grep "TERMUX_APK_RELEASE" $HOME/isFdroid.zex  | sed "s/declare -x TERMUX_APK_RELEASE=//g" | sed "s/\"//g")
+isFDroid=$(export | tee "$HOME"/isFdroid.zex | grep "TERMUX_APK_RELEASE" "$HOME"/isFdroid.zex  | sed "s/declare -x TERMUX_APK_RELEASE=//g" | sed "s/\"//g")
 if [[ $isFDroid != "F_DROID" ]]; then
+    rm "$HOME"/isFDroid.zex
     FDroidTermux="${redColorBold}I recommend you using Termux from F-Droid${whiteColor}\n========================================"
 else
+    rm "$HOME"/isFDroid.zex
     FDroidTermux="========================================"
 fi
-
-rm $HOME/isFDroid.zex
 
 clear
 whoMadeThis() {
@@ -737,17 +760,10 @@ whoMadeThis() {
 }
 
 
-
-fixVersionScripts() {
-    openZex=$(cat $pathZex | grep "versionBash1=")
-    sed -i "s/$openZex/versionBash1=\"$versionBashIn1\"/g" $pathZex
-    echo "Try to enter command zex again!"
-    exit
-}
-
-
+ 
 
 # PLEASE DON'T EDIT THIS, THIS LOAD SOME CODE FROM SERVER
+# Why Shell Check this said problem... TF
 source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate)
 # source $HOME/AnimeGamePatch/someupdate
 if [[ $versionBashIn1 = "" ]]; then
@@ -787,27 +803,52 @@ elif [[ $versionBash1 = $versionBashIn1 ]]; then
     noInternet=false
 fi
 
-if [[ $forceUpdate = true ]]; then
-    updateSciptForce
-fi
-
 # SubCommand here
 # You can edit as you want (IF YOU KNOW SHELL CODE)
 # If you want make to UI 1,2,3,4 install without zex ins for example. You can do it (I SAID AGAIN IF YOU KNOW SHELL CODE)
 
+backStable() {
+    if ! command -v zex; then
+        echo "${redColorBold}You can't go back because \"zex\" not found!${whiteColor}"
+        echo ""
+        echo "Press enter for back to Menu!"
+        read -r
+        UIMenu
+        return
+    else
+        command zex
+    fi
+}
+
 getCert() {
     clear
-    command cd
+    command cd || echo
     whoMadeThis
     if [[ ! -f ".local/bin/mitmproxy" ]]; then
         echo "${redColorBold}Please install mitmproxy first at Main Menu!${whiteColor}"
         echo ""
-        read -p "Press enter for back to Menu!"
+        echo -n "Press enter for back to Menu!"
+        read -r
         UIMenu
         return
     fi
     if [[ -d .mitmproxy ]]; then
         rm -rf .mitmproxy
+    fi
+    detectCertInstalled=/system/etc/security/cacerts/zexCert
+    if [[ $isRooted = true ]]; then
+        if [[ -f $detectCertInstalled ]]; then
+            echo "${redColorBold}Certificate already exist..."
+            echo "Do you want to remove it?${whiteColor}"
+            echo ""
+            echo -n "Enter input (y/n) : "
+            read -r askDeleteCert
+            case $askDeleteCert in
+                "y" | "Y" ) su -c rm $detectCertInstalled; echo "${greenColorBold}Certficiate done deleted...${whiteColor}"; sleep 1s; clear; whoMadeThis;;
+                "n" | 'N' ) echo "${greenColorBold}Cancel deleted cert by users!${whiteColor}"; sleep 1s; clear; whoMadeThis;;
+                * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; getCert;;
+            esac
+        fi
     fi
     echo "${greenColorBold}Setup...${whiteColor}"
     timeout --foreground 10s ./.local/bin/mitmdump --ssl-insecure &> /dev/null &
@@ -817,11 +858,93 @@ getCert() {
     echo "${greenColorBold}Get Certificate...${whiteColor}"
     curl -s --proxy 127.0.0.1:8080 --cacert ~/.mitmproxy/mitmproxy-ca-cert.pem http://mitm.it/cert/cer > /sdcard/mitm.cer
     sleep 0.5s
-    echo -e "${greenColorBold}Done get Certificate.\nSaved to /sdcard and file name \"mitm.cer\"\n${whiteColor}"
-    read -p "Press enter for back to Menu!"
-    UIMenu
-    return
+    if [[ $isRooted = true ]]; then
+        echo "========================================"
+        echo "${greenColorBold}Do you want to install Certificate as Root?${whiteColor}"
+        echo "${yellowColorBold}i'm not take any responsibility if there is something wrong with your Phone"
+        echo "or even can't delete for the certficate${whiteColor}"
+        echo ""
+        echo -n "Enter input (y/n) : "
+        read -r installCert
+        case $installCert in
+            "y" | "Y" ) echo "${yellowColorBold}Okay will continue install cert as Root!${whiteColor}"; sleep 1s;;
+            "n" | "N" ) echo -e "${greenColorBold}Okay cancell for install cert as Root!\nCertificate file saved in /sdcard and file name \"mitm.cer\"${whiteColor}"; sleep 1s; echo ""; echo -n "Press enter for back to Menu!"; read -r; UIMenu;;
+            * ) echo -e "Wrong Input!\n${greenColorBold}Will skip for install cert as Root!\nCertificate file saved in /sdcard and file name \"mitm.cer\"${whiteColor}"; sleep 1s; echo ""; echo -n "Press enter for back to Menu!"; read -r; UIMenu; return ;;
+        esac
+        clear
+        whoMadeThis
+        echo "${greenColorBold}Install certificate...${whiteColor}"
+        pathCertRoot=/system/etc/security/cacerts/zexCert
+        echo "${greenColorBold}Mount target to /${whiteColor}"
+        su -c mount -o rw,remount /
+        sleep 0.5s
+        echo "${greenColorBold}Success mount... Now copying certificate!${whiteColor}"
+        su -c mv /sdcard/mitm.cer "$pathCertRoot"
+        sleep 0.5s
+        echo "${greenColorBold}Set Permission...${whiteColor}"
+        su -c chmod 644 "$pathCertRoot"
+        if [[ ! -f $pathCertRoot ]]; then
+            echo "${redColorBold}Failed install certificate as Root!${whiteColor}"
+            echo ""
+            echo -n "Press enter for back to Menu!"
+            read -r
+            UIMenu
+            return
+        else
+            echo "${greenColorBold}Certificate Success install as Root${whiteColor}"
+            echo ""
+            echo -n "Press enter for back to Menu!"
+            read -r
+            UIMenu
+            return
+        fi
+    else
+        echo -e "${greenColorBold}Done get Certificate.\nSaved to /sdcard and file name \"mitm.cer\"\n${whiteColor}"
+        echo -n "Press enter for back to Menu!"
+        read -r
+        UIMenu
+        return
+    fi
 }
+
+removeCertRoot() {
+    clear
+    whoMadeThis
+    if [[ "$isRooted" = false ]]; then
+        echo "${redColorBold}This feature only for Rooted phone!${whiteColor}"
+        echo ""
+        echo -n "Press enter for back to Menu!"
+        read -r
+        UIMenu
+        return
+    fi
+    rmpathCertRoot=/system/etc/security/cacerts/zexCert
+    echo "${greenColorBold}Mount target to /${whiteColor}"
+    su -c mount -o rw,remount /
+    sleep 0.5s
+    echo "${greenColorBold}Check certficate...${whiteColor}"
+    if [[ ! -f "$rmpathCertRoot" ]]; then
+        echo "${redColorBold}There is no Certificate...${whiteColor}"
+        echo ""
+        echo -n "Press enter for back to Menu!"
+        read -r
+        UIMenu
+        return
+    else
+        su -c rm "$rmpathCertRoot"
+        if [[ ! -f $rmpathCertRoot ]]; then
+            echo "${greenColorBold}Success remove Certificat Root!${whiteColor}"
+            echo ""
+            echo -n "Press enter for back to Menu"
+            read -r
+            UIMenu
+            return
+        else
+            echo "${redColorBold}Can't Remove Certificat, IDK how to fix it"
+        fi
+    fi
+}
+
 
 DevelopmentVersion() {
     if [[ $noInternet = true ]]; then
@@ -833,20 +956,24 @@ DevelopmentVersion() {
     bash <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/testscript/zex-test.sh)
 }
 
+
+
 UIMenu() {
   clear
   whoMadeThis
-  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Get Certificate\n3. Change Domain/Server\n4. Download proxy.py\n5. Download Genshin APKs\n6. Run Mitmproxy (zex run)\n7. Go to Development Version\n8. ${redColorBold}Exit${whiteColor}"
-  read -p "Enter input : " enterInputUI
+  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Get Certificate\n3. Remove Certificate Root\n4. Change Domain/Server\n5. Download proxy.py\n6. Download Genshin APKs\n7. Run Mitmproxy (zex run)\n8. Go to Development Version\n0. ${redColorBold}Exit${whiteColor}"
+  echo -n "Enter input : "
+  read -r enterInputUI
   case $enterInputUI in
     "1" ) extractMitm;;
     "2" ) getCert;;
-    "3" ) zdomsh;;
-    "4" ) proxyMenu;;
-    "5" ) GenshinAPKs;;
-    "6" ) zexsh;;
-    "7" ) DevelopmentVersion;;
-    "8" ) exit 0;;
+    "3" ) removeCertRoot;;
+    "4" ) zdomsh;;
+    "5" ) proxyMenu;;
+    "6" ) GenshinAPKs;;
+    "7" ) zexsh;;
+    "8" ) DevelopmentVersion;;
+    "0" ) exit 0;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
   esac
 }
