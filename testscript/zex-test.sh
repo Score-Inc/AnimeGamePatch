@@ -771,8 +771,9 @@ changeLog() {
     echo "${greenColorBold}1. Add code detect package Genshin (Root)"
     echo "2. Fix some code"
     echo "3. Add install certificate to Root"
-    echo "4. Add function remove Certificate from Root${whiteColor}"
+    echo "4. Add function remove Certificate from Root"
     echo "5. Remove unnecessary code and fix code"
+    echo "6. Add code detect if cert root already installed${whiteColor}"
     echo ""
     echo -n "Press enter for back to Menu!"
     read -r
