@@ -431,7 +431,16 @@ mitmProxyRun() {
             UIMenu
             return 1
         fi
-        if [[ $isRooted = true ]]; then
+        getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
+        if [[ $getSettingsConf = true ]]; then
+            if [[ $isRooted = false ]]; then
+                echo "${redColorBold}Sorry auto rename only for Rooted device!${whiteColor}"
+                echo "${yellowColorBold}Please turn off in Settings!${whiteColor}"
+                echo ""
+                echo -n "Press enter for back to Menu!"
+                UIMenu
+                return
+            fi
             genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | grep "zex")
             genshinDatas=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | sed "s/com.*zex//g" | grep "com")
             if [[ $genshinDatas != "com.miHoYo.GenshinImpact" ]]; then
@@ -768,7 +777,7 @@ source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/so
 changeLog() {
     clear
     whoMadeThis
-    echo "${greenColorBold}NOTHING${whiteColor}"
+    echo "${greenColorBold}1. Add Settings (STILL TESTING)${whiteColor}"
     echo ""
     echo -n "Press enter for back to Menu!"
     read -r
@@ -831,7 +840,17 @@ getCert() {
     echo "${greenColorBold}Get Certificate...${whiteColor}"
     curl -s --proxy 127.0.0.1:8080 --cacert ~/.mitmproxy/mitmproxy-ca-cert.pem http://mitm.it/cert/cer > /sdcard/mitm.cer
     sleep 0.5s
-    if [[ $isRooted = true ]]; then
+    getSettingsConf2=$(cat "$pathScript" | grep "installcert" | sed "s/.*installcert=//g")
+    if [[ $getSettingsConf2 = true ]]; then
+        if [[ $isRooted = false ]]; then
+            echo "${redColorBold}Sorry this only for Rooted device!${whiteColor}"
+            echo ""
+            echo -e "${greenColorBold}Done get Certificate.\nSaved to /sdcard and file name \"mitm.cer\"\n${whiteColor}"
+            echo -n "Press enter for back to Menu!"
+            read -r
+            UIMenu
+            return
+        fi
         echo "========================================"
         echo "${greenColorBold}Do you want to install Certificate as Root?${whiteColor}"
         echo "${yellowColorBold}i'm not take any responsibility if there is something wrong with your Phone"
@@ -932,13 +951,100 @@ whatDifferentRoot() {
     return
 }
 
+ChangeConfSettings() {
+    if [[ $inputsettings = "1" ]]; then
+        stringchange="rename"
+    elif [[ $inputsettings = "2" ]]; then
+        stringchange="installcert"
+    fi
+
+    if [[ $isConfisTrue = true ]]; then
+        changeSet="true"
+        changeTo="false"
+    elif [[ $isConfisTrue = false ]]; then
+        changeSet="false"
+        changeTo="true"
+    fi
+
+    if [[ $isConfisTrue2 = true ]]; then
+        changeSet="true"
+        changeTo="false"
+    elif [[ $isConfisTrue2 = false ]]; then
+        changeSet="false"
+        changeTo="true"
+    fi
+
+    sed -i "s/$stringchange=$changeSet/$stringchange=$changeTo/g" "$pathScript"
+    deterrorchangesettings=$?
+    if [[ $deterrorchangesettings != 0 ]]; then
+        clear
+        whoMadeThis
+        echo "${redColorBold}Failed to edit settings...${whiteColor}"
+        echo ""
+        echo -n "Press enter for back to Settings!"
+        read -r
+        settingsScript
+        return
+    else
+        clear
+        whoMadeThis
+        echo "${greenColorBold}Success Edit Settings...${whiteColor}"
+        echo ""
+        echo -n "Press enter for back to Settings!"
+        read -r
+        settingsScript
+        return
+    fi
+}
+
+settingsScript() {
+    clear
+    whoMadeThis
+    getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
+    getSettingsConf2=$(cat "$pathScript" | grep "installcert" | sed "s/.*installcert=//g")
+
+    if [[ $getSettingsConf = true ]]; then
+        renameconf="${greenColorBold}True${whiteColor}"
+        isConfisTrue=true
+    elif [[ "${getSettingsConf}" = false ]]; then
+        renameconf="${redColorBold}False${whiteColor}"
+        isConfisTrue=false
+    elif [[ $getSettingsConf = "" ]]; then
+        renameconf="${redColorBold}Can't Display${whiteColor}"
+        isConfisTrue=err
+    fi
+
+    if [[ $getSettingsConf2 = true ]]; then
+        installcertconf="${greenColorBold}True${whiteColor}"
+        isConfisTrue2=true
+    elif [[ $getSettingsConf2 = false ]]; then
+        installcertconf="${redColorBold}False${whiteColor}"
+        isConfisTrue2=false
+    elif [[ $getSettingsConf2 = "" ]]; then
+        installcertconf="${redColorBold}Can't Display${whiteColor}"
+        isConfisTrue2=err
+    fi
+
+    echo "[$renameconf] ${cyanColorBold}1. Autorename Package Genshin (ROOT)${whiteColor}"
+    echo "[$installcertconf] ${cyanColorBold}2. Auto Install cert as Root (ROOT)${whiteColor}"
+    echo "0. Back to Menu!"
+    echo ""
+    echo -n "Enter input : "
+    read -r inputsettings
+    case $inputsettings in
+        "1" | "2" ) ChangeConfSettings;;
+        "0" ) UIMenu;;
+        * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; settingsScript;;
+    esac
+}
+
 
 
 
 UIMenu() {
   clear
   whoMadeThis
-  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Get Certificate\n3. Remove Certificate Root\n4. Change Domain/Server\n5. Download proxy.py\n6. Download Genshin APKs\n7. Run Mitmproxy (zex run)\n8. Go back to Stable Version\n9. What different Root and No Root\n10. Changelog\n0. ${redColorBold}Exit${whiteColor}"
+  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Get Certificate\n3. Remove Certificate Root\n4. Change Domain/Server\n5. Download proxy.py\n6. Download Genshin APKs\n7. Run Mitmproxy (zex run)\n8. Settings\n9. Go back to Stable Version\n10. What different Root and No Root\n11. Changelog\n0. ${redColorBold}Exit${whiteColor}"
   echo -n "Enter input : "
   read -r enterInputUI
   case $enterInputUI in
@@ -949,13 +1055,19 @@ UIMenu() {
     "5" ) proxyMenu;;
     "6" ) GenshinAPKs;;
     "7" ) zexsh;;
-    "8" ) backStable;;
-    "9" ) whatDifferentRoot;;
-    "10" ) changeLog;;
+    "8" ) settingsScript;;
+    "9" ) backStable;;
+    "10" ) whatDifferentRoot;;
+    "11" ) changeLog;;
     "0" ) exit 0;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
   esac
 }
+
+pathScript=$HOME/.termux/settings.zex
+if [[ ! -f $pathScript ]]; then
+    echo -e -n "# Script made by ElaXan\ninstallcert=false\nrename=false" > "$pathScript"
+fi
 
 case $userInput1 in
     "run" | "3" ) zexsh;; # if enter command zex run
