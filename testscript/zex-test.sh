@@ -77,30 +77,9 @@ extractMitm() {
                 UIMenu
                 return
             fi
-        fi
-        clear
-        whoMadeThis
-        echo "${greenColorBold}Download zex${whiteColor}"
-        sleep 0.5s
-        cd "$PREFIX"/bin || echo
-        rm zex
-        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex.sh -q --show-progress
-        wgetDownloadFailed2=$?
-        if [[ "$wgetDownloadFailed2" != 0 ]]; then
             clear
             whoMadeThis
-            echo "${redColorBold}Error for Download zex!${whiteColor}"
-            exit
         fi
-        mv zex.sh zex
-        clear
-        whoMadeThis
-        echo "${greenColorBold}Set permission!${whiteColor}"
-        chmod +x zex
-        sleep 1s
-        echo "${greenColorBold}Done!${whiteColor}"
-        clear
-        whoMadeThis
         echo -e "${greenColorBold}Done extract/install mitmproxy!...\n${whiteColor}"
         command cd || echo
         if [[ -f proxy.py ]]; then
@@ -517,16 +496,23 @@ mitmProxyRun() {
         fi
         
         if [[ $isConfisTrue3 = true ]]; then
+            echo "${greenColorBold}Open Genshin...${whiteColor}"
+            am start --user 0 com.miHoYo.GenshinImpactzex/com.miHoYo.GetMobileInfo.MainActivity &> $HOME/.termux/openGenshin
+            detectErrorOpenGenshin=$(cat $HOME/.termux/openGenshin | sed 's/.*does not/does not/g' | grep "does not")
+            if [[ $detectErrorOpenGenshin = "does not exist." ]]; then
+                echo -e "${redColorBold}Can't open Genshin...\nTarget to com.miHoYo.GenshinImpactzex\n${yellowColorBold}Will Skip open Genshin${whiteColor}"
+                sleep 1s
+                rm $HOME/.termux/openGenshin
+            else
+                echo "${greenColorBold}Done Open Genshin...,${whiteColor}"
+                rm $HOME/.termux/openGenshin
+            fi
             echo "${greenColorBold}Run Mitmdump...${whiteColor}"
-            ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false &
+            ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
             ifmitmdumpfailed=$?
             if [[ $ifmitmdumpfailed != 0 ]]; then
                 killMtimprob
             fi
-            sleep 3s
-            echo "${greenColorBold}Open Genshin...${whiteColor}"
-            am start --user 0 com.miHoYo.GenshinImpactzex/com.miHoYo.GetMobileInfo.MainActivity
-            fg
         else
             ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
             ifmitmdumpfailed=$?
@@ -862,7 +848,7 @@ getCert() {
     getSettingsConf2=$(cat "$pathScript" | grep "installcert" | sed "s/.*installcert=//g")
     if [[ $getSettingsConf2 = true ]]; then
         if [[ $isRooted = false ]]; then
-            echo "${redColorBold}Sorry this only for Rooted device!${whiteColor}"
+            echo "${redColorBold}Sorry auto install Certificate only for Rooted device!${whiteColor}"
             echo ""
             echo -e "${greenColorBold}Done get Certificate.\nSaved to /sdcard and file name \"mitm.cer\"\n${whiteColor}"
             echo -n "Press enter for back to Menu!"
@@ -1001,6 +987,15 @@ ChangeConfSettings() {
         fi
     fi
 
+    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue = err ]]; then
+        echo "${redColorBold}Sorry there is Problem can't change the Settings.${whiteColor}"
+        echo ""
+        echo -n "Press enter for back to Settings!"
+        read -r
+        settingsScript
+        return
+    fi
+
     sleep 0.2s
     sed -i "s/$stringchange=$changeSet/$stringchange=$changeTo/g" "$pathScript"
     settingsScript
@@ -1014,36 +1009,51 @@ settingsScript() {
     getSettingsConf3=$(cat "$pathScript" | grep "openGenshin" | sed "s/.*openGenshin=//g")
 
     if [[ $getSettingsConf = true ]]; then
-        renameconf="${greenColorBold}True${whiteColor}"
+        renameconf="${greenColorBold}ON${whiteColor}"
         isConfisTrue=true
     elif [[ $getSettingsConf = false ]]; then
-        renameconf="${redColorBold}False${whiteColor}"
+        renameconf="${redColorBold}OFF${whiteColor}"
         isConfisTrue=false
     elif [[ $getSettingsConf = "" ]]; then
+        renameconf="${redColorBold}Can't Display${whiteColor}"
+        isConfisTrue=err
+    elif [[ $getSettingsConf = err ]]; then
         renameconf="${redColorBold}Can't Display${whiteColor}"
         isConfisTrue=err
     fi
 
     if [[ $getSettingsConf2 = true ]]; then
-        installcertconf="${greenColorBold}True${whiteColor}"
+        installcertconf="${greenColorBold}ON${whiteColor}"
         isConfisTrue2=true
     elif [[ $getSettingsConf2 = false ]]; then
-        installcertconf="${redColorBold}False${whiteColor}"
+        installcertconf="${redColorBold}OFF${whiteColor}"
         isConfisTrue2=false
     elif [[ $getSettingsConf2 = "" ]]; then
+        installcertconf="${redColorBold}Can't Display${whiteColor}"
+        isConfisTrue2=err
+    elif [[ $getSettingsConf2 = err ]]; then
         installcertconf="${redColorBold}Can't Display${whiteColor}"
         isConfisTrue2=err
     fi
 
     if [[ $getSettingsConf3 = true ]]; then
-        openGenshinConf="${greenColorBold}True${whiteColor}"
+        openGenshinConf="${greenColorBold}ON${whiteColor}"
         isConfisTrue3=true
     elif [[ $getSettingsConf3 = false ]]; then
-        openGenshinConf="${redColorBold}False${whiteColor}"
+        openGenshinConf="${redColorBold}OFF${whiteColor}"
         isConfisTrue3=false
     elif [[ $getSettingsConf3 = "" ]]; then
         openGenshinConf="${redColorBold}Can't Display${whiteColor}"
         isConfisTrue3=err
+    elif [[ $getSettingsConf3 = err ]]; then
+        openGenshinConf="${redColorBold}Can't Display${whiteColor}"
+        isConfisTrue3=err
+    fi
+
+    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]]; then
+        rm $pathScript
+        echo -e -n "# Script made by ElaXan\ninstallcert=false\nrename=false\nopenGenshin=false" > "$pathScript"
+        settingsScript
     fi
 
     echo "[$renameconf] ${cyanColorBold}1. Autorename Package Genshin (ROOT)${whiteColor}"
