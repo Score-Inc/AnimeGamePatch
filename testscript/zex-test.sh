@@ -416,6 +416,34 @@ changeProxy() {
     fi
 }
 
+killMtimprob() {
+    if [[ $killMitms = 2 ]]; then
+        echo "${redColorBold}I can't fix this error. Try restart your phone!"
+        exit
+    fi
+    if [[ $killMitms = 1 ]]; then
+        echo "${yellowColorBold}Trying seconds method!${whiteColor}"
+        killMitmd=$(ps ax > "$HOME"/z.log; grep "mitmdump" "$HOME"/z.log | sed "s/ pts\/1.*false//g")
+        kill "$killMitmd"
+        echo "Killed" > "$HOME"/zkill.log
+        rm "$HOME"/z.log
+        sleep 0.5
+        echo "${greenColorBold}Trying run again...${whiteColor}"
+        sleep 1s
+        killMitms=2
+        mitmProxyRun
+    fi
+    echo "${yellowColorBold}Trying fix this Issue!"
+    sleep 1s
+    echo "Killed" > "$HOME"/zkill.log
+    pkill -9 mitmdump
+    sleep 0.5
+    echo "${greenColorBold}Trying run again...${whiteColor}"
+    killMitms=1
+    clear
+    mitmProxyRun
+}
+
 mitmProxyRun() {
     command cd || echo
     clear
@@ -438,6 +466,7 @@ mitmProxyRun() {
                 echo "${yellowColorBold}Please turn off in Settings!${whiteColor}"
                 echo ""
                 echo -n "Press enter for back to Menu!"
+                read -r
                 UIMenu
                 return
             fi
@@ -459,6 +488,8 @@ mitmProxyRun() {
                     echo "========================================"
                 fi
             fi
+        fi
+        if [[ $isRooted = true ]]; then
             echo "${greenColorBold}Change Proxy..."
             sleep 0.3s
             su -c settings put global http_proxy 127.0.0.1:8080
@@ -485,35 +516,23 @@ mitmProxyRun() {
             exit
         fi
         
-        
-        ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
-        ifmitmdumpfailed=$?
-        if [[ "$ifmitmdumpfailed" != 0 ]]; then
-            if [[ $killMitms = 2 ]]; then
-                echo "${redColorBold}I can't fix this error. Try restart your phone!"
-                exit
+        if [[ $isConfisTrue3 = true ]]; then
+            echo "${greenColorBold}Run Mitmdump...${whiteColor}"
+            ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false &
+            ifmitmdumpfailed=$?
+            if [[ $ifmitmdumpfailed != 0 ]]; then
+                killMtimprob
             fi
-            if [[ $killMitms = 1 ]]; then
-                echo "${yellowColorBold}Trying seconds method!${whiteColor}"
-                killMitmd=$(ps ax > "$HOME"/z.log; grep "mitmdump" "$HOME"/z.log | sed "s/ pts\/1.*false//g")
-                kill "$killMitmd"
-                echo "Killed" > "$HOME"/zkill.log
-                rm "$HOME"/z.log
-                sleep 0.5
-                echo "${greenColorBold}Trying run again...${whiteColor}"
-                sleep 1s
-                killMitms=2
-                mitmProxyRun
+            sleep 3s
+            echo "${greenColorBold}Open Genshin...${whiteColor}"
+            am start --user 0 com.miHoYo.GenshinImpactzex/com.miHoYo.GetMobileInfo.MainActivity
+            fg
+        else
+            ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
+            ifmitmdumpfailed=$?
+            if [[ $ifmitmdumpfailed != 0 ]]; then
+                killMtimprob
             fi
-            echo "${yellowColorBold}Trying fix this Issue!"
-            sleep 1s
-            echo "Killed" > "$HOME"/zkill.log
-            pkill -9 mitmdump
-            sleep 0.5
-            echo "${greenColorBold}Trying run again...${whiteColor}"
-            killMitms=1
-            clear
-            mitmProxyRun
         fi
         changeProxy
     else
@@ -952,49 +971,39 @@ whatDifferentRoot() {
 }
 
 ChangeConfSettings() {
+    inputsettings=$inputsettings
     if [[ $inputsettings = "1" ]]; then
         stringchange="rename"
+        if [[ $isConfisTrue = true ]]; then
+            changeSet="true"
+            changeTo="false"
+        elif [[ $isConfisTrue = false ]]; then
+            changeSet="false"
+            changeTo="true"
+        fi
     elif [[ $inputsettings = "2" ]]; then
         stringchange="installcert"
+        if [[ $isConfisTrue2 = true ]]; then
+            changeSet="true"
+            changeTo="false"
+        elif [[ $isConfisTrue2 = false ]]; then
+            changeSet="false"
+            changeTo="true"
+        fi
+    elif [[ $inputsettings = "3" ]]; then
+        stringchange="openGenshin"
+        if [[ $isConfisTrue3 = true ]]; then
+            changeSet="true"
+            changeTo="false"
+        elif [[ $isConfisTrue3 = false ]]; then
+            changeSet="false"
+            changeTo="true"
+        fi
     fi
 
-    if [[ $isConfisTrue = true ]]; then
-        changeSet="true"
-        changeTo="false"
-    elif [[ $isConfisTrue = false ]]; then
-        changeSet="false"
-        changeTo="true"
-    fi
-
-    if [[ $isConfisTrue2 = true ]]; then
-        changeSet="true"
-        changeTo="false"
-    elif [[ $isConfisTrue2 = false ]]; then
-        changeSet="false"
-        changeTo="true"
-    fi
-
+    sleep 0.2s
     sed -i "s/$stringchange=$changeSet/$stringchange=$changeTo/g" "$pathScript"
-    deterrorchangesettings=$?
-    if [[ $deterrorchangesettings != 0 ]]; then
-        clear
-        whoMadeThis
-        echo "${redColorBold}Failed to edit settings...${whiteColor}"
-        echo ""
-        echo -n "Press enter for back to Settings!"
-        read -r
-        settingsScript
-        return
-    else
-        clear
-        whoMadeThis
-        echo "${greenColorBold}Success Edit Settings...${whiteColor}"
-        echo ""
-        echo -n "Press enter for back to Settings!"
-        read -r
-        settingsScript
-        return
-    fi
+    settingsScript
 }
 
 settingsScript() {
@@ -1002,11 +1011,12 @@ settingsScript() {
     whoMadeThis
     getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
     getSettingsConf2=$(cat "$pathScript" | grep "installcert" | sed "s/.*installcert=//g")
+    getSettingsConf3=$(cat "$pathScript" | grep "openGenshin" | sed "s/.*openGenshin=//g")
 
     if [[ $getSettingsConf = true ]]; then
         renameconf="${greenColorBold}True${whiteColor}"
         isConfisTrue=true
-    elif [[ "${getSettingsConf}" = false ]]; then
+    elif [[ $getSettingsConf = false ]]; then
         renameconf="${redColorBold}False${whiteColor}"
         isConfisTrue=false
     elif [[ $getSettingsConf = "" ]]; then
@@ -1025,14 +1035,26 @@ settingsScript() {
         isConfisTrue2=err
     fi
 
+    if [[ $getSettingsConf3 = true ]]; then
+        openGenshinConf="${greenColorBold}True${whiteColor}"
+        isConfisTrue3=true
+    elif [[ $getSettingsConf3 = false ]]; then
+        openGenshinConf="${redColorBold}False${whiteColor}"
+        isConfisTrue3=false
+    elif [[ $getSettingsConf3 = "" ]]; then
+        openGenshinConf="${redColorBold}Can't Display${whiteColor}"
+        isConfisTrue3=err
+    fi
+
     echo "[$renameconf] ${cyanColorBold}1. Autorename Package Genshin (ROOT)${whiteColor}"
     echo "[$installcertconf] ${cyanColorBold}2. Auto Install cert as Root (ROOT)${whiteColor}"
+    echo "[$openGenshinConf] ${cyanColorBold}3. Auto open Genshin Impact App${whiteColor}"
     echo "0. Back to Menu!"
     echo ""
     echo -n "Enter input : "
     read -r inputsettings
     case $inputsettings in
-        "1" | "2" ) ChangeConfSettings;;
+        "1" | "2" | "3" ) ChangeConfSettings;;
         "0" ) UIMenu;;
         * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; settingsScript;;
     esac
@@ -1066,7 +1088,7 @@ UIMenu() {
 
 pathScript=$HOME/.termux/settings.zex
 if [[ ! -f $pathScript ]]; then
-    echo -e -n "# Script made by ElaXan\ninstallcert=false\nrename=false" > "$pathScript"
+    echo -e -n "# Script made by ElaXan\ninstallcert=false\nrename=false\nopenGenshin=false" > "$pathScript"
 fi
 
 case $userInput1 in
