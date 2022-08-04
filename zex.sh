@@ -11,6 +11,12 @@
 userInput1=$1
 nameScript=$(basename "$0")
 
+checkTermux=$(env | grep "TERMUX_APK_RELEASE" | sed "s/=.*//g")
+if [[ $checkTermux != "TERMUX_APK_RELEASE" ]]; then
+    clear
+    echo "This script only for Termux"
+    exit
+fi
 
 # ================== extract.sh START ================== #
 
@@ -77,30 +83,9 @@ extractMitm() {
                 UIMenu
                 return
             fi
-        fi
-        clear
-        whoMadeThis
-        echo "${greenColorBold}Download zex${whiteColor}"
-        sleep 0.5s
-        cd "$PREFIX"/bin || echo
-        rm zex
-        wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex.sh -q --show-progress
-        wgetDownloadFailed2=$?
-        if [[ "$wgetDownloadFailed2" != 0 ]]; then
             clear
             whoMadeThis
-            echo "${redColorBold}Error for Download zex!${whiteColor}"
-            exit
         fi
-        mv zex.sh zex
-        clear
-        whoMadeThis
-        echo "${greenColorBold}Set permission!${whiteColor}"
-        chmod +x zex
-        sleep 1s
-        echo "${greenColorBold}Done!${whiteColor}"
-        clear
-        whoMadeThis
         echo -e "${greenColorBold}Done extract/install mitmproxy!...\n${whiteColor}"
         command cd || echo
         if [[ -f proxy.py ]]; then
@@ -416,6 +401,34 @@ changeProxy() {
     fi
 }
 
+killMtimprob() {
+    if [[ $killMitms = 2 ]]; then
+        echo "${redColorBold}I can't fix this error. Try restart your phone!"
+        exit
+    fi
+    if [[ $killMitms = 1 ]]; then
+        echo "${yellowColorBold}Trying seconds method!${whiteColor}"
+        killMitmd=$(ps ax > "$HOME"/z.log; grep "mitmdump" "$HOME"/z.log | sed "s/ pts\/1.*false//g")
+        kill "$killMitmd"
+        echo "Killed" > "$HOME"/zkill.log
+        rm "$HOME"/z.log
+        sleep 0.5
+        echo "${greenColorBold}Trying run again...${whiteColor}"
+        sleep 1s
+        killMitms=2
+        mitmProxyRun
+    fi
+    echo "${yellowColorBold}Trying fix this Issue!"
+    sleep 1s
+    echo "Killed" > "$HOME"/zkill.log
+    pkill -9 mitmdump
+    sleep 0.5
+    echo "${greenColorBold}Trying run again...${whiteColor}"
+    killMitms=1
+    clear
+    mitmProxyRun
+}
+
 mitmProxyRun() {
     command cd || echo
     clear
@@ -431,7 +444,17 @@ mitmProxyRun() {
             UIMenu
             return 1
         fi
-        if [[ $isRooted = true ]]; then
+        getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
+        if [[ $getSettingsConf = true ]]; then
+            if [[ $isRooted = false ]]; then
+                echo "${redColorBold}Sorry auto rename only for Rooted device!${whiteColor}"
+                echo "${yellowColorBold}Please turn off in Settings!${whiteColor}"
+                echo ""
+                echo -n "Press enter for back to Menu!"
+                read -r
+                UIMenu
+                return
+            fi
             genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | grep "zex")
             genshinDatas=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | sed "s/com.*zex//g" | grep "com")
             if [[ $genshinDatas != "com.miHoYo.GenshinImpact" ]]; then
@@ -447,9 +470,12 @@ mitmProxyRun() {
                         * ) echo -e "${redColorBold}Wrong Input!\nSkip Rename!${whiteColor}\n========================================"; sleep 0.5s;;
                     esac
                 else
+                    echo "${redColorBold}Can't Rename, there is 2 Package exist...${whiteColor}"
                     echo "========================================"
                 fi
             fi
+        fi
+        if [[ $isRooted = true ]]; then
             echo "${greenColorBold}Change Proxy..."
             sleep 0.3s
             su -c settings put global http_proxy 127.0.0.1:8080
@@ -476,35 +502,30 @@ mitmProxyRun() {
             exit
         fi
         
-        
-        ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
-        ifmitmdumpfailed=$?
-        if [[ "$ifmitmdumpfailed" != 0 ]]; then
-            if [[ $killMitms = 2 ]]; then
-                echo "${redColorBold}I can't fix this error. Try restart your phone!"
-                exit
-            fi
-            if [[ $killMitms = 1 ]]; then
-                echo "${yellowColorBold}Trying seconds method!${whiteColor}"
-                killMitmd=$(ps ax > "$HOME"/z.log; grep "mitmdump" "$HOME"/z.log | sed "s/ pts\/1.*false//g")
-                kill "$killMitmd"
-                echo "Killed" > "$HOME"/zkill.log
-                rm "$HOME"/z.log
-                sleep 0.5
-                echo "${greenColorBold}Trying run again...${whiteColor}"
+        if [[ $isConfisTrue3 = true ]]; then
+            echo "${greenColorBold}Open Genshin...${whiteColor}"
+            am start --user 0 com.miHoYo.GenshinImpactzex/com.miHoYo.GetMobileInfo.MainActivity &> $HOME/.termux/openGenshin
+            detectErrorOpenGenshin=$(cat $HOME/.termux/openGenshin | sed 's/.*does not/does not/g' | grep "does not")
+            if [[ $detectErrorOpenGenshin = "does not exist." ]]; then
+                echo -e "${redColorBold}Can't open Genshin...\nTarget to com.miHoYo.GenshinImpactzex\n${yellowColorBold}Will Skip open Genshin${whiteColor}"
                 sleep 1s
-                killMitms=2
-                mitmProxyRun
+                rm $HOME/.termux/openGenshin
+            else
+                echo "${greenColorBold}Done Open Genshin...,${whiteColor}"
+                rm $HOME/.termux/openGenshin
             fi
-            echo "${yellowColorBold}Trying fix this Issue!"
-            sleep 1s
-            echo "Killed" > "$HOME"/zkill.log
-            pkill -9 mitmdump
-            sleep 0.5
-            echo "${greenColorBold}Trying run again...${whiteColor}"
-            killMitms=1
-            clear
-            mitmProxyRun
+            echo "${greenColorBold}Run Mitmdump...${whiteColor}"
+            ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
+            ifmitmdumpfailed=$?
+            if [[ $ifmitmdumpfailed != 0 ]]; then
+                killMtimprob
+            fi
+        else
+            ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
+            ifmitmdumpfailed=$?
+            if [[ $ifmitmdumpfailed != 0 ]]; then
+                killMtimprob
+            fi
         fi
         changeProxy
     else
@@ -721,7 +742,7 @@ GenshinAPKs() {
     esac
 }
 
-versionBash1="2.9"
+versionBash1="3.0"
 
 greenColorBold="$(printf '\033[1;32m')"
 redColorBold="$(printf '\033[1;31m')"
@@ -766,6 +787,7 @@ whoMadeThis() {
 # Why Shell Check this said problem... TF
 source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate)
 # source $HOME/AnimeGamePatch/someupdate
+
 if [[ $versionBashIn1 = "" ]]; then
     echo -e "${redColorBold}Can't connect to server!\n\nScript will run without check Update!${whiteColor}"
     isThisLatestVersion="${redColorBold}Can't connect to server!\n\nScript will run without check Update!${whiteColor}"
@@ -807,18 +829,6 @@ fi
 # You can edit as you want (IF YOU KNOW SHELL CODE)
 # If you want make to UI 1,2,3,4 install without zex ins for example. You can do it (I SAID AGAIN IF YOU KNOW SHELL CODE)
 
-backStable() {
-    if ! command -v zex; then
-        echo "${redColorBold}You can't go back because \"zex\" not found!${whiteColor}"
-        echo ""
-        echo "Press enter for back to Menu!"
-        read -r
-        UIMenu
-        return
-    else
-        command zex
-    fi
-}
 
 getCert() {
     clear
@@ -858,7 +868,17 @@ getCert() {
     echo "${greenColorBold}Get Certificate...${whiteColor}"
     curl -s --proxy 127.0.0.1:8080 --cacert ~/.mitmproxy/mitmproxy-ca-cert.pem http://mitm.it/cert/cer > /sdcard/mitm.cer
     sleep 0.5s
-    if [[ $isRooted = true ]]; then
+    getSettingsConf2=$(cat "$pathScript" | grep "installcert" | sed "s/.*installcert=//g")
+    if [[ $getSettingsConf2 = true ]]; then
+        if [[ $isRooted = false ]]; then
+            echo "${redColorBold}Sorry auto install Certificate only for Rooted device!${whiteColor}"
+            echo ""
+            echo -e "${greenColorBold}Done get Certificate.\nSaved to /sdcard and file name \"mitm.cer\"\n${whiteColor}"
+            echo -n "Press enter for back to Menu!"
+            read -r
+            UIMenu
+            return
+        fi
         echo "========================================"
         echo "${greenColorBold}Do you want to install Certificate as Root?${whiteColor}"
         echo "${yellowColorBold}i'm not take any responsibility if there is something wrong with your Phone"
@@ -945,6 +965,118 @@ removeCertRoot() {
     fi
 }
 
+ChangeConfSettings() {
+    inputsettings=$inputsettings
+    if [[ $inputsettings = "1" ]]; then
+        stringchange="rename"
+        if [[ $isConfisTrue = true ]]; then
+            changeSet="true"
+            changeTo="false"
+        elif [[ $isConfisTrue = false ]]; then
+            changeSet="false"
+            changeTo="true"
+        fi
+    elif [[ $inputsettings = "2" ]]; then
+        stringchange="installcert"
+        if [[ $isConfisTrue2 = true ]]; then
+            changeSet="true"
+            changeTo="false"
+        elif [[ $isConfisTrue2 = false ]]; then
+            changeSet="false"
+            changeTo="true"
+        fi
+    elif [[ $inputsettings = "3" ]]; then
+        stringchange="openGenshin"
+        if [[ $isConfisTrue3 = true ]]; then
+            changeSet="true"
+            changeTo="false"
+        elif [[ $isConfisTrue3 = false ]]; then
+            changeSet="false"
+            changeTo="true"
+        fi
+    fi
+
+    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]]; then
+        echo "${redColorBold}Sorry there is Problem can't change the Settings.${whiteColor}"
+        echo ""
+        echo -n "Press enter for back to Settings!"
+        read -r
+        settingsScript
+        return
+    fi
+
+    sed -i "s/$stringchange=$changeSet/$stringchange=$changeTo/g" "$pathScript"
+    settingsScript
+}
+
+settingsScript() {
+    clear
+    whoMadeThis
+    getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
+    getSettingsConf2=$(cat "$pathScript" | grep "installcert" | sed "s/.*installcert=//g")
+    getSettingsConf3=$(cat "$pathScript" | grep "openGenshin" | sed "s/.*openGenshin=//g")
+
+    if [[ $getSettingsConf = true ]]; then
+        renameconf="${greenColorBold}ON${whiteColor}"
+        isConfisTrue=true
+    elif [[ $getSettingsConf = false ]]; then
+        renameconf="${redColorBold}OFF${whiteColor}"
+        isConfisTrue=false
+    elif [[ $getSettingsConf = "" ]]; then
+        renameconf="${redColorBold}Can't Display${whiteColor}"
+        isConfisTrue=err
+    elif [[ $getSettingsConf = err ]]; then
+        renameconf="${redColorBold}Can't Display${whiteColor}"
+        isConfisTrue=err
+    fi
+
+    if [[ $getSettingsConf2 = true ]]; then
+        installcertconf="${greenColorBold}ON${whiteColor}"
+        isConfisTrue2=true
+    elif [[ $getSettingsConf2 = false ]]; then
+        installcertconf="${redColorBold}OFF${whiteColor}"
+        isConfisTrue2=false
+    elif [[ $getSettingsConf2 = "" ]]; then
+        installcertconf="${redColorBold}Can't Display${whiteColor}"
+        isConfisTrue2=err
+    elif [[ $getSettingsConf2 = err ]]; then
+        installcertconf="${redColorBold}Can't Display${whiteColor}"
+        isConfisTrue2=err
+    fi
+
+    if [[ $getSettingsConf3 = true ]]; then
+        openGenshinConf="${greenColorBold}ON${whiteColor}"
+        isConfisTrue3=true
+    elif [[ $getSettingsConf3 = false ]]; then
+        openGenshinConf="${redColorBold}OFF${whiteColor}"
+        isConfisTrue3=false
+    elif [[ $getSettingsConf3 = "" ]]; then
+        openGenshinConf="${redColorBold}Can't Display${whiteColor}"
+        isConfisTrue3=err
+    elif [[ $getSettingsConf3 = err ]]; then
+        openGenshinConf="${redColorBold}Can't Display${whiteColor}"
+        isConfisTrue3=err
+    fi
+
+    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]]; then
+        rm $pathScript
+        echo -e -n "# Script made by ElaXan\ninstallcert=false\nrename=false\nopenGenshin=false" > "$pathScript"
+        settingsScript
+    fi
+
+    echo "[$renameconf] ${cyanColorBold}1. Autorename Package Genshin (ROOT)${whiteColor}"
+    echo "[$installcertconf] ${cyanColorBold}2. Auto Install cert as Root (ROOT)${whiteColor}"
+    echo "[$openGenshinConf] ${cyanColorBold}3. Auto open Genshin Impact App${whiteColor}"
+    echo "0. Back to Menu!"
+    echo ""
+    echo -n "Enter input : "
+    read -r inputsettings
+    case $inputsettings in
+        "1" | "2" | "3" ) ChangeConfSettings;;
+        "0" ) UIMenu;;
+        * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; settingsScript;;
+    esac
+}
 
 DevelopmentVersion() {
     if [[ $noInternet = true ]]; then
@@ -957,11 +1089,19 @@ DevelopmentVersion() {
 }
 
 
-
 UIMenu() {
   clear
   whoMadeThis
-  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Get Certificate\n3. Remove Certificate Root\n4. Change Domain/Server\n5. Download proxy.py\n6. Download Genshin APKs\n7. Run Mitmproxy (zex run)\n8. Go to Development Version\n0. ${redColorBold}Exit${whiteColor}"
+  echo "${cyanColorBold}1. Extract Mitmproxy! and install Python"
+  echo "2. Get Certificate"
+  echo "3. Remove Certificate Root"
+  echo "4. Change Domain/Server"
+  echo "5. Download proxy.py"
+  echo "6. Download Genshin APKs"
+  echo "7. Run Mitmproxy (zex run)"
+  echo "8. Settings"
+  echo "9. Go to Development Version"
+  echo "0. ${redColorBold}Exit${whiteColor}"
   echo -n "Enter input : "
   read -r enterInputUI
   case $enterInputUI in
@@ -972,11 +1112,17 @@ UIMenu() {
     "5" ) proxyMenu;;
     "6" ) GenshinAPKs;;
     "7" ) zexsh;;
-    "8" ) DevelopmentVersion;;
+    "8" ) settingsScript;;
+    "9" ) DevelopmentVersion;;
     "0" ) exit 0;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
   esac
 }
+
+pathScript=$HOME/.termux/settings.zex
+if [[ ! -f $pathScript ]]; then
+    echo -e -n "# Script made by ElaXan\ninstallcert=false\nrename=false\nopenGenshin=false" > "$pathScript"
+fi
 
 case $userInput1 in
     "run" | "3" ) zexsh;; # if enter command zex run
