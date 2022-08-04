@@ -1,6 +1,6 @@
 binary=/data/data/com.termux/files/usr/bin/zex
-versionBashIn1="2.9"
-updateNotif="1. Add code detect package Genshin (Root)\n2. Add install certificate to Root\n3. Add function remove Certificate from Root\n4. Remove unnecessary code and fix code\n5. Add code detect if cert root already installed"
+versionBashIn1="3.0"
+updateNotif="1. Add Settings\n2. Fix code"
 updateNote="There is new version to"
 link=null
 printLatest="This is Latest Version (Ver : $versionBashIn1)"
