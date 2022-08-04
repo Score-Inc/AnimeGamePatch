@@ -464,6 +464,7 @@ mitmProxyRun() {
                         * ) echo -e "${redColorBold}Wrong Input!\nSkip Rename!${whiteColor}\n========================================"; sleep 0.5s;;
                     esac
                 else
+                    echo "${redColorBold}Can't Rename, there is 2 Package exist...${whiteColor}"
                     echo "========================================"
                 fi
             fi
@@ -768,7 +769,7 @@ fi
 
 clear
 whoMadeThis() {
-    echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n${yellowColorBold}Development Version (Maybe there is Bug)\n${printRooted}${whiteColor}\n========================================\n${greenColorBold}This only for test Script\nbefore update to Stable Version...${whiteColor}\n$FDroidTermux"
+    echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n${yellowColorBold}Development Version (Maybe there is Bug)\n${printRooted}${whiteColor}\n========================================\n${greenColorBold}Maybe will get update again for 5 days or more...${whiteColor}\n$FDroidTermux"
 }
 
 
@@ -987,7 +988,7 @@ ChangeConfSettings() {
         fi
     fi
 
-    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue = err ]]; then
+    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]]; then
         echo "${redColorBold}Sorry there is Problem can't change the Settings.${whiteColor}"
         echo ""
         echo -n "Press enter for back to Settings!"
@@ -996,7 +997,6 @@ ChangeConfSettings() {
         return
     fi
 
-    sleep 0.2s
     sed -i "s/$stringchange=$changeSet/$stringchange=$changeTo/g" "$pathScript"
     settingsScript
 }
@@ -1076,7 +1076,18 @@ settingsScript() {
 UIMenu() {
   clear
   whoMadeThis
-  echo -e "${cyanColorBold}1. Extract Mitmproxy! and install Python\n2. Get Certificate\n3. Remove Certificate Root\n4. Change Domain/Server\n5. Download proxy.py\n6. Download Genshin APKs\n7. Run Mitmproxy (zex run)\n8. Settings\n9. Go back to Stable Version\n10. What different Root and No Root\n11. Changelog\n0. ${redColorBold}Exit${whiteColor}"
+  echo "${cyanColorBold}1. Extract Mitmproxy! and install Python"
+  echo "2. Get Certificate"
+  echo "3. Remove Certificate Root"
+  echo "4. Change Domain/Server"
+  echo "5. Download proxy.py"
+  echo "6. Download Genshin APKs"
+  echo "7. Run Mitmproxy (zex run)"
+  echo "8. Settings"
+  echo "9. Go back to Stable Version"
+  echo "10. What different Root and No Root"
+  echo "11. Changelog"
+  echo "0. ${redColorBold}Exit${whiteColor}"
   echo -n "Enter input : "
   read -r enterInputUI
   case $enterInputUI in
