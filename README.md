@@ -1,12 +1,4 @@
-
-# This will not get update for 7 day's or more.
-Hey, if you always using my Script, then sorry I'm doing make script for localhost on Android, edit mongodb, and etc, and this for you too. But i need time because this not easy for me
-
-* Here for the picture and look the ping/ms
-<img src="img/Screenshot_20220806-055336_GI Private Server Z.png" width="350"/>
-
 # AnimeGamePatch
-
 For who have Android 8 or crash issue can try use this Patch.<br />
 This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)<br />
 <br />Feel free dm me on [Telegram](https://t.me/ElashXander) If you want need help how to use this or have issue install
@@ -15,6 +7,10 @@ This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)<br />
 - [ ] Install Mitmproxy with pipx
 - [ ] Manual Install 
 - [x] Autoscript
+
+# GCAndroid
+Want play localhost on your android phone?\
+Go to [GCAndroid](https://github.com/ElaXan/GCAndroid)
 
 #### This just for install mitmproxy
 Maybe for now just for install mitmproxy and change a server as you want<br />
