@@ -11,6 +11,12 @@
 userInput1=$1
 nameScript=$(basename "$0")
 
+checkTermux=$(env | grep "TERMUX_APK_RELEASE" | sed "s/=.*//g")
+if [[ $checkTermux != "TERMUX_APK_RELEASE" ]]; then
+    clear
+    echo "This script only for Termux"
+    # exit
+fi
 
 # ================== extract.sh START ================== #
 
@@ -119,10 +125,13 @@ changeServer() {
     # You can add more server here. But edit code bellow too not only this
     if [[ $domainChange = "1" ]]; then
         domainChange="sg.game.yuuki.me"
+        portChange="443"
     elif [[ $domainChange = "2" ]]; then
         domainChange="de.game.yuuki.me"
+        portChange="443"
     elif [[ $domainChange = "3" ]]; then
-        domainChange="hk.elashxander.my.id"
+        domainChange="127.0.0.1"
+        portChange="54321"
     fi
     if [[ $inpsrv = "1" ]]; then
         if [[ $downServerYuukiSG = 1 ]]; then
@@ -141,11 +150,7 @@ changeServer() {
     fi
 
     if [[ $inpsrv = "3" ]]; then
-        if [[ $downServerMINE = 1 ]]; then
-            changeServerDOWN
-        else
-            changeServer2
-        fi
+        changeServer2
     fi
 }
 
@@ -178,6 +183,7 @@ changeServer2 () {
         return
     fi
     command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domainChange\"/g" "$HOME"/proxy_config.py &> "$ZERR"
+    sed -i "s/REMOTE_PORT = .*/REMOTE_PORT = 54321/g" $HOME/proxy_config.py &> /dev/null
     ifeditfailed=$?
     if [[ "$ifeditfailed" != 0 ]]; then
         echo "ERROR!"
@@ -208,26 +214,38 @@ customserver() {
     echo -e "Custom Domain!\nExample : elashxander.my.id\nB : Back to change server\n"
     echo -n "Enter custom Domain : "
     read -r domain
+    echo -n "Enter port : "
+    read -r changeAPort
     if [[ $domain = "B" ]] || [[ $domain = "b" ]] || [[ $domain = "Back" ]] || [[ $domain = "BACK" ]]; then
         clear
         changeServer
     else
         domain=$(echo "$domain" | sed "s/http.*\/\///g") # Thanks to Charon Baglari
         curl -Ism 2 -f https://"$domain" &> /dev/null
+        ifcurleditfail=$?
     fi
-    ifcurleditfail=$?
-    if [[ "$ifcurleditfail" != 0 ]]; then
+    if [[ $domain = "127.0.0.1" ]]; then
+        command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" "$HOME"/proxy_config.py &> "$ZERR"
+        sed -i "s/REMOTE_PORT = .*/REMOTE_PORT = $changeAPort/g" $HOME/proxy_config.py &> /dev/null
+        echo "Domain changed to localhost..."
+        echo ""
+        echo -n "Press Enter to change server "
+        read -r
+        clear
+        zdomsh
+    elif [[ "$ifcurleditfail" != 0 ]]; then
         echo -e "Server is can't to be access!\n"
         echo -n "You sure want change to $domain? (y/n/r) : "
         read -r youSureBruh
         case $youSureBruh in
-            "y" | "Y" ) command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" "$HOME"/proxy_config.py &> "$ZERR";;
+            "y" | "Y" ) command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" "$HOME"/proxy_config.py &> "$ZERR";sed -i "s/REMOTE_PORT = .*/REMOTE_PORT = $changeAPort/g" $HOME/proxy_config.py &> /dev/null;;
             "n" | "N" ) echo "Okay! server not changed!"; exit;;
             "r" | "R" ) customserver;;
             * ) echo "Wrong input!"; exit;;
         esac
     else
         command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" "$HOME"/proxy_config.py &> "$ZERR"
+        sed -i "s/REMOTE_PORT = .*/REMOTE_PORT = $changeAPort/g" $HOME/proxy_config.py &> /dev/null
     fi
     ifeditsedfail=$?
     if [[ "$ifeditsedfail" != 0 ]]; then
@@ -249,7 +267,7 @@ ZERR=/data/user/0/com.termux/cache/zlog
 whoMadeThis
 command cd || echo
 if [[ -f "proxy_config.py" ]]; then
-    serverUsing=$(echo proxy_config.py | grep "REMOTE_HOST = \"" | sed "s/.*= //g" | sed "s/\"//g")
+    serverUsing=$(cat proxy_config.py | grep "REMOTE_HOST = \"" | sed "s/.*= //g" | sed "s/\"//g")
 else
     serverUsing=""
 fi
@@ -268,8 +286,6 @@ curl -Ism 3 -f https://sg.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiSG=$?
 curl -Ism 3 -f https://de.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiDE=$?
-curl -Ism 3 -f https://hk.elashxander.my.id &> /dev/null
-resultsCheckServerMINE=$?
 
 if [[ $resultsCheckServerYuukiSG = 28 ]]; then
     statusServerYuukiSG="${redColorBold}[DOWN]${whiteColor}"
@@ -293,28 +309,18 @@ elif [[ $resultsCheckServerYuukiDE = 0 ]]; then
     downServerYuukiDE=0
 fi
 
-if [[ $resultsCheckServerMINE = 28 ]]; then
-    statusServerMINE="${redColorBold}[DOWN]${whiteColor}"
-    downServerMINE=1
-elif [[ $resultsCheckServerMINE = 6 ]]; then
-    statusServerMINE="${yellowColorBold}[CAN'T CONNECT]${whiteColor}"
-    downServerMINE=0
-elif [[ $resultsCheckServerMINE = 0 ]]; then
-    statusServerMINE="${greenColorBold}[RUNNING]${whiteColor}"
-    downServerMINE=0
-fi
 
-downServer=$((downServerYuukiSG+downServerYuukiDE+downServerMINE))
+downServer=$((downServerYuukiSG+downServerYuukiDE))
 
-if [[ $resultsCheckServerYuukiSG = 28 ]] || [[ $resultsCheckServerYuukiDE = 28 ]] || [[ $resultsCheckServerMINE = 28 ]]; then
+if [[ $resultsCheckServerYuukiSG = 28 ]] || [[ $resultsCheckServerYuukiDE = 28 ]]; then
     echo -e "\n${redColorBold}There is $downServer server DOWN${whiteColor}\n========================================"
-elif [[ $resultsCheckServerYuukiSG = 6 ]] || [[ $resultsCheckServerYuukiDE = 6 ]] || [[ $resultsCheckServerMINE = 6 ]]; then
+elif [[ $resultsCheckServerYuukiSG = 6 ]] || [[ $resultsCheckServerYuukiDE = 6 ]]; then
     echo "========================================"
-elif [[ $resultsCheckServerYuukiSG = 0 ]] || [[ $resultsCheckServerYuukiDE = 0 ]] || [[ $resultsCheckServerMINE = 0 ]]; then
+elif [[ $resultsCheckServerYuukiSG = 0 ]] || [[ $resultsCheckServerYuukiDE = 0 ]]; then
     echo "========================================"
 fi
 
-echo -e "Select Server\n1. Yuuki (Singapore) : $statusServerYuukiSG\n2. Yuuki (German) :  $statusServerYuukiDE\n3. My Server (Hongkong) : $statusServerMINE\n4. Custom\n5. BACK\n\nExample : 1 for select Yuuki Server"
+echo -e "Select Server\n1. Yuuki (Singapore) : $statusServerYuukiSG\n2. Yuuki (German) :  $statusServerYuukiDE\n3. localhost (GCAndroid)\n4. Custom\n5. BACK\n\nExample : 1 for select Yuuki Server"
 echo -n "Enter input : "
 read -r inpsrv
 
@@ -455,14 +461,10 @@ mitmProxyRun() {
                 echo "========================================"
             else
                 if [[ $genshinData != "com.miHoYo.GenshinImpactzex" ]]; then
-                    echo -e "${yellowColorBold}Do you want rename package Genshin?\n"
-                    echo -n "Enter input (y/n) : "
-                    read -r renamePackage
-                    case $renamePackage in
-                        "y" | "Y" ) cd /sdcard/Android/data || echo; su -c mv com.miHoYo.GenshinImpact com.miHoYo.GenshinImpactzex; echo -e "${greenColorBold}Done Rename!${whiteColor}\n========================================"; command cd || echo;;
-                        "n" | "N" ) echo -e "${yellowColorBold}Okay! Rename by yourself!${whiteColor}\n========================================"; sleep 0.4s;;
-                        * ) echo -e "${redColorBold}Wrong Input!\nSkip Rename!${whiteColor}\n========================================"; sleep 0.5s;;
-                    esac
+                    cd /sdcard/Android/data || echo
+                    echo; su -c mv com.miHoYo.GenshinImpact com.miHoYo.GenshinImpactzex
+                    echo -e "${greenColorBold}Done Rename!${whiteColor}\n========================================"
+                    command cd || echo
                 else
                     echo "${redColorBold}Can't Rename, there is 2 Package exist...${whiteColor}"
                     echo "========================================"
@@ -498,15 +500,15 @@ mitmProxyRun() {
         
         if [[ $isConfisTrue3 = true ]]; then
             echo "${greenColorBold}Open Genshin...${whiteColor}"
-            am start --user 0 com.miHoYo.GenshinImpactzex/com.miHoYo.GetMobileInfo.MainActivity &> $HOME/.termux/openGenshin
-            detectErrorOpenGenshin=$(cat $HOME/.termux/openGenshin | sed 's/.*does not/does not/g' | grep "does not")
+            am start --user 0 com.miHoYo.GenshinImpactzex/com.miHoYo.GetMobileInfo.MainActivity &> "$HOME"/.termux/openGenshin
+            detectErrorOpenGenshin=$(cat "$HOME"/.termux/openGenshin | sed 's/.*does not/does not/g' | grep "does not")
             if [[ $detectErrorOpenGenshin = "does not exist." ]]; then
                 echo -e "${redColorBold}Can't open Genshin...\nTarget to com.miHoYo.GenshinImpactzex\n${yellowColorBold}Will Skip open Genshin${whiteColor}"
                 sleep 1s
-                rm $HOME/.termux/openGenshin
+                rm "$HOME"/.termux/openGenshin
             else
                 echo "${greenColorBold}Done Open Genshin...,${whiteColor}"
-                rm $HOME/.termux/openGenshin
+                rm "$HOME"/.termux/openGenshin
             fi
             echo "${greenColorBold}Run Mitmdump...${whiteColor}"
             ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
@@ -769,7 +771,7 @@ fi
 
 clear
 whoMadeThis() {
-    echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n${yellowColorBold}Development Version (Maybe there is Bug)\n${printRooted}${whiteColor}\n========================================\n${greenColorBold}Maybe will get update again for 5 days or more...${whiteColor}\n$FDroidTermux"
+    echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n${yellowColorBold}Development Version (Maybe there is Bug)\n${printRooted}${whiteColor}\n========================================\n${greenColorBold}Script testing before update to Stable version...${whiteColor}\n$FDroidTermux"
 }
 
 
@@ -783,7 +785,8 @@ source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/so
 changeLog() {
     clear
     whoMadeThis
-    echo "${greenColorBold}1. Add Settings (STILL TESTING)${whiteColor}"
+    echo "${greenColorBold}1. Add Settings"
+    echo "2. Add localhost (GCAndroid)${whiteColor}"
     echo ""
     echo -n "Press enter for back to Menu!"
     read -r
@@ -958,7 +961,6 @@ whatDifferentRoot() {
 }
 
 ChangeConfSettings() {
-    inputsettings=$inputsettings
     if [[ $inputsettings = "1" ]]; then
         stringchange="rename"
         if [[ $isConfisTrue = true ]]; then
@@ -1051,7 +1053,7 @@ settingsScript() {
     fi
 
     if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]]; then
-        rm $pathScript
+        rm "$pathScript"
         echo -e -n "# Script made by ElaXan\ninstallcert=false\nrename=false\nopenGenshin=false" > "$pathScript"
         settingsScript
     fi
