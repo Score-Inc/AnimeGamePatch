@@ -183,7 +183,7 @@ changeServer2 () {
         return
     fi
     command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domainChange\"/g" "$HOME"/proxy_config.py &> "$ZERR"
-    sed -i "s/REMOTE_PORT = .*/REMOTE_PORT = 54321/g" $HOME/proxy_config.py &> /dev/null
+    sed -i "s/REMOTE_PORT = .*/REMOTE_PORT = $portChange/g" $HOME/proxy_config.py &> /dev/null
     ifeditfailed=$?
     if [[ "$ifeditfailed" != 0 ]]; then
         echo "ERROR!"
