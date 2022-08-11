@@ -297,7 +297,7 @@ curl -Ism 3 -f https://sg.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiSG=$?
 curl -Ism 3 -f https://de.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiDE=$?
-curl -lsm 3 -f https://eu.game.yuuki.me &> /dev/null
+curl -Ism 3 -f https://eu.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiEU=$?
 
 if [[ $resultsCheckServerYuukiSG = 28 ]]; then
@@ -399,11 +399,16 @@ zexsh() {
 changeProxy() {
     clear
     whoMadeThis
-    if [[ $isRooted = true ]]; then
-        echo -e "${redColorBold}mitmproxy killed/force stopped!\n\n${greenColorBold}Reset Proxy..."
+    echo -e "${redColorBold}mitmproxy killed/force stopped!${whiteColor}"
+    getSettingsConf4=$(cat "$pathScript" | grep "setProxy" | sed "s/.*setProxy=//g")
+    if [[ $getSettingsConf4 = true ]]; then
+        echo "${greenColorBold}Reset Proxy..."
         su -c settings put global http_proxy :0
         sleep 0.5s
         echo "Done!${whiteColor}"
+    fi
+    getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
+    if [[ $getSettingsConf = true ]]; then
         genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | grep "zex")
         zexPackage=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | sed "s/.*zex//g")
         if [[ ${genshinData} = "com.miHoYo.GenshinImpact" ]] && [[ ${zexPackage} = "com.miHoYo.GenshinImpact" ]]; then
@@ -416,18 +421,12 @@ changeProxy() {
             su -c mv /sdcard/Android/data/com.miHoYo.GenshinImpactzex /sdcard/Android/data/com.miHoYo.GenshinImpact
             echo "Done!${whiteColor}"
         fi
-        echo ""
-        echo -n "Press enter for back to Menu!"
-        read -r
-        UIMenu
-        return
-    else
-        echo -e "${redColorBold}mitmproxy killed/force stopped!${whiteColor}\n"
-        echo -n "Press enter for back to Menu!"
-        read -r
-        UIMenu
-        return
     fi
+    echo ""
+    echo -n "Press enter for back to Menu!"
+    read -r
+    UIMenu
+    return
 }
 
 killMtimprob() {
@@ -501,7 +500,8 @@ mitmProxyRun() {
                 fi
             fi
         fi
-        if [[ $isRooted = true ]]; then
+        getSettingsConf4=$(cat "$pathScript" | grep "setProxy" | sed "s/.*setProxy=//g")
+        if [[ $getSettingsConf4 = true ]]; then
             echo "${greenColorBold}Change Proxy..."
             sleep 0.3s
             su -c settings put global http_proxy 127.0.0.1:8080
@@ -968,7 +968,7 @@ ChangeConfSettings() {
     if [[ $inputsettings = "1" ]]; then
         stringchange="rename"
         if [[ $isConfisTrue = true ]]; then
-            changeSet="true"
+            changeFrom="true"
             changeTo="false"
         elif [[ $isConfisTrue = false ]]; then
             if [[ $isRooted = false ]]; then
@@ -981,13 +981,13 @@ ChangeConfSettings() {
                 settingsScript
                 return
             fi
-            changeSet="false"
+            changeFrom="false"
             changeTo="true"
         fi
     elif [[ $inputsettings = "2" ]]; then
         stringchange="installcert"
         if [[ $isConfisTrue2 = true ]]; then
-            changeSet="true"
+            changeFrom="true"
             changeTo="false"
         elif [[ $isConfisTrue2 = false ]]; then
             if [[ $isRooted = false ]]; then
@@ -1009,20 +1009,39 @@ ChangeConfSettings() {
             echo -n "Enter input (y/n) : "
             read -r installCert
             case $installCert in
-                "y" | "Y" ) sleep 0.5s;;
+                "y" | "Y" ) sleep 0.1s;;
                 "n" | "N" ) UIMenu;;
                 * ) echo "Wrong Input!"; sleep 1s; settingsScript;;
             esac
-            changeSet="false"
+            changeFrom="false"
             changeTo="true"
         fi
     elif [[ $inputsettings = "3" ]]; then
         stringchange="openGenshin"
         if [[ $isConfisTrue3 = true ]]; then
-            changeSet="true"
+            changeFrom="true"
             changeTo="false"
         elif [[ $isConfisTrue3 = false ]]; then
-            changeSet="false"
+            changeFrom="false"
+            changeTo="true"
+        fi
+    elif [[ $inputsettings = "4" ]]; then
+        stringchange="setProxy"
+        if [[ $isConfisTrue4 = true ]]; then
+            changeFrom="true"
+            changeTo="false"
+        elif [[ $isConfisTrue4 = false ]]; then
+            if [[ $isRooted = false ]]; then
+                clear
+                whoMadeThis
+                echo "${redColorBold}Sorry this only for Rooted Device!${whiteColor}"
+                echo ""
+                echo -n "Press enter for back to Settings!"
+                read -r
+                settingsScript
+                return
+            fi
+            changeFrom="false"
             changeTo="true"
         fi
     fi
@@ -1036,7 +1055,7 @@ ChangeConfSettings() {
         return
     fi
 
-    sed -i "s/$stringchange=$changeSet/$stringchange=$changeTo/g" "$pathScript"
+    sed -i "s/$stringchange=$changeFrom/$stringchange=$changeTo/g" "$pathScript"
     settingsScript
 }
 
@@ -1046,6 +1065,7 @@ settingsScript() {
     getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
     getSettingsConf2=$(cat "$pathScript" | grep "installcert" | sed "s/.*installcert=//g")
     getSettingsConf3=$(cat "$pathScript" | grep "openGenshin" | sed "s/.*openGenshin=//g")
+    getSettingsConf4=$(cat "$pathScript" | grep "setProxy" | sed "s/.*setProxy=//g")
 
     if [[ $getSettingsConf = true ]]; then
         renameconf="${greenColorBold}ON${whiteColor}"
@@ -1053,6 +1073,8 @@ settingsScript() {
     elif [[ $getSettingsConf = false ]]; then
         renameconf="${redColorBold}OFF${whiteColor}"
         isConfisTrue=false
+    elif [[ $getSettingsConf = "" ]]; then
+        isConfisTrue=err
     fi
 
     if [[ $getSettingsConf2 = true ]]; then
@@ -1061,6 +1083,8 @@ settingsScript() {
     elif [[ $getSettingsConf2 = false ]]; then
         installcertconf="${redColorBold}OFF${whiteColor}"
         isConfisTrue2=false
+    elif [[ $getSettingsConf2 = "" ]]; then
+        isConfisTrue2=err
     fi
 
     if [[ $getSettingsConf3 = true ]]; then
@@ -1069,23 +1093,36 @@ settingsScript() {
     elif [[ $getSettingsConf3 = false ]]; then
         openGenshinConf="${redColorBold}OFF${whiteColor}"
         isConfisTrue3=false
+    elif [[ $getSettingsConf3 = "" ]]; then
+        isConfisTrue3=err
     fi
 
-    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]]; then
+    if [[ $getSettingsConf4 = true ]]; then
+        setProxyConf="${greenColorBold}ON${whiteColor}"
+        isConfisTrue4=true
+    elif [[ $getSettingsConf4 = false ]]; then
+        setProxyConf="${redColorBold}OFF${whiteColor}"
+        isConfisTrue4=false
+    elif [[ $getSettingsConf4 = "" ]]; then
+        isConfisTrue4=err
+    fi
+
+    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]] || [[ $isConfisTrue4 = err ]]; then
         rm "$pathScript"
-        echo -e -n "# Script made by ElaXan\ninstallcert=false\nrename=false\nopenGenshin=false" > "$pathScript"
+        echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false" > "$pathScript"
         settingsScript
     fi
 
     echo "[$renameconf] ${cyanColorBold}1. Autorename Package Genshin (ROOT)${whiteColor}"
     echo "[$installcertconf] ${cyanColorBold}2. Auto Install cert as Root (ROOT)${whiteColor}"
     echo "[$openGenshinConf] ${cyanColorBold}3. Auto open Genshin Impact App${whiteColor}"
+    echo "[$setProxyConf] ${cyanColorBold}4. Auto Change Proxy (ROOT)${whiteColor}"
     echo "0. Back to Menu!"
     echo ""
     echo -n "Enter input : "
     read -r inputsettings
     case $inputsettings in
-        "1" | "2" | "3" ) ChangeConfSettings;;
+        "1" | "2" | "3" | "4" ) ChangeConfSettings;;
         "0" ) UIMenu;;
         * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; settingsScript;;
     esac
@@ -1097,7 +1134,8 @@ changeLog() {
     echo "${greenColorBold}1. Add Settings"
     echo "2. Add localhost (GCAndroid)"
     echo "3. Add server EU (Yuuki)"
-    echo "4. Fix code?${whiteColor}"
+    echo "4. Add Settings for change proxy! (ROOT)"
+    echo "5. Fix code?${whiteColor}"
     echo ""
     echo -n "Press enter for back to Menu!"
     read -r
@@ -1143,7 +1181,7 @@ UIMenu() {
 
 pathScript=$HOME/.termux/settings.zex
 if [[ ! -f $pathScript ]]; then
-    echo -e -n "# Script made by ElaXan\ninstallcert=false\nrename=false\nopenGenshin=false" > "$pathScript"
+    echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false" > "$pathScript"
 fi
 
 case $userInput1 in
