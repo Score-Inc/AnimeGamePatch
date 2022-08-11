@@ -130,6 +130,9 @@ changeServer() {
         domainChange="de.game.yuuki.me"
         portChange="443"
     elif [[ $domainChange = "3" ]]; then
+        domainChange="eu.game.yuuki.me"
+        portChange="443"
+    elif [[ $domainChange = "4" ]]; then
         domainChange="127.0.0.1"
         portChange="54321"
     fi
@@ -150,6 +153,14 @@ changeServer() {
     fi
 
     if [[ $inpsrv = "3" ]]; then
+        if [[ $downServerYuukiEU = 1 ]]; then
+            changeServerDOWN
+        else
+            changeServer2
+        fi
+    fi
+
+    if [[ $inpsrv = "4" ]]; then
         changeServer2
     fi
 }
@@ -286,6 +297,8 @@ curl -Ism 3 -f https://sg.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiSG=$?
 curl -Ism 3 -f https://de.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiDE=$?
+curl -lsm 3 -f https://eu.game.yuuki.me &> /dev/null
+resultsCheckServerYuukiEU=$?
 
 if [[ $resultsCheckServerYuukiSG = 28 ]]; then
     statusServerYuukiSG="${redColorBold}[DOWN]${whiteColor}"
@@ -309,25 +322,41 @@ elif [[ $resultsCheckServerYuukiDE = 0 ]]; then
     downServerYuukiDE=0
 fi
 
+if [[ $resultsCheckServerYuukiEU = 28 ]]; then
+    statusServerYuukiEU="${redColorBold}[DOWN]${whiteColor}"
+    downServerYuukiEU=1
+elif [[ $resultsCheckServerYuukiEU = 6 ]]; then
+    statusServerYuukiEU="${yellowColorBold}[CAN'T CONNECT]${whiteColor}"
+    downServerYuukiEU=0
+elif [[ $resultsCheckServerYuukiEU = 0 ]]; then
+    statusServerYuukiEU="${greenColorBold}[RUNNING]${whiteColor}"
+    downServerYuukiEU=0
+fi
 
-downServer=$((downServerYuukiSG+downServerYuukiDE))
 
-if [[ $resultsCheckServerYuukiSG = 28 ]] || [[ $resultsCheckServerYuukiDE = 28 ]]; then
+downServer=$((downServerYuukiSG+downServerYuukiDE+downServerYuukiEU))
+
+if [[ $resultsCheckServerYuukiSG = 28 ]] || [[ $resultsCheckServerYuukiDE = 28 ]] || [[ $resultsCheckServerYuukiEU = 28 ]]; then
     echo -e "\n${redColorBold}There is $downServer server DOWN${whiteColor}\n========================================"
-elif [[ $resultsCheckServerYuukiSG = 6 ]] || [[ $resultsCheckServerYuukiDE = 6 ]]; then
-    echo "========================================"
-elif [[ $resultsCheckServerYuukiSG = 0 ]] || [[ $resultsCheckServerYuukiDE = 0 ]]; then
+elif [[ $resultsCheckServerYuukiSG = 0 ]] || [[ $resultsCheckServerYuukiDE = 0 ]] || [[ $resultsCheckServerYuukiEU = 0 ]]; then
     echo "========================================"
 fi
 
-echo -e "Select Server\n1. Yuuki (Singapore) : $statusServerYuukiSG\n2. Yuuki (German) :  $statusServerYuukiDE\n3. localhost (GCAndroid)\n4. Custom\n5. BACK\n\nExample : 1 for select Yuuki Server"
+echo "Select Server"
+echo "1. Yuuki (Singapore) : $statusServerYuukiSG"
+echo "2. Yuuki (German) :  $statusServerYuukiDE"
+echo "3. Yuuki (Europe) : $statusServerYuukiEU"
+echo "4. localhost (GCAndroid)"
+echo "5. Custom"
+echo "6. BACK"
+echo ""
+echo "Example : 1 for select Yuuki Server"
 echo -n "Enter input : "
 read -r inpsrv
-
 case $inpsrv in
-    "1" | "2" | "3" ) changeServer;;
-    "4" ) customserver;;
-    "5" ) clear; UIMenu;;
+    "1" | "2" | "3" | "4" ) changeServer;;
+    "5" ) customserver;;
+    "6" ) clear; UIMenu;;
     * ) echo "Wrong Input!";;
 esac
 }
@@ -458,11 +487,12 @@ mitmProxyRun() {
             genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | grep "zex")
             genshinDatas=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | sed "s/com.*zex//g" | grep "com")
             if [[ $genshinDatas != "com.miHoYo.GenshinImpact" ]]; then
+                echo "${redColorBold}Can't Rename, Package genshin doesn't exist!...${whiteColor}"
                 echo "========================================"
             else
                 if [[ $genshinData != "com.miHoYo.GenshinImpactzex" ]]; then
                     cd /sdcard/Android/data || echo
-                    echo; su -c mv com.miHoYo.GenshinImpact com.miHoYo.GenshinImpactzex
+                    su -c mv com.miHoYo.GenshinImpact com.miHoYo.GenshinImpactzex
                     echo -e "${greenColorBold}Done Rename!${whiteColor}\n========================================"
                     command cd || echo
                 else
@@ -760,12 +790,10 @@ elif [[ $RootDetect = 1 ]]; then
     isRooted=false
 fi
 
-isFDroid=$(export | tee "$HOME"/isFdroid.zex | grep "TERMUX_APK_RELEASE" "$HOME"/isFdroid.zex  | sed "s/declare -x TERMUX_APK_RELEASE=//g" | sed "s/\"//g")
+isFDroid=$(env | grep "TERMUX_APK_RELEASE" | sed "s/TERMUX_APK_RELEASE=//g" | sed "s/\"//g")
 if [[ $isFDroid != "F_DROID" ]]; then
-    rm "$HOME"/isFDroid.zex
     FDroidTermux="${redColorBold}I recommend you using Termux from F-Droid${whiteColor}\n========================================"
 else
-    rm "$HOME"/isFDroid.zex
     FDroidTermux="========================================"
 fi
 
@@ -781,18 +809,6 @@ whoMadeThis() {
 # Why Shell Check this said problem... TF
 source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate)
 # source $HOME/AnimeGamePatch/someupdate
-
-changeLog() {
-    clear
-    whoMadeThis
-    echo "${greenColorBold}1. Add Settings"
-    echo "2. Add localhost (GCAndroid)${whiteColor}"
-    echo ""
-    echo -n "Press enter for back to Menu!"
-    read -r
-    UIMenu
-    return
-}
 
 # SubCommand here
 # You can edit as you want (IF YOU KNOW SHELL CODE)
@@ -860,18 +876,6 @@ getCert() {
             UIMenu
             return
         fi
-        echo "========================================"
-        echo "${greenColorBold}Do you want to install Certificate as Root?${whiteColor}"
-        echo "${yellowColorBold}i'm not take any responsibility if there is something wrong with your Phone"
-        echo "or even can't delete for the certficate${whiteColor}"
-        echo ""
-        echo -n "Enter input (y/n) : "
-        read -r installCert
-        case $installCert in
-            "y" | "Y" ) echo "${yellowColorBold}Okay will continue install cert as Root!${whiteColor}"; sleep 1s;;
-            "n" | "N" ) echo -e "${greenColorBold}Okay cancell for install cert as Root!\nCertificate file saved in /sdcard and file name \"mitm.cer\"${whiteColor}"; sleep 1s; echo ""; echo -n "Press enter for back to Menu!"; read -r; UIMenu;;
-            * ) echo -e "Wrong Input!\n${greenColorBold}Will skip for install cert as Root!\nCertificate file saved in /sdcard and file name \"mitm.cer\"${whiteColor}"; sleep 1s; echo ""; echo -n "Press enter for back to Menu!"; read -r; UIMenu; return ;;
-        esac
         clear
         whoMadeThis
         echo "${greenColorBold}Install certificate...${whiteColor}"
@@ -967,6 +971,16 @@ ChangeConfSettings() {
             changeSet="true"
             changeTo="false"
         elif [[ $isConfisTrue = false ]]; then
+            if [[ $isRooted = false ]]; then
+                clear
+                whoMadeThis
+                echo "${redColorBold}Sorry this only for Rooted device!${whiteColor}"
+                echo ""
+                echo -n "Press enter for back to Settings!"
+                read -r
+                settingsScript
+                return
+            fi
             changeSet="false"
             changeTo="true"
         fi
@@ -976,6 +990,29 @@ ChangeConfSettings() {
             changeSet="true"
             changeTo="false"
         elif [[ $isConfisTrue2 = false ]]; then
+            if [[ $isRooted = false ]]; then
+                clear
+                whoMadeThis
+                echo "${redColorBold}Sorry this only for Rooted device!${whiteColor}"
+                echo ""
+                echo -n "Press enter for back to Settings!"
+                read -r
+                settingsScript
+                return
+            fi
+            clear
+            whoMadeThis
+            echo "${greenColorBold}Do you want to install Certificate as Root?${whiteColor}"
+            echo "${yellowColorBold}i'm not take any responsibility if there is something wrong with your Phone"
+            echo "or even can't delete for the certficate${whiteColor}"
+            echo ""
+            echo -n "Enter input (y/n) : "
+            read -r installCert
+            case $installCert in
+                "y" | "Y" ) sleep 0.5s;;
+                "n" | "N" ) UIMenu;;
+                * ) echo "Wrong Input!"; sleep 1s; settingsScript;;
+            esac
             changeSet="false"
             changeTo="true"
         fi
@@ -1016,12 +1053,6 @@ settingsScript() {
     elif [[ $getSettingsConf = false ]]; then
         renameconf="${redColorBold}OFF${whiteColor}"
         isConfisTrue=false
-    elif [[ $getSettingsConf = "" ]]; then
-        renameconf="${redColorBold}Can't Display${whiteColor}"
-        isConfisTrue=err
-    elif [[ $getSettingsConf = err ]]; then
-        renameconf="${redColorBold}Can't Display${whiteColor}"
-        isConfisTrue=err
     fi
 
     if [[ $getSettingsConf2 = true ]]; then
@@ -1030,12 +1061,6 @@ settingsScript() {
     elif [[ $getSettingsConf2 = false ]]; then
         installcertconf="${redColorBold}OFF${whiteColor}"
         isConfisTrue2=false
-    elif [[ $getSettingsConf2 = "" ]]; then
-        installcertconf="${redColorBold}Can't Display${whiteColor}"
-        isConfisTrue2=err
-    elif [[ $getSettingsConf2 = err ]]; then
-        installcertconf="${redColorBold}Can't Display${whiteColor}"
-        isConfisTrue2=err
     fi
 
     if [[ $getSettingsConf3 = true ]]; then
@@ -1044,12 +1069,6 @@ settingsScript() {
     elif [[ $getSettingsConf3 = false ]]; then
         openGenshinConf="${redColorBold}OFF${whiteColor}"
         isConfisTrue3=false
-    elif [[ $getSettingsConf3 = "" ]]; then
-        openGenshinConf="${redColorBold}Can't Display${whiteColor}"
-        isConfisTrue3=err
-    elif [[ $getSettingsConf3 = err ]]; then
-        openGenshinConf="${redColorBold}Can't Display${whiteColor}"
-        isConfisTrue3=err
     fi
 
     if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]]; then
@@ -1072,6 +1091,19 @@ settingsScript() {
     esac
 }
 
+changeLog() {
+    clear
+    whoMadeThis
+    echo "${greenColorBold}1. Add Settings"
+    echo "2. Add localhost (GCAndroid)"
+    echo "3. Add server EU (Yuuki)"
+    echo "4. Fix code?${whiteColor}"
+    echo ""
+    echo -n "Press enter for back to Menu!"
+    read -r
+    UIMenu
+    return
+}
 
 
 
