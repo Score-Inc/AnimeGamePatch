@@ -15,7 +15,7 @@ checkTermux=$(env | grep "TERMUX_APK_RELEASE" | sed "s/=.*//g")
 if [[ $checkTermux != "TERMUX_APK_RELEASE" ]]; then
     clear
     echo "This script only for Termux"
-    exit
+    # exit
 fi
 
 # ================== extract.sh START ================== #
@@ -125,10 +125,16 @@ changeServer() {
     # You can add more server here. But edit code bellow too not only this
     if [[ $domainChange = "1" ]]; then
         domainChange="sg.game.yuuki.me"
+        portChange="443"
     elif [[ $domainChange = "2" ]]; then
         domainChange="de.game.yuuki.me"
+        portChange="443"
     elif [[ $domainChange = "3" ]]; then
-        domainChange="hk.elashxander.my.id"
+        domainChange="eu.game.yuuki.me"
+        portChange="443"
+    elif [[ $domainChange = "4" ]]; then
+        domainChange="127.0.0.1"
+        portChange="54321"
     fi
     if [[ $inpsrv = "1" ]]; then
         if [[ $downServerYuukiSG = 1 ]]; then
@@ -147,11 +153,15 @@ changeServer() {
     fi
 
     if [[ $inpsrv = "3" ]]; then
-        if [[ $downServerMINE = 1 ]]; then
+        if [[ $downServerYuukiEU = 1 ]]; then
             changeServerDOWN
         else
             changeServer2
         fi
+    fi
+
+    if [[ $inpsrv = "4" ]]; then
+        changeServer2
     fi
 }
 
@@ -184,6 +194,7 @@ changeServer2 () {
         return
     fi
     command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domainChange\"/g" "$HOME"/proxy_config.py &> "$ZERR"
+    sed -i "s/REMOTE_PORT = .*/REMOTE_PORT = $portChange/g" $HOME/proxy_config.py &> /dev/null
     ifeditfailed=$?
     if [[ "$ifeditfailed" != 0 ]]; then
         echo "ERROR!"
@@ -214,26 +225,38 @@ customserver() {
     echo -e "Custom Domain!\nExample : elashxander.my.id\nB : Back to change server\n"
     echo -n "Enter custom Domain : "
     read -r domain
+    echo -n "Enter port : "
+    read -r changeAPort
     if [[ $domain = "B" ]] || [[ $domain = "b" ]] || [[ $domain = "Back" ]] || [[ $domain = "BACK" ]]; then
         clear
         changeServer
     else
         domain=$(echo "$domain" | sed "s/http.*\/\///g") # Thanks to Charon Baglari
         curl -Ism 2 -f https://"$domain" &> /dev/null
+        ifcurleditfail=$?
     fi
-    ifcurleditfail=$?
-    if [[ "$ifcurleditfail" != 0 ]]; then
+    if [[ $domain = "127.0.0.1" ]]; then
+        command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" "$HOME"/proxy_config.py &> "$ZERR"
+        sed -i "s/REMOTE_PORT = .*/REMOTE_PORT = $changeAPort/g" $HOME/proxy_config.py &> /dev/null
+        echo "Domain changed to localhost..."
+        echo ""
+        echo -n "Press Enter to change server "
+        read -r
+        clear
+        zdomsh
+    elif [[ "$ifcurleditfail" != 0 ]]; then
         echo -e "Server is can't to be access!\n"
         echo -n "You sure want change to $domain? (y/n/r) : "
         read -r youSureBruh
         case $youSureBruh in
-            "y" | "Y" ) command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" "$HOME"/proxy_config.py &> "$ZERR";;
+            "y" | "Y" ) command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" "$HOME"/proxy_config.py &> "$ZERR";sed -i "s/REMOTE_PORT = .*/REMOTE_PORT = $changeAPort/g" $HOME/proxy_config.py &> /dev/null;;
             "n" | "N" ) echo "Okay! server not changed!"; exit;;
             "r" | "R" ) customserver;;
             * ) echo "Wrong input!"; exit;;
         esac
     else
         command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" "$HOME"/proxy_config.py &> "$ZERR"
+        sed -i "s/REMOTE_PORT = .*/REMOTE_PORT = $changeAPort/g" $HOME/proxy_config.py &> /dev/null
     fi
     ifeditsedfail=$?
     if [[ "$ifeditsedfail" != 0 ]]; then
@@ -255,7 +278,7 @@ ZERR=/data/user/0/com.termux/cache/zlog
 whoMadeThis
 command cd || echo
 if [[ -f "proxy_config.py" ]]; then
-    serverUsing=$(echo proxy_config.py | grep "REMOTE_HOST = \"" | sed "s/.*= //g" | sed "s/\"//g")
+    serverUsing=$(cat proxy_config.py | grep "REMOTE_HOST = \"" | sed "s/.*= //g" | sed "s/\"//g")
 else
     serverUsing=""
 fi
@@ -274,8 +297,8 @@ curl -Ism 3 -f https://sg.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiSG=$?
 curl -Ism 3 -f https://de.game.yuuki.me &> /dev/null
 resultsCheckServerYuukiDE=$?
-curl -Ism 3 -f https://hk.elashxander.my.id &> /dev/null
-resultsCheckServerMINE=$?
+curl -Ism 3 -f https://eu.game.yuuki.me &> /dev/null
+resultsCheckServerYuukiEU=$?
 
 if [[ $resultsCheckServerYuukiSG = 28 ]]; then
     statusServerYuukiSG="${redColorBold}[DOWN]${whiteColor}"
@@ -299,35 +322,41 @@ elif [[ $resultsCheckServerYuukiDE = 0 ]]; then
     downServerYuukiDE=0
 fi
 
-if [[ $resultsCheckServerMINE = 28 ]]; then
-    statusServerMINE="${redColorBold}[DOWN]${whiteColor}"
-    downServerMINE=1
-elif [[ $resultsCheckServerMINE = 6 ]]; then
-    statusServerMINE="${yellowColorBold}[CAN'T CONNECT]${whiteColor}"
-    downServerMINE=0
-elif [[ $resultsCheckServerMINE = 0 ]]; then
-    statusServerMINE="${greenColorBold}[RUNNING]${whiteColor}"
-    downServerMINE=0
+if [[ $resultsCheckServerYuukiEU = 28 ]]; then
+    statusServerYuukiEU="${redColorBold}[DOWN]${whiteColor}"
+    downServerYuukiEU=1
+elif [[ $resultsCheckServerYuukiEU = 6 ]]; then
+    statusServerYuukiEU="${yellowColorBold}[CAN'T CONNECT]${whiteColor}"
+    downServerYuukiEU=0
+elif [[ $resultsCheckServerYuukiEU = 0 ]]; then
+    statusServerYuukiEU="${greenColorBold}[RUNNING]${whiteColor}"
+    downServerYuukiEU=0
 fi
 
-downServer=$((downServerYuukiSG+downServerYuukiDE+downServerMINE))
 
-if [[ $resultsCheckServerYuukiSG = 28 ]] || [[ $resultsCheckServerYuukiDE = 28 ]] || [[ $resultsCheckServerMINE = 28 ]]; then
+downServer=$((downServerYuukiSG+downServerYuukiDE+downServerYuukiEU))
+
+if [[ $resultsCheckServerYuukiSG = 28 ]] || [[ $resultsCheckServerYuukiDE = 28 ]] || [[ $resultsCheckServerYuukiEU = 28 ]]; then
     echo -e "\n${redColorBold}There is $downServer server DOWN${whiteColor}\n========================================"
-elif [[ $resultsCheckServerYuukiSG = 6 ]] || [[ $resultsCheckServerYuukiDE = 6 ]] || [[ $resultsCheckServerMINE = 6 ]]; then
-    echo "========================================"
-elif [[ $resultsCheckServerYuukiSG = 0 ]] || [[ $resultsCheckServerYuukiDE = 0 ]] || [[ $resultsCheckServerMINE = 0 ]]; then
+elif [[ $resultsCheckServerYuukiSG = 0 ]] || [[ $resultsCheckServerYuukiDE = 0 ]] || [[ $resultsCheckServerYuukiEU = 0 ]]; then
     echo "========================================"
 fi
 
-echo -e "Select Server\n1. Yuuki (Singapore) : $statusServerYuukiSG\n2. Yuuki (German) :  $statusServerYuukiDE\n3. My Server (Hongkong) : $statusServerMINE\n4. Custom\n5. BACK\n\nExample : 1 for select Yuuki Server"
+echo "Select Server"
+echo "1. Yuuki (Singapore) : $statusServerYuukiSG"
+echo "2. Yuuki (German) :  $statusServerYuukiDE"
+echo "3. Yuuki (Europe) : $statusServerYuukiEU"
+echo "4. localhost (GCAndroid)"
+echo "5. Custom"
+echo "6. BACK"
+echo ""
+echo "Example : 1 for select Yuuki Server"
 echo -n "Enter input : "
 read -r inpsrv
-
 case $inpsrv in
-    "1" | "2" | "3" ) changeServer;;
-    "4" ) customserver;;
-    "5" ) clear; UIMenu;;
+    "1" | "2" | "3" | "4" ) changeServer;;
+    "5" ) customserver;;
+    "6" ) clear; UIMenu;;
     * ) echo "Wrong Input!";;
 esac
 }
@@ -370,11 +399,16 @@ zexsh() {
 changeProxy() {
     clear
     whoMadeThis
-    if [[ $isRooted = true ]]; then
-        echo -e "${redColorBold}mitmproxy killed/force stopped!\n\n${greenColorBold}Reset Proxy..."
+    echo -e "${redColorBold}mitmproxy killed/force stopped!${whiteColor}"
+    getSettingsConf4=$(cat "$pathScript" | grep "setProxy" | sed "s/.*setProxy=//g")
+    if [[ $getSettingsConf4 = true ]]; then
+        echo "${greenColorBold}Reset Proxy..."
         su -c settings put global http_proxy :0
         sleep 0.5s
         echo "Done!${whiteColor}"
+    fi
+    getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
+    if [[ $getSettingsConf = true ]]; then
         genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | grep "zex")
         zexPackage=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | sed "s/.*zex//g")
         if [[ ${genshinData} = "com.miHoYo.GenshinImpact" ]] && [[ ${zexPackage} = "com.miHoYo.GenshinImpact" ]]; then
@@ -387,18 +421,12 @@ changeProxy() {
             su -c mv /sdcard/Android/data/com.miHoYo.GenshinImpactzex /sdcard/Android/data/com.miHoYo.GenshinImpact
             echo "Done!${whiteColor}"
         fi
-        echo ""
-        echo -n "Press enter for back to Menu!"
-        read -r
-        UIMenu
-        return
-    else
-        echo -e "${redColorBold}mitmproxy killed/force stopped!${whiteColor}\n"
-        echo -n "Press enter for back to Menu!"
-        read -r
-        UIMenu
-        return
     fi
+    echo ""
+    echo -n "Press enter for back to Menu!"
+    read -r
+    UIMenu
+    return
 }
 
 killMtimprob() {
@@ -458,24 +486,22 @@ mitmProxyRun() {
             genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | grep "zex")
             genshinDatas=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | sed "s/com.*zex//g" | grep "com")
             if [[ $genshinDatas != "com.miHoYo.GenshinImpact" ]]; then
+                echo "${redColorBold}Can't Rename, Package genshin doesn't exist!...${whiteColor}"
                 echo "========================================"
             else
                 if [[ $genshinData != "com.miHoYo.GenshinImpactzex" ]]; then
-                    echo -e "${yellowColorBold}Do you want rename package Genshin?\n"
-                    echo -n "Enter input (y/n) : "
-                    read -r renamePackage
-                    case $renamePackage in
-                        "y" | "Y" ) cd /sdcard/Android/data || echo; su -c mv com.miHoYo.GenshinImpact com.miHoYo.GenshinImpactzex; echo -e "${greenColorBold}Done Rename!${whiteColor}\n========================================"; command cd || echo;;
-                        "n" | "N" ) echo -e "${yellowColorBold}Okay! Rename by yourself!${whiteColor}\n========================================"; sleep 0.4s;;
-                        * ) echo -e "${redColorBold}Wrong Input!\nSkip Rename!${whiteColor}\n========================================"; sleep 0.5s;;
-                    esac
+                    cd /sdcard/Android/data || echo
+                    su -c mv com.miHoYo.GenshinImpact com.miHoYo.GenshinImpactzex
+                    echo -e "${greenColorBold}Done Rename!${whiteColor}\n========================================"
+                    command cd || echo
                 else
                     echo "${redColorBold}Can't Rename, there is 2 Package exist...${whiteColor}"
                     echo "========================================"
                 fi
             fi
         fi
-        if [[ $isRooted = true ]]; then
+        getSettingsConf4=$(cat "$pathScript" | grep "setProxy" | sed "s/.*setProxy=//g")
+        if [[ $getSettingsConf4 = true ]]; then
             echo "${greenColorBold}Change Proxy..."
             sleep 0.3s
             su -c settings put global http_proxy 127.0.0.1:8080
@@ -504,15 +530,15 @@ mitmProxyRun() {
         
         if [[ $isConfisTrue3 = true ]]; then
             echo "${greenColorBold}Open Genshin...${whiteColor}"
-            am start --user 0 com.miHoYo.GenshinImpactzex/com.miHoYo.GetMobileInfo.MainActivity &> $HOME/.termux/openGenshin
-            detectErrorOpenGenshin=$(cat $HOME/.termux/openGenshin | sed 's/.*does not/does not/g' | grep "does not")
+            am start --user 0 com.miHoYo.GenshinImpactzex/com.miHoYo.GetMobileInfo.MainActivity &> "$HOME"/.termux/openGenshin
+            detectErrorOpenGenshin=$(cat "$HOME"/.termux/openGenshin | sed 's/.*does not/does not/g' | grep "does not")
             if [[ $detectErrorOpenGenshin = "does not exist." ]]; then
                 echo -e "${redColorBold}Can't open Genshin...\nTarget to com.miHoYo.GenshinImpactzex\n${yellowColorBold}Will Skip open Genshin${whiteColor}"
                 sleep 1s
-                rm $HOME/.termux/openGenshin
+                rm "$HOME"/.termux/openGenshin
             else
                 echo "${greenColorBold}Done Open Genshin...,${whiteColor}"
-                rm $HOME/.termux/openGenshin
+                rm "$HOME"/.termux/openGenshin
             fi
             echo "${greenColorBold}Run Mitmdump...${whiteColor}"
             ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false
@@ -742,7 +768,7 @@ GenshinAPKs() {
     esac
 }
 
-versionBash1="3.0"
+versionBash1="3.1"
 
 greenColorBold="$(printf '\033[1;32m')"
 redColorBold="$(printf '\033[1;31m')"
@@ -766,12 +792,10 @@ elif [[ $RootDetect = 1 ]]; then
     isRooted=false
 fi
 
-isFDroid=$(export | tee "$HOME"/isFdroid.zex | grep "TERMUX_APK_RELEASE" "$HOME"/isFdroid.zex  | sed "s/declare -x TERMUX_APK_RELEASE=//g" | sed "s/\"//g")
+isFDroid=$(env | grep "TERMUX_APK_RELEASE" | sed "s/TERMUX_APK_RELEASE=//g" | sed "s/\"//g")
 if [[ $isFDroid != "F_DROID" ]]; then
-    rm "$HOME"/isFDroid.zex
     FDroidTermux="${redColorBold}I recommend you using Termux from F-Droid${whiteColor}\n========================================"
 else
-    rm "$HOME"/isFDroid.zex
     FDroidTermux="========================================"
 fi
 
@@ -787,7 +811,6 @@ whoMadeThis() {
 # Why Shell Check this said problem... TF
 source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate)
 # source $HOME/AnimeGamePatch/someupdate
-
 if [[ $versionBashIn1 = "" ]]; then
     echo -e "${redColorBold}Can't connect to server!\n\nScript will run without check Update!${whiteColor}"
     isThisLatestVersion="${redColorBold}Can't connect to server!\n\nScript will run without check Update!${whiteColor}"
@@ -825,10 +848,25 @@ elif [[ $versionBash1 = $versionBashIn1 ]]; then
     noInternet=false
 fi
 
+if [[ $forceUpdate = true ]]; then
+    updateSciptForce
+fi
 # SubCommand here
 # You can edit as you want (IF YOU KNOW SHELL CODE)
 # If you want make to UI 1,2,3,4 install without zex ins for example. You can do it (I SAID AGAIN IF YOU KNOW SHELL CODE)
 
+backStable() {
+    if ! command -v zex; then
+        echo "${redColorBold}You can't go back because \"zex\" not found!${whiteColor}"
+        echo ""
+        echo "Press enter for back to Menu!"
+        read -r
+        UIMenu
+        return
+    else
+        command zex
+    fi
+}
 
 getCert() {
     clear
@@ -879,18 +917,6 @@ getCert() {
             UIMenu
             return
         fi
-        echo "========================================"
-        echo "${greenColorBold}Do you want to install Certificate as Root?${whiteColor}"
-        echo "${yellowColorBold}i'm not take any responsibility if there is something wrong with your Phone"
-        echo "or even can't delete for the certficate${whiteColor}"
-        echo ""
-        echo -n "Enter input (y/n) : "
-        read -r installCert
-        case $installCert in
-            "y" | "Y" ) echo "${yellowColorBold}Okay will continue install cert as Root!${whiteColor}"; sleep 1s;;
-            "n" | "N" ) echo -e "${greenColorBold}Okay cancell for install cert as Root!\nCertificate file saved in /sdcard and file name \"mitm.cer\"${whiteColor}"; sleep 1s; echo ""; echo -n "Press enter for back to Menu!"; read -r; UIMenu;;
-            * ) echo -e "Wrong Input!\n${greenColorBold}Will skip for install cert as Root!\nCertificate file saved in /sdcard and file name \"mitm.cer\"${whiteColor}"; sleep 1s; echo ""; echo -n "Press enter for back to Menu!"; read -r; UIMenu; return ;;
-        esac
         clear
         whoMadeThis
         echo "${greenColorBold}Install certificate...${whiteColor}"
@@ -966,32 +992,83 @@ removeCertRoot() {
 }
 
 ChangeConfSettings() {
-    inputsettings=$inputsettings
     if [[ $inputsettings = "1" ]]; then
         stringchange="rename"
         if [[ $isConfisTrue = true ]]; then
-            changeSet="true"
+            changeFrom="true"
             changeTo="false"
         elif [[ $isConfisTrue = false ]]; then
-            changeSet="false"
+            if [[ $isRooted = false ]]; then
+                clear
+                whoMadeThis
+                echo "${redColorBold}Sorry this only for Rooted device!${whiteColor}"
+                echo ""
+                echo -n "Press enter for back to Settings!"
+                read -r
+                settingsScript
+                return
+            fi
+            changeFrom="false"
             changeTo="true"
         fi
     elif [[ $inputsettings = "2" ]]; then
         stringchange="installcert"
         if [[ $isConfisTrue2 = true ]]; then
-            changeSet="true"
+            changeFrom="true"
             changeTo="false"
         elif [[ $isConfisTrue2 = false ]]; then
-            changeSet="false"
+            if [[ $isRooted = false ]]; then
+                clear
+                whoMadeThis
+                echo "${redColorBold}Sorry this only for Rooted device!${whiteColor}"
+                echo ""
+                echo -n "Press enter for back to Settings!"
+                read -r
+                settingsScript
+                return
+            fi
+            clear
+            whoMadeThis
+            echo "${greenColorBold}Do you want to install Certificate as Root?${whiteColor}"
+            echo "${yellowColorBold}i'm not take any responsibility if there is something wrong with your Phone"
+            echo "or even can't delete for the certficate${whiteColor}"
+            echo ""
+            echo -n "Enter input (y/n) : "
+            read -r installCert
+            case $installCert in
+                "y" | "Y" ) sleep 0.1s;;
+                "n" | "N" ) UIMenu;;
+                * ) echo "Wrong Input!"; sleep 1s; settingsScript;;
+            esac
+            changeFrom="false"
             changeTo="true"
         fi
     elif [[ $inputsettings = "3" ]]; then
         stringchange="openGenshin"
         if [[ $isConfisTrue3 = true ]]; then
-            changeSet="true"
+            changeFrom="true"
             changeTo="false"
         elif [[ $isConfisTrue3 = false ]]; then
-            changeSet="false"
+            changeFrom="false"
+            changeTo="true"
+        fi
+    elif [[ $inputsettings = "4" ]]; then
+        stringchange="setProxy"
+        if [[ $isConfisTrue4 = true ]]; then
+            changeFrom="true"
+            changeTo="false"
+        elif [[ $isConfisTrue4 = false ]]; then
+            if [[ $isRooted = false ]]; then
+                clear
+                whoMadeThis
+                echo "${redColorBold}Sorry this only for Rooted Device!${whiteColor}"
+                echo ""
+                echo -n "Press enter for back to Settings!"
+                read -r
+                settingsScript
+                return
+            fi
+            changeFrom="false"
             changeTo="true"
         fi
     fi
@@ -1005,7 +1082,7 @@ ChangeConfSettings() {
         return
     fi
 
-    sed -i "s/$stringchange=$changeSet/$stringchange=$changeTo/g" "$pathScript"
+    sed -i "s/$stringchange=$changeFrom/$stringchange=$changeTo/g" "$pathScript"
     settingsScript
 }
 
@@ -1015,6 +1092,7 @@ settingsScript() {
     getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
     getSettingsConf2=$(cat "$pathScript" | grep "installcert" | sed "s/.*installcert=//g")
     getSettingsConf3=$(cat "$pathScript" | grep "openGenshin" | sed "s/.*openGenshin=//g")
+    getSettingsConf4=$(cat "$pathScript" | grep "setProxy" | sed "s/.*setProxy=//g")
 
     if [[ $getSettingsConf = true ]]; then
         renameconf="${greenColorBold}ON${whiteColor}"
@@ -1023,10 +1101,6 @@ settingsScript() {
         renameconf="${redColorBold}OFF${whiteColor}"
         isConfisTrue=false
     elif [[ $getSettingsConf = "" ]]; then
-        renameconf="${redColorBold}Can't Display${whiteColor}"
-        isConfisTrue=err
-    elif [[ $getSettingsConf = err ]]; then
-        renameconf="${redColorBold}Can't Display${whiteColor}"
         isConfisTrue=err
     fi
 
@@ -1037,10 +1111,6 @@ settingsScript() {
         installcertconf="${redColorBold}OFF${whiteColor}"
         isConfisTrue2=false
     elif [[ $getSettingsConf2 = "" ]]; then
-        installcertconf="${redColorBold}Can't Display${whiteColor}"
-        isConfisTrue2=err
-    elif [[ $getSettingsConf2 = err ]]; then
-        installcertconf="${redColorBold}Can't Display${whiteColor}"
         isConfisTrue2=err
     fi
 
@@ -1051,32 +1121,40 @@ settingsScript() {
         openGenshinConf="${redColorBold}OFF${whiteColor}"
         isConfisTrue3=false
     elif [[ $getSettingsConf3 = "" ]]; then
-        openGenshinConf="${redColorBold}Can't Display${whiteColor}"
-        isConfisTrue3=err
-    elif [[ $getSettingsConf3 = err ]]; then
-        openGenshinConf="${redColorBold}Can't Display${whiteColor}"
         isConfisTrue3=err
     fi
 
-    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]]; then
-        rm $pathScript
-        echo -e -n "# Script made by ElaXan\ninstallcert=false\nrename=false\nopenGenshin=false" > "$pathScript"
+    if [[ $getSettingsConf4 = true ]]; then
+        setProxyConf="${greenColorBold}ON${whiteColor}"
+        isConfisTrue4=true
+    elif [[ $getSettingsConf4 = false ]]; then
+        setProxyConf="${redColorBold}OFF${whiteColor}"
+        isConfisTrue4=false
+    elif [[ $getSettingsConf4 = "" ]]; then
+        isConfisTrue4=err
+    fi
+
+    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]] || [[ $isConfisTrue4 = err ]]; then
+        rm "$pathScript"
+        echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false" > "$pathScript"
         settingsScript
     fi
 
     echo "[$renameconf] ${cyanColorBold}1. Autorename Package Genshin (ROOT)${whiteColor}"
     echo "[$installcertconf] ${cyanColorBold}2. Auto Install cert as Root (ROOT)${whiteColor}"
     echo "[$openGenshinConf] ${cyanColorBold}3. Auto open Genshin Impact App${whiteColor}"
+    echo "[$setProxyConf] ${cyanColorBold}4. Auto Change Proxy (ROOT)${whiteColor}"
     echo "0. Back to Menu!"
     echo ""
     echo -n "Enter input : "
     read -r inputsettings
     case $inputsettings in
-        "1" | "2" | "3" ) ChangeConfSettings;;
+        "1" | "2" | "3" | "4" ) ChangeConfSettings;;
         "0" ) UIMenu;;
         * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; settingsScript;;
     esac
 }
+
 
 DevelopmentVersion() {
     if [[ $noInternet = true ]]; then
@@ -1121,7 +1199,7 @@ UIMenu() {
 
 pathScript=$HOME/.termux/settings.zex
 if [[ ! -f $pathScript ]]; then
-    echo -e -n "# Script made by ElaXan\ninstallcert=false\nrename=false\nopenGenshin=false" > "$pathScript"
+    echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false" > "$pathScript"
 fi
 
 case $userInput1 in
