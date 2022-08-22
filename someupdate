@@ -1,6 +1,6 @@
 binary=/data/data/com.termux/files/usr/bin/zex
-versionBashIn1="3.1"
-updateNotif="1. Add Settings\n2. Add localhost (GCAndroid)\n3. Add server EU (Yuuki)\n4. Add Settings for change proxy! (ROOT)"
+versionBashIn1="3.2"
+updateNotif="1. Change address/domain on Change Domain/Server\n2. Remove Development Version"
 updateNote="There is new version to"
 link=null
 printLatest="This is Latest Version (Ver : $versionBashIn1)"
