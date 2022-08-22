@@ -11,11 +11,11 @@
 userInput1=$1
 nameScript=$(basename "$0")
 
-checkTermux=$(env | grep "TERMUX_APK_RELEASE" | sed "s/=.*//g")
-if [[ $checkTermux != "TERMUX_APK_RELEASE" ]]; then
+checkTermux=$(uname -o)
+if [[ $checkTermux != "Android" ]]; then
     clear
-    echo "This script only for Termux"
-    # exit
+    echo "Please run script from Termux"
+    exit
 fi
 
 # ================== extract.sh START ================== #
@@ -116,7 +116,7 @@ extractMitm() {
 
 zdomsh() {
 clear
-command cd || echo
+cd $HOME || exit 1
 
 changeServer() {
     clear
@@ -124,15 +124,12 @@ changeServer() {
     domainChange=$inpsrv
     # You can add more server here. But edit code bellow too not only this
     if [[ $domainChange = "1" ]]; then
-        domainChange="sg.game.yuuki.me"
+        domainChange="sg.genshin.ps.yuuki.me"
         portChange="443"
     elif [[ $domainChange = "2" ]]; then
-        domainChange="de.game.yuuki.me"
+        domainChange="eu.genshin.ps.yuuki.me"
         portChange="443"
     elif [[ $domainChange = "3" ]]; then
-        domainChange="eu.game.yuuki.me"
-        portChange="443"
-    elif [[ $domainChange = "4" ]]; then
         domainChange="127.0.0.1"
         portChange="54321"
     fi
@@ -222,19 +219,22 @@ customserver() {
         UIMenu
         return
     fi
-    echo -e "Custom Domain!\nExample : elashxander.my.id\nB : Back to change server\n"
+    echo -e "Custom Domain!\nExample : elashxander.my.id\nEnter b/B for back or cancel\n"
     echo -n "Enter custom Domain : "
     read -r domain
-    echo -n "Enter port : "
-    read -r changeAPort
     if [[ $domain = "B" ]] || [[ $domain = "b" ]] || [[ $domain = "Back" ]] || [[ $domain = "BACK" ]]; then
         clear
-        changeServer
-    else
-        domain=$(echo "$domain" | sed "s/http.*\/\///g") # Thanks to Charon Baglari
-        curl -Ism 2 -f https://"$domain" &> /dev/null
-        ifcurleditfail=$?
+        zdomsh
     fi
+    echo -n "Enter port : "
+    read -r changeAPort
+    if [[ $changeAPort = "B" ]] || [[ $changeAPort = "b" ]] || [[ $changeAPort = "Back" ]] || [[ $changeAPort = "Back" ]]; then
+        clear
+        zdomsh
+    fi
+    domain=$(echo "$domain" | sed "s/http.*\/\///g") # Thanks to Charon Baglari
+    curl -Ism 2 -f https://"$domain" &> /dev/null
+    ifcurleditfail=$?
     if [[ $domain = "127.0.0.1" ]]; then
         command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" "$HOME"/proxy_config.py &> "$ZERR"
         sed -i "s/REMOTE_PORT = .*/REMOTE_PORT = $changeAPort/g" $HOME/proxy_config.py &> /dev/null
@@ -252,7 +252,7 @@ customserver() {
             "y" | "Y" ) command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" "$HOME"/proxy_config.py &> "$ZERR";sed -i "s/REMOTE_PORT = .*/REMOTE_PORT = $changeAPort/g" $HOME/proxy_config.py &> /dev/null;;
             "n" | "N" ) echo "Okay! server not changed!"; exit;;
             "r" | "R" ) customserver;;
-            * ) echo "Wrong input!"; exit;;
+            * ) echo -e "Wrong input!\nTry Again..."; sleep 1s; customserver;;
         esac
     else
         command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" "$HOME"/proxy_config.py &> "$ZERR"
@@ -288,17 +288,21 @@ if [[ $serverUsing = "" ]]; then
 fi
 
 if [[ -f "proxy_config.py" ]]; then
-    echo -e "${greenColorBold}File target edit to proxy_config.py\n\n${cyanColorBold}Current Server : $serverUsing${whiteColor}"
+    zdomsh_echo="${greenColorBold}File target edit to proxy_config.py\n\n${cyanColorBold}Current Server : $serverUsing${whiteColor}"
 else
-    echo "${redColorBold}Can't display : proxy_config.py file not found${whiteColor}"
+    zdomsh_echo="${redColorBold}Can't display : proxy_config.py file not found${whiteColor}"
 fi
 
-curl -Ism 3 -f https://sg.game.yuuki.me &> /dev/null
+echo "${greenColorBold}Checking server...${whiteColor}"
+
+curl -Ism 3 -f https://sg.genshin.ps.yuuki.me &> /dev/null
 resultsCheckServerYuukiSG=$?
-curl -Ism 3 -f https://de.game.yuuki.me &> /dev/null
-resultsCheckServerYuukiDE=$?
-curl -Ism 3 -f https://eu.game.yuuki.me &> /dev/null
+curl -Ism 3 -f https://eu.genshin.ps.yuuki.me &> /dev/null
 resultsCheckServerYuukiEU=$?
+
+clear
+whoMadeThis
+echo -e ${zdomsh_echo}
 
 if [[ $resultsCheckServerYuukiSG = 28 ]]; then
     statusServerYuukiSG="${redColorBold}[DOWN]${whiteColor}"
@@ -309,17 +313,6 @@ elif [[ $resultsCheckServerYuukiSG = 6 ]]; then
 elif [[ $resultsCheckServerYuukiSG = 0 ]]; then
     statusServerYuukiSG="${greenColorBold}[RUNNING]${whiteColor}"
     downServerYuukiSG=0
-fi
-
-if [[ $resultsCheckServerYuukiDE = 28 ]]; then
-    statusServerYuukiDE="${redColorBold}[DOWN]${whiteColor}"
-    downServerYuukiDE=1
-elif [[ $resultsCheckServerYuukiDE = 6 ]]; then
-    statusServerYuukiDE="${yellowColorBold}[CAN'T CONNECT]${whiteColor}"
-    downServerYuukiDE=0
-elif [[ $resultsCheckServerYuukiDE = 0 ]]; then
-    statusServerYuukiDE="${greenColorBold}[RUNNING]${whiteColor}"
-    downServerYuukiDE=0
 fi
 
 if [[ $resultsCheckServerYuukiEU = 28 ]]; then
@@ -334,30 +327,29 @@ elif [[ $resultsCheckServerYuukiEU = 0 ]]; then
 fi
 
 
-downServer=$((downServerYuukiSG+downServerYuukiDE+downServerYuukiEU))
+downServer=$((downServerYuukiSG+downServerYuukiEU))
 
-if [[ $resultsCheckServerYuukiSG = 28 ]] || [[ $resultsCheckServerYuukiDE = 28 ]] || [[ $resultsCheckServerYuukiEU = 28 ]]; then
+if [[ $resultsCheckServerYuukiSG = 28 ]] || [[ $resultsCheckServerYuukiEU = 28 ]]; then
     echo -e "\n${redColorBold}There is $downServer server DOWN${whiteColor}\n========================================"
-elif [[ $resultsCheckServerYuukiSG = 0 ]] || [[ $resultsCheckServerYuukiDE = 0 ]] || [[ $resultsCheckServerYuukiEU = 0 ]]; then
+elif [[ $resultsCheckServerYuukiSG = 0 ]] || [[ $resultsCheckServerYuukiEU = 0 ]]; then
     echo "========================================"
 fi
 
 echo "Select Server"
 echo "1. Yuuki (Singapore) : $statusServerYuukiSG"
-echo "2. Yuuki (German) :  $statusServerYuukiDE"
-echo "3. Yuuki (Europe) : $statusServerYuukiEU"
-echo "4. localhost (GCAndroid)"
-echo "5. Custom"
-echo "6. BACK"
+echo "2. Yuuki (Europe) : $statusServerYuukiEU"
+echo "3. localhost (GCAndroid)"
+echo "4. Custom"
+echo "5. BACK"
 echo ""
 echo "Example : 1 for select Yuuki Server"
 echo -n "Enter input : "
 read -r inpsrv
 case $inpsrv in
-    "1" | "2" | "3" | "4" ) changeServer;;
-    "5" ) customserver;;
-    "6" ) clear; UIMenu;;
-    * ) echo "Wrong Input!";;
+    "1" | "2" | "3" ) changeServer;;
+    "4" ) customserver;;
+    "5" ) clear; UIMenu;;
+    * ) echo "Wrong Input!"; sleep 0.5s; zdomsh;;
 esac
 }
 # ================== zdom.sh END ================== #
@@ -594,7 +586,7 @@ downloadproxy() {
     whoMadeThis
     echo "${greenColorBold}Edit proxy_config.py${whiteColor}"
     sleep 1s
-    sed -i "s/REMOTE_HOST = \"localhost\"/REMOTE_HOST = \"sg.game.yuuki.me\"/g" proxy_config.py
+    sed -i "s/REMOTE_HOST = \"localhost\"/REMOTE_HOST = \"sg.genshin.ps.yuuki.me\"/g" proxy_config.py
     echo "${greenColorBold}Done Edit${whiteColor}"
     sleep 1s
     if [[ -f proxy.py ]] || [[ -f proxy_config.py ]]; then
@@ -630,7 +622,7 @@ proxyMenu() {
     case $proxyInput in
         "1" ) downloadproxy; break;;
         "2" ) clear; UIMenu break;;
-        * ) echo "Wrong input!"; proxyMenu;;
+        * ) echo "Wrong input!"; sleep 0.5s; proxyMenu;;
     esac
     done
 }
@@ -645,9 +637,24 @@ downloadYesGenshin() {
     fi
     echo "${yellowColorBold}Download Genshin apks. [PLEASE WAIT!]${whiteColor}"
     if [[ $dgenshininp = "1" ]]; then
+        if [[ -f "/sdcard/Genshin_Impact_3.0.apks" ]]; then
+            echo "${greenColorBold}Genshin_Impact_3.0.apks already exist in /sdcard !${whiteColor}"
+            echo 
+            echo -n "Press enter to back Menu!"
+            read -r
+            UIMenu
+            return
+        else
+            versionGenshin="3.0"
+            if [[ -f "$HOME/Genshin_Impact_3.0.apks" ]]; then
+                rm "$HOME/Genshin_Impact_3.0.apks"
+            fi
+            wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.8/Genshin_Impact_2.8.apks -q --show-progress
+        fi
+    elif [[ $dgenshininp = "2" ]]; then
         if [[ -f "/sdcard/Genshin_Impact_2.8.apks" ]]; then
             echo "${greenColorBold}Genshin_Impact_2.8.apks already exist in /sdcard !${whiteColor}"
-            echo ""
+            echo 
             echo -n "Press enter to back Menu!"
             read -r
             UIMenu
@@ -659,10 +666,10 @@ downloadYesGenshin() {
             fi
             wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.8/Genshin_Impact_2.8.apks -q --show-progress
         fi
-    elif [[ $dgenshininp = "2" ]]; then
+    elif [[ $dgenshininp = "3" ]]; then
         if [[ -f "/sdcard/Genshin.Impact.Cert.Patch_Sign.apk" ]]; then
             echo "${greenColorBold}Genshin.Impact.Cert.Patch_Sign.apk already exist in /sdcard !${whiteColor}"
-            echo ""
+            echo 
             echo "Press enter to back Menu!"
             read -r
             UIMenu
@@ -697,7 +704,7 @@ downloadYesGenshin() {
         elif [[ -f "Genshin.Impact.Cert.Patch_Sign.apk" ]]; then
             mv Genshin.Impact.Cert.Patch_Sign.apk /sdcard
         else
-            echo "${redColorBold}File Genshin APKs not found!"
+            echo "${redColorBold}File Genshin APKs not found!${whiteColor}"
             echo ""
             echo -n "Press Enter for back to Menu!"
             read -r
@@ -738,8 +745,12 @@ downloadGenshin() {
     clear
     whoMadeThis
     if [[ $dgenshininp = "1" ]]; then
-        echo "${redColorBold}File size is 238 MB... Do you want continue to download?${whiteColor}"
+        echo "${redColorBold}Not available...${whiteColor}"
+        sleep 1s
+        GenshinAPKs
     elif [[ $dgenshininp = "2" ]]; then
+        echo "${redColorBold}File size is 238 MB... Do you want continue to download?${whiteColor}"
+    elif [[ $dgenshininp = "3" ]]; then
         echo "${redColorBold}File size is 321 MB... Do you want continue to download?${whiteColor}"
     fi
     echo -n "Enter input (y/n) : "
@@ -755,20 +766,21 @@ GenshinAPKs() {
     clear
     command cd || echo
     whoMadeThis
-    echo "1. ${greenColorBold}Genshin Impact Version 2.8${whiteColor}"
-    echo "2. ${yellowColorBold}Genshin Impact Version 2.7${whiteColor}"
-    echo "3. Back"
+    echo "1. ${redColorBold}Genshin Impact Version 3.0${whiteColor}"
+    echo "2. ${greenColorBold}Genshin Impact Version 2.8${whiteColor}"
+    echo "3. ${yellowColorBold}Genshin Impact Version 2.7${whiteColor}"
+    echo "0. Back"
     echo ""
     echo -n "Enter input : "
     read -r dgenshininp
     case $dgenshininp in
-        "1" | "2" ) downloadGenshin;;
-        "3" ) UIMenu;;
+        "1" | "2" | "3" ) downloadGenshin;;
+        "0" ) UIMenu;;
         * ) echo "Wrong Input!"; sleep 1s; GenshinAPKs;;
     esac
 }
 
-versionBash1="3.1"
+versionBash1="3.2"
 
 greenColorBold="$(printf '\033[1;32m')"
 redColorBold="$(printf '\033[1;31m')"
@@ -1156,17 +1168,6 @@ settingsScript() {
 }
 
 
-DevelopmentVersion() {
-    if [[ $noInternet = true ]]; then
-        echo "${redColorBold}This need Internet to access Development Version!${whiteColor}"
-        echo ""
-        read -p "Press enter for back to Menu!"
-        UIMenu
-    fi
-    bash <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/testscript/zex-test.sh)
-}
-
-
 UIMenu() {
   clear
   whoMadeThis
@@ -1178,7 +1179,6 @@ UIMenu() {
   echo "6. Download Genshin APKs"
   echo "7. Run Mitmproxy (zex run)"
   echo "8. Settings"
-  echo "9. Go to Development Version"
   echo "0. ${redColorBold}Exit${whiteColor}"
   echo -n "Enter input : "
   read -r enterInputUI
@@ -1191,7 +1191,6 @@ UIMenu() {
     "6" ) GenshinAPKs;;
     "7" ) zexsh;;
     "8" ) settingsScript;;
-    "9" ) DevelopmentVersion;;
     "0" ) exit 0;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
   esac
@@ -1203,9 +1202,14 @@ if [[ ! -f $pathScript ]]; then
 fi
 
 case $userInput1 in
-    "run" | "3" ) zexsh;; # if enter command zex run
-    "2" | "dom" ) zdomsh;;
-    "1" | "mitm" | "ins" | "install" ) extractMitm;;
-    * ) clear; UIMenu;;
+    "1" | "install" ) extractMitm;;
+    "2" | "cert" ) getCert;;
+    "3" | "rmcert" ) removeCertRoot;;
+    "4" | "dom" | "changedomain" ) zdomsh;;
+    "5" | "proxy" ) proxyMenu;;
+    "6" | "downloadgenshin" | "download" ) GenshinAPKs;;
+    "7" | "mitm" | "run" ) zexsh;;
+    "8" | "settings" ) settingsScript;;
+    * ) clear; UIMenu;; 
 esac
 
