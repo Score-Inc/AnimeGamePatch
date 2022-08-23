@@ -1,6 +1,6 @@
 binary=/data/data/com.termux/files/usr/bin/zex
-versionBashIn1="3.2"
-updateNotif="1. Change address/domain on Change Domain/Server\n2. Remove Development Version"
+versionBashIn1="3.2.1"
+updateNotif="1. Move download proxy.py to Change Domain/Server\n2. Fix Code"
 updateNote="There is new version to"
 link=null
 printLatest="This is Latest Version (Ver : $versionBashIn1)"
@@ -13,7 +13,7 @@ updateScript1() {
        rm $binary
     fi
     mkdir $updateDir
-    cd $updateDir
+    cd $updateDir || exit 1
     echo "Update Script!"
     if ! command -v wget &> /dev/null; then
        pkg install wget
@@ -22,13 +22,13 @@ updateScript1() {
     if [[ $? != 0 ]]; then
        echo "Can't do update Script. Make sure you internet is ON or stable"
        rm $updateDir
-       command cd
+       cd $HOME || exit 1
        exit
     else
        mv zex.sh $binary
-       command cd
+       cd $HOME || exit 1
        rm -rf $updateDir
-       command clear
+       clear
        echo "Update success!"
        sleep 1s
        echo "Settings permission!"
@@ -38,13 +38,13 @@ updateScript1() {
        sleep 1s
        command clear
        echo "Please enter command zex again!"
-       cd
+       cd $HOME || exit 1
        if [[ -f "proxy.py" ]]; then
            rm proxy.py
        fi
        if [[ -f "proxy_config.py" ]]; then
            rm proxy_config.py
        fi
-       exit
+       exit 0
     fi
 }
