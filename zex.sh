@@ -150,14 +150,6 @@ changeServer() {
     fi
 
     if [[ $inpsrv = "3" ]]; then
-        if [[ $downServerYuukiEU = 1 ]]; then
-            changeServerDOWN
-        else
-            changeServer2
-        fi
-    fi
-
-    if [[ $inpsrv = "4" ]]; then
         changeServer2
     fi
 }
@@ -191,7 +183,7 @@ changeServer2 () {
         return
     fi
     command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domainChange\"/g" "$HOME"/proxy_config.py &> "$ZERR"
-    sed -i "s/REMOTE_PORT = .*/REMOTE_PORT = $portChange/g" $HOME/proxy_config.py &> /dev/null
+    sed -i "s/REMOTE_PORT = $portUsing/REMOTE_PORT = $portChange/g" $HOME/proxy_config.py &> /dev/null
     ifeditfailed=$?
     if [[ "$ifeditfailed" != 0 ]]; then
         echo "ERROR!"
@@ -219,9 +211,10 @@ customserver() {
         UIMenu
         return
     fi
-    echo -e "Custom Domain!\nExample : elashxander.my.id\nEnter b/B for back or cancel\n"
-    echo -n "Enter custom Domain : "
+    echo -e "${greenColorBold}Custom Domain!\n${cyanColorBold}Example : elashxander.my.id\n${yellowColorBold}Enter b/B for back or cancel\n${whiteColor}"
+    echo -n "Enter custom Domain : ${cyanColorBold}"
     read -r domain
+    echo -n "${whiteColor}"
     if [[ $domain = "B" ]] || [[ $domain = "b" ]] || [[ $domain = "Back" ]] || [[ $domain = "BACK" ]]; then
         clear
         zdomsh
@@ -237,7 +230,7 @@ customserver() {
     ifcurleditfail=$?
     if [[ $domain = "127.0.0.1" ]]; then
         command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" "$HOME"/proxy_config.py &> "$ZERR"
-        sed -i "s/REMOTE_PORT = .*/REMOTE_PORT = $changeAPort/g" $HOME/proxy_config.py &> /dev/null
+        sed -i "s/REMOTE_PORT = $portUsing/REMOTE_PORT = $changeAPort/g" $HOME/proxy_config.py &> /dev/null
         echo "Domain changed to localhost..."
         echo ""
         echo -n "Press Enter to change server "
@@ -256,7 +249,7 @@ customserver() {
         esac
     else
         command sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$domain\"/g" "$HOME"/proxy_config.py &> "$ZERR"
-        sed -i "s/REMOTE_PORT = .*/REMOTE_PORT = $changeAPort/g" $HOME/proxy_config.py &> /dev/null
+        sed -i "s/REMOTE_PORT = $portUsing/REMOTE_PORT = $changeAPort/g" $HOME/proxy_config.py &> /dev/null
     fi
     ifeditsedfail=$?
     if [[ "$ifeditsedfail" != 0 ]]; then
@@ -279,16 +272,21 @@ whoMadeThis
 command cd || echo
 if [[ -f "proxy_config.py" ]]; then
     serverUsing=$(cat proxy_config.py | grep "REMOTE_HOST = \"" | sed "s/.*= //g" | sed "s/\"//g")
+    portUsing=$(cat proxy_config.py | grep "REMOTE_PORT = " | head -n 1 | sed "s/.*= //g")
 else
     serverUsing=""
+    portUsing=""
 fi
 
 if [[ $serverUsing = "" ]]; then
     serverUsing="${redColorBold}There is no Server${whiteColor}"
 fi
+if [[ $portUsing = "" ]]; then
+    portUsing="${redColorBold}There is no Port${whiteColor}"
+fi
 
 if [[ -f "proxy_config.py" ]]; then
-    zdomsh_echo="${greenColorBold}File target edit to proxy_config.py\n\n${cyanColorBold}Current Server : $serverUsing${whiteColor}"
+    zdomsh_echo="${greenColorBold}File target edit to proxy_config.py\n\n${cyanColorBold}Current Server : $serverUsing\nCurrent Port : $portUsing${whiteColor}"
 else
     zdomsh_echo="${redColorBold}Can't display : proxy_config.py file not found${whiteColor}"
 fi
@@ -340,7 +338,8 @@ echo "1. Yuuki (Singapore) : $statusServerYuukiSG"
 echo "2. Yuuki (Europe) : $statusServerYuukiEU"
 echo "3. localhost (GCAndroid)"
 echo "4. Custom"
-echo "5. BACK"
+echo "5. Download proxy.py"
+echo "0. BACK"
 echo ""
 echo "Example : 1 for select Yuuki Server"
 echo -n "Enter input : "
@@ -348,7 +347,8 @@ read -r inpsrv
 case $inpsrv in
     "1" | "2" | "3" ) changeServer;;
     "4" ) customserver;;
-    "5" ) clear; UIMenu;;
+    "5" ) proxyMenu;;
+    "0" ) clear; UIMenu;;
     * ) echo "Wrong Input!"; sleep 0.5s; zdomsh;;
 esac
 }
@@ -599,12 +599,12 @@ downloadproxy() {
     echo -n "Press enter for back to Menu!"
     read -r
     clear
-    proxyMenu
+    zdomsh
 }
 
 
 proxyMenu() {
-    cd || echo
+    cd $HOME || exit 1
     clear
     whoMadeThis
     if [[ -f proxy.py ]] || [[ -f proxy_config.py ]]; then
@@ -614,14 +614,14 @@ proxyMenu() {
     fi
     echo "========================================"
     echo "1. ${greenColorBold}Download proxy.py${whiteColor}"
-    echo "2. ${yellowColorBold}Back${whiteColor}"
+    echo "0. ${yellowColorBold}Back${whiteColor}"
     echo ""
     echo -n "Enter input : "
     read -r proxyInput
     while true; do
     case $proxyInput in
         "1" ) downloadproxy; break;;
-        "2" ) clear; UIMenu break;;
+        "0" ) clear; zdomsh break;;
         * ) echo "Wrong input!"; sleep 0.5s; proxyMenu;;
     esac
     done
@@ -780,7 +780,7 @@ GenshinAPKs() {
     esac
 }
 
-versionBash1="3.2"
+versionBash1="3.2.1"
 
 greenColorBold="$(printf '\033[1;32m')"
 redColorBold="$(printf '\033[1;31m')"
@@ -820,6 +820,9 @@ whoMadeThis() {
  
 
 # PLEASE DON'T EDIT THIS, THIS LOAD SOME CODE FROM SERVER
+isThisLatestVersion="${greenColorBold}Checking version...${whiteColor}"
+whoMadeThis
+echo "${greenColorBold}Load data from server...${whiteColor}"
 # Why Shell Check this said problem... TF
 source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate)
 # source $HOME/AnimeGamePatch/someupdate
@@ -866,19 +869,6 @@ fi
 # SubCommand here
 # You can edit as you want (IF YOU KNOW SHELL CODE)
 # If you want make to UI 1,2,3,4 install without zex ins for example. You can do it (I SAID AGAIN IF YOU KNOW SHELL CODE)
-
-backStable() {
-    if ! command -v zex; then
-        echo "${redColorBold}You can't go back because \"zex\" not found!${whiteColor}"
-        echo ""
-        echo "Press enter for back to Menu!"
-        read -r
-        UIMenu
-        return
-    else
-        command zex
-    fi
-}
 
 getCert() {
     clear
@@ -1175,10 +1165,9 @@ UIMenu() {
   echo "2. Get Certificate"
   echo "3. Remove Certificate Root"
   echo "4. Change Domain/Server"
-  echo "5. Download proxy.py"
-  echo "6. Download Genshin APKs"
-  echo "7. Run Mitmproxy (zex run)"
-  echo "8. Settings"
+  echo "5. Download Genshin APKs"
+  echo "6. Run Mitmproxy (zex run)"
+  echo "7. Settings"
   echo "0. ${redColorBold}Exit${whiteColor}"
   echo -n "Enter input : "
   read -r enterInputUI
@@ -1187,10 +1176,9 @@ UIMenu() {
     "2" ) getCert;;
     "3" ) removeCertRoot;;
     "4" ) zdomsh;;
-    "5" ) proxyMenu;;
-    "6" ) GenshinAPKs;;
-    "7" ) zexsh;;
-    "8" ) settingsScript;;
+    "5" ) GenshinAPKs;;
+    "6" ) zexsh;;
+    "7" ) settingsScript;;
     "0" ) exit 0;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
   esac
@@ -1204,12 +1192,11 @@ fi
 case $userInput1 in
     "1" | "install" ) extractMitm;;
     "2" | "cert" ) getCert;;
-    "3" | "rmcert" ) removeCertRoot;;
+    "3" | "remove" | "rmcert" ) removeCertRoot;;
     "4" | "dom" | "changedomain" ) zdomsh;;
-    "5" | "proxy" ) proxyMenu;;
-    "6" | "downloadgenshin" | "download" ) GenshinAPKs;;
-    "7" | "mitm" | "run" ) zexsh;;
-    "8" | "settings" ) settingsScript;;
+    "5" | "downloadgenshin" | "download" ) GenshinAPKs;;
+    "6" | "mitm" | "run" ) zexsh;;
+    "7" | "settings" ) settingsScript;;
     * ) clear; UIMenu;; 
 esac
 
