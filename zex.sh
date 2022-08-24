@@ -796,7 +796,7 @@ GenshinAPKs() {
     esac
 }
 
-versionBash1="3.2.1"
+versionBash1="3.2.2"
 
 greenColorBold="$(printf '\033[1;32m')"
 redColorBold="$(printf '\033[1;31m')"
