@@ -19,7 +19,7 @@ This good for beginner/who don't know about Termux
 #### Download File
 Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) [Recommend]
 
-Download Anime Game Patch 2.8 from [Release](https://github.com/ElaXan/AnimeGamePatch/releases/tag/2.8)\
+Download Anime Game Patch 3.0 from [Release](https://github.com/ElaXan/AnimeGamePatch/releases/tag/3.0)\
 [OR YOU CAN DOWNLOAD FROM SCRIPT]
 
 ### FOR ROOT USERS
