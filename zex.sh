@@ -646,10 +646,10 @@ downloadYesGenshin() {
             return
         else
             versionGenshin="3.0"
-            if [[ -f "$HOME/Genshin_Impact_3.0.apks" ]]; then
-                rm "$HOME/Genshin_Impact_3.0.apks"
+            if [[ -f "$HOME/AnimeGame-Termux-3.0-patched.apks" ]]; then
+                rm "$HOME/AnimeGame-Termux-3.0-patched.apks"
             fi
-            wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.8/Genshin_Impact_2.8.apks -q --show-progress
+            wget https://github.com/ElaXan/AnimeGamePatch/releases/download/3.0/AnimeGame-Termux-3.0-patched.apks -q --show-progress
         fi
     elif [[ $dgenshininp = "2" ]]; then
         if [[ -f "/sdcard/Genshin_Impact_2.8.apks" ]]; then
@@ -703,6 +703,8 @@ downloadYesGenshin() {
             mv Genshin_Impact_2.8.apks /sdcard
         elif [[ -f "Genshin.Impact.Cert.Patch_Sign.apk" ]]; then
             mv Genshin.Impact.Cert.Patch_Sign.apk /sdcard
+        elif [[ -f "AnimeGame-Termux-3.0-patched.apks" ]]; then
+            mv AnimeGame-Termux-3.0-patched.apks /sdcard
         else
             echo "${redColorBold}File Genshin APKs not found!${whiteColor}"
             echo ""
@@ -716,12 +718,28 @@ downloadYesGenshin() {
     if [[ -f "/sdcard/Genshin_Impact_2.8.apks" ]]; then
         echo -e "${greenColorBold}Success move to /sdcard !\n\nInstall with SAI Installer or other apk that support install .apks${whiteColor}"
         if [[ $isRooted = true ]]; then
-            if [[ $versionGenshin = "2.8" ]]; then
-                echo "Can't do Install automatically with \"pm install\" because file name is .apks so install manually"
-            elif [[ $versionGenshin = "2.7" ]]; then
-                cd /sdcard || echo
-                pm install Genshin.Impact.Cert.Patch_Sign.apk
-            fi
+            echo "${yellowColorBold}Can't do Install automatically with \"pm install\" because file name is .apks so install manually${whiteColor}"
+        fi
+        echo ""
+        echo -n "Press Enter for back to Menu!"
+        read -r
+        clear
+        UIMenu
+        return
+    elif [[ -f "/sdcard/AnimeGame-Termux-3.0-patched.apks" ]]; then
+        if [[ $isRooted = true ]]; then
+            echo "${yellowColorBold}Can't do install automatically with \"pm install\" because file name is .apks so install manually${whiteColor}"
+        fi
+        echo ""
+        echo -n "Press Enter for back to Menu!"
+        read -r
+        clear
+        UIMenu
+        return
+    elif [[ -f "/sdcard/Genshin.Impact.Cert.Patch_Sign.apk" ]]; then
+        if [[ $isRooted = true ]]; then
+            su -c pm install Genshin.Impact.Cert.Patch_Sign.apk
+            echo "${yellowColorBold}Genshin Installed with \"pm install\" so check it...${whiteColor}"
         fi
         echo ""
         echo -n "Press Enter for back to Menu!"
@@ -745,9 +763,7 @@ downloadGenshin() {
     clear
     whoMadeThis
     if [[ $dgenshininp = "1" ]]; then
-        echo "${redColorBold}Not available...${whiteColor}"
-        sleep 1s
-        GenshinAPKs
+        echo "${redColorBold}File size is 264 MB... Do you want continue to download?${whiteColor}"
     elif [[ $dgenshininp = "2" ]]; then
         echo "${redColorBold}File size is 238 MB... Do you want continue to download?${whiteColor}"
     elif [[ $dgenshininp = "3" ]]; then
@@ -766,8 +782,8 @@ GenshinAPKs() {
     clear
     command cd || echo
     whoMadeThis
-    echo "1. ${redColorBold}Genshin Impact Version 3.0${whiteColor}"
-    echo "2. ${greenColorBold}Genshin Impact Version 2.8${whiteColor}"
+    echo "1. ${greenColorBold}Genshin Impact Version 3.0${whiteColor}"
+    echo "2. ${yellowColorBold}Genshin Impact Version 2.8${whiteColor}"
     echo "3. ${yellowColorBold}Genshin Impact Version 2.7${whiteColor}"
     echo "0. Back"
     echo ""
