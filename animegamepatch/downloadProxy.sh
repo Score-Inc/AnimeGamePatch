@@ -7,27 +7,17 @@ downloadproxy() {
     if [[ -f proxy_config.py ]]; then
         rm proxy_config.py
     fi
-    wget https://raw.githubusercontent.com/Grasscutters/Grasscutter/development/proxy.py &> /dev/null & pid=$!
-    spinPID "${greenColorBold}Download proxy.py${whiteColor}"
-    clear
-    whoMadeThis
-    wget https://raw.githubusercontent.com/Grasscutters/Grasscutter/development/proxy_config.py &> /dev/null & pid=$!
-    spinPID "${greenColorBold}Download proxy_config.py${whiteColor}"
-    clear
-    whoMadeThis
-    echo "${greenColorBold}Edit proxy_config.py${whiteColor}"
-    sleep 1s
-    sed -i "s/REMOTE_HOST = \"localhost\"/REMOTE_HOST = \"sg.genshin.ps.yuuki.me\"/g" proxy_config.py
-    echo "${greenColorBold}Done Edit${whiteColor}"
-    sleep 1s
-    if [[ -f proxy.py ]] || [[ -f proxy_config.py ]]; then
-        echo "${greenColorBold}proxy.py successfully download!${whiteColor}"
-        echo ""
-    else
-        echo "${redColorBold}proxy.py failed to download!${whiteColor}"
-        echo ""
-    fi
-    echo -n "Press enter for back to Menu!"
+     &> /dev/null & pid=$!
+    run_Program() { wget https://raw.githubusercontent.com/Grasscutters/Grasscutter/development/proxy.py -q &> $HOME/zerr.log; errCode=$?; log "$errCode"; }
+    run_Program & pid=$!
+    spin "${greenColorBold}Download proxy.py${whiteColor}" "0" "Menu" "UIMenu"
+    run_Program() { wget https://raw.githubusercontent.com/Grasscutters/Grasscutter/development/proxy_config.py -q &> $HOME/zerr.log; errCode=$?; log "$errCode"; }
+    run_Program & pid=$!
+    spin "${greenColorBold}Download proxy_config.py${whiteColor}" "0" "Menu" "UIMenu"
+    run_Program() { sed -i "s/REMOTE_HOST = \"localhost\"/REMOTE_HOST = \"sg.genshin.ps.yuuki.me\"/g" proxy_config.py &> $HOME/zerr.log; errCode=$?; log "$errCode"; sleep 1s; }
+    run_Program & pid=$!
+    spin "${greenColorBold}Edit proxy_config.py${whiteColor}" "0" "Menu" "UIMenu"
+    echo -n "Press enter for back to Change Server!"
     read -r
     clear
     zdomsh

@@ -107,17 +107,18 @@ mitmProxyRun() {
         fi
         getSettingsConf4=$(cat "$pathScript" | grep "setProxy" | sed "s/.*setProxy=//g")
         if [[ $getSettingsConf4 = true ]]; then
-            echo "${greenColorBold}Change Proxy..."
-            sleep 0.3s
-            su -c settings put global http_proxy 127.0.0.1:8080
-            echo "Done${whiteColor}"
-            sleep 0.5s
-            echo -e "${cyanColorBold}Important... For reset just do CTRL + C${whiteColor}"
-            sleep 2s
+            run_Program() { su -c settings put global http_proxy 127.0.0.1:8080 &> $HOME/zerr.log; errCode=$?; log "$errCode"; sleep 1s; }
+            run_Program & pid=$!
+            spin "${greenColorBold}Change Proxy${whiteColor}" "0" "Menu" "UIMenu"
+            sleep 1
             clear
             whoMadeThis
+            echo "${yellowColorBold}Make sure you already install Certificate"
+            sleep 0.1s
+            echo "if you not do that will not work${whiteColor}"
+            echo "========================================"
         else
-            echo "${greenColorBold}Make Sure you already set the proxy and port"
+            echo "${yellowColorBold}Make Sure you already set the proxy and port"
             sleep 0.1s
             echo "Proxy/hostname : 127.0.0.1"
             sleep 0.1s
@@ -125,6 +126,10 @@ mitmProxyRun() {
             sleep 0.1s
             echo "If you not do that will not work${whiteColor}"
             sleep 0.1s
+            echo "========================================"
+            echo "${yellowColorBold}Make sure you already install Certificate"
+            sleep 0.1s
+            echo "if you not do that will not work${whiteColor}"
             echo "========================================"
         fi
         mitmKilled=$(cat "$HOME"/zkill.log &> /dev/null)
@@ -147,22 +152,18 @@ mitmProxyRun() {
             echo "${greenColorBold}Log saved to /sdcard/mitm.log"
             echo "For stop press CTRL + C on your keyboard"
             echo "Now you can open Genshin${whiteColor}"
-            ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false >> /sdcard/mitm.log ifmitmdumpfailed=$? & pid=$!
-            spinPID "${greenColorBold}mitmdump/mitmproxy running${whiteColor}" "changeProxy"
+            run_Program() { ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false >> /sdcard/mitm.log; echo "Babi" &> $HOME/zerr.log; errCode=$?; log "$errCode"; }
+            run_Program & pid=$!
+            spin "${greenColorBold}mitmdump/mitmproxy running${whiteColor}" "0" "Nothing" "changeProxy"
             changeProxy
-            if [[ $ifmitmdumpfailed != 0 ]]; then
-                killMtimprob
-            fi
         else
             echo "${greenColorBold}Log saved to /sdcard/mitm.log"
             echo "For stop press CTRL + C on your keyboard"
             echo "Now you can open Genshin${whiteColor}"
-            ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false >> /sdcard/mitm.log ifmitmdumpfailed=$? & pid=$!
-            spinPID "${greenColorBold}mitmdump/mitmproxy running${whiteColor}" "changeProxy"
+            run_Program() { ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false >> /sdcard/mitm.log; echo "Babi" &> $HOME/zerr.log; errCode=$?; log "$errCode"; }
+            run_Program & pid=$!
+            spin "${greenColorBold}mitmdump/mitmproxy running${whiteColor}" "0" "Nothing" "changeProxy"
             changeProxy
-            if [[ $ifmitmdumpfailed != 0 ]]; then
-                killMtimprob
-            fi
         fi
         changeProxy
     else

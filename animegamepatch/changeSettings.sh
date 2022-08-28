@@ -93,9 +93,7 @@ ChangeConfSettings() {
     settingsScript
 }
 
-settingsScript() {
-    clear
-    whoMadeThis
+changeSettings_list() {
     getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
     getSettingsConf2=$(cat "$pathScript" | grep "installcert" | sed "s/.*installcert=//g")
     getSettingsConf3=$(cat "$pathScript" | grep "openGenshin" | sed "s/.*openGenshin=//g")
@@ -146,18 +144,4 @@ settingsScript() {
         echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false" > "$pathScript"
         settingsScript
     fi
-
-    echo "[$renameconf] ${cyanColorBold}1. Autorename Package Genshin (ROOT)${whiteColor}"
-    echo "[$installcertconf] ${cyanColorBold}2. Auto Install cert as Root (ROOT)${whiteColor}"
-    echo "[$openGenshinConf] ${cyanColorBold}3. Auto open Genshin Impact App${whiteColor}"
-    echo "[$setProxyConf] ${cyanColorBold}4. Auto Change Proxy (ROOT)${whiteColor}"
-    echo "0. Back to Menu!"
-    echo ""
-    echo -n "Enter input : "
-    read -r inputsettings
-    case $inputsettings in
-        "1" | "2" | "3" | "4" ) ChangeConfSettings;;
-        "0" ) UIMenu;;
-        * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; settingsScript;;
-    esac
 }

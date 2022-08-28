@@ -28,13 +28,12 @@ getCert() {
             esac
         fi
     fi
-    timeout --foreground 10s ./.local/bin/mitmdump --ssl-insecure &> /dev/null &
-    sleep 2s & pid=$!
-    spinPID "${greenColorBold}Setup${whiteColor}"
-    sleep 1s & pid=$!
-    spinPID "${greenColorBold}Get Certificate${whiteColor}"
-    curl -s --proxy 127.0.0.1:8080 --cacert ~/.mitmproxy/mitmproxy-ca-cert.pem http://mitm.it/cert/cer > /sdcard/mitm.cer
-    sleep 0.5s
+    run_Program() { timeout --foreground 10s ./.local/bin/mitmdump --ssl-insecure &> $HOME/zerr.log & errCode=$?; log "$errCode"; sleep 3; }
+    run_Program & pid=$!
+    spin "${greenColorBold}Setup${whiteColor}" "0" "Menu" "UIMenu"
+    run_Program() { curl -s --proxy 127.0.0.1:8080 --cacert ~/.mitmproxy/mitmproxy-ca-cert.pem http://mitm.it/cert/cer > $HOME/zerr.log; errCode=$?; cp $HOME/zerr.log /sdcard/mitm.cer; log "$errCode"; sleep 1s; }
+    run_Program & pid=$!
+    spin "${greenColorBold}Get Certificate${whiteColor}" "0" "Menu" "UIMenu"
     getSettingsConf2=$(cat "$pathScript" | grep "installcert" | sed "s/.*installcert=//g")
     if [[ $getSettingsConf2 = true ]]; then
         if [[ $isRooted = false ]]; then
@@ -74,7 +73,7 @@ getCert() {
             return
         fi
     else
-        echo -e "${greenColorBold}Done get Certificate.\nSaved to /sdcard and file name \"mitm.cer\"\n${whiteColor}"
+        echo -e "${greenColorBold}Saved to /sdcard and file name \"mitm.cer\"\n${whiteColor}"
         echo -n "Press enter for back to Menu!"
         read -r
         UIMenu
