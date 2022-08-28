@@ -1,50 +1,50 @@
 binary=/data/data/com.termux/files/usr/bin/zex
-versionBashIn1="3.2.2"
-updateNotif="1. Add download Genshin Impact 3.0"
+versionBashIn1="3.2"
+updateNotif="1. Now progress using spin\n2. Fix some code?"
 updateNote="There is new version to"
 link=null
 printLatest="This is Latest Version (Ver : $versionBashIn1)"
 whatTheFuckEditVersion="Something wrong with version.\nThis version different from the server\n\nServer Latest Version : $versionBashIn1\nVersion Script : $versionBash1\n\nversion too latest from server"
 updateScript1() {
-    command cd
-    updateDir=$HOME/updatezex
-    scriptUpdate=$updateDir/zinstall
-    if [[ -f $binary ]]; then
-       rm $binary
+    cd $HOME || exit 1
+    if [ -f "$PREFIX/bin/zex" ]; then
+        rm $PREFIX/bin/zex
     fi
-    mkdir $updateDir
-    cd $updateDir || exit 1
-    echo "Update Script!"
-    if ! command -v wget &> /dev/null; then
-       pkg install wget
+    if [ -d "/usr/share/gcandroid" ]; then
+        rm -rf "$PREFIX/usr/share/animegamepatch"
     fi
-    wget https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/zex.sh &> /dev/null
+    folderName="AnimeGamePatch"
+    if ! command -v git &> /dev/null; then
+        sudo apt install git -y
+    fi
+    clear
+    echo "Download Script..."
+    sleep 1s
+    if [ -d "$folderName" ]; then
+        rm -rf "$folderName"
+    fi
+    git clone https://github.com/ElaXan/AnimeGamePatch.git
     if [[ $? != 0 ]]; then
-       echo "Can't do update Script. Make sure you internet is ON or stable"
-       rm $updateDir
-       cd $HOME || exit 1
-       exit
+        echo "Install Failed!"
+        exit 1
+    fi
+    cd $folderName
+    mv zex.sh $PREFIX/bin/zex
+    chmod +x $PREFIX/bin/zex
+    if [ -d "$PREFIX/usr/share/animegamepatch" ]; then
+        rm -rf "$PREFIX/usr/share/animegamepatch"
+    fi
+    mv animegamepatch $PREFIX/usr/share
+    chmod +x /usr/share/animegamepatch/*
+    rm -rf $HOME/$folderName
+    if [ -f "$PREFIX/bin/zex" ] || [ -d "$PREFIX/usr/share/animegamepatch" ]; then
+        clear
+        echo "Install Success!!"
+        echo "now enter command : zex"
+        exit
     else
-       mv zex.sh $binary
-       cd $HOME || exit 1
-       rm -rf $updateDir
-       clear
-       echo "Update success!"
-       sleep 1s
-       echo "Settings permission!"
-       chmod +x $binary
-       sleep 1s
-       echo "Done!"
-       sleep 1s
-       command clear
-       echo "Please enter command zex again!"
-       cd $HOME || exit 1
-       if [[ -f "proxy.py" ]]; then
-           rm proxy.py
-       fi
-       if [[ -f "proxy_config.py" ]]; then
-           rm proxy_config.py
-       fi
-       exit 0
+        clear
+        echo "Install Failed!"
+        exit
     fi
 }
