@@ -1,5 +1,5 @@
 binary=/data/data/com.termux/files/usr/bin/zex
-versionBashIn1="3.2"
+versionBashIn1="3.3"
 updateNotif="1. Now progress using spin\n2. Fix some code?"
 updateNote="There is new version to"
 link=null
