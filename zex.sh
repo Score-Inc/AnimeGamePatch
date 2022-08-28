@@ -80,7 +80,7 @@ else
 fi
 
 
-versionBash1="3.2"
+versionBash1="3.3"
 
 su -c echo &> /dev/null
 RootDetect=$?
