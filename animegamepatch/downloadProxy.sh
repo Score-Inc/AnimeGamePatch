@@ -7,7 +7,6 @@ downloadproxy() {
     if [[ -f proxy_config.py ]]; then
         rm proxy_config.py
     fi
-     &> /dev/null & pid=$!
     run_Program() { wget https://raw.githubusercontent.com/Grasscutters/Grasscutter/development/proxy.py -q &> $HOME/zerr.log; errCode=$?; log "$errCode"; }
     run_Program & pid=$!
     spin "${greenColorBold}Download proxy.py${whiteColor}" "0" "Menu" "UIMenu"
