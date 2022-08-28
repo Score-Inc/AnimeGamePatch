@@ -250,8 +250,7 @@ isThisLatestVersion="${greenColorBold}Checking version...${whiteColor}"
 whoMadeThis
 # Why Shell Check this said problem... TF
 echo "${greenColorBold}Load data from server...${whiteColor}"
-# source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate)
-source $HOME/someupdate
+source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate)
 # source $HOME/AnimeGamePatch/someupdate
 if [[ $versionBashIn1 = "" ]]; then
     echo -e "\n${redColorBold}Can't connect to server!\n\nScript will run without check Update!${whiteColor}"
