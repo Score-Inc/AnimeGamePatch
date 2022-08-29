@@ -4,7 +4,7 @@ cd $HOME || exit 1
 if [ -f "$PREFIX/bin/zex" ]; then
     rm $PREFIX/bin/zex
 fi
-if [ -d "/usr/share/gcandroid" ]; then
+if [ -d "$PREFIX/usr/share/animegamepatch" ]; then
     rm -rf "$PREFIX/usr/share/animegamepatch"
 fi
 folderName="AnimeGamePatch"
