@@ -6,12 +6,25 @@ changeProxy() {
     trap - INT
     echo -e "${redColorBold}mitmproxy killed/force stopped!${whiteColor}"
     getSettingsConf4=$(cat "$pathScript" | grep "setProxy" | sed "s/.*setProxy=//g")
+    getSettingsConf5=$(cat "$pathScript" | grep "reset" | sed "s/.*reset=//g")
     if [[ $getSettingsConf4 = true ]]; then
-        echo "${greenColorBold}Reset Proxy..."
-        su -c settings put global http_proxy :0
-        sleep 0.5s
-        echo "Done!${whiteColor}"
-    fi
+        if [[ $getSettingsConf5 = 1 ]]; then
+            run_Program() { su -c settings put global http_proxy :0 &> $HOME/zerr.log; errCode=$?; log "$errCode"; sleep 0.5s; }
+            run_Program & pid=$!
+            spin "${greenColorBold}Reset Proxy${whiteColor}" "0" "Main Menu" "UIMenu"
+        elif [[ $getSettingsConf5 = 2 ]]; then
+            run_Program() { su -c settings delete global http_proxy &> $HOME/zerr.log; errCode=$?; log "$errCode"; sleep 0.5s; }
+            run_Program & pid=$!
+            spin "${greenColorBold}Delete proxy${whiteColor}" "0" "Main" "UIMenu"
+            run_Program() { su -c settings delete global global_http_proxy_host &> $HOME/zerr.log; errCode=$?; log "$errCode"; sleep 0.5s; }
+            run_Program & pid=$!
+            spin "${greenColorBold}Delete http proxy host${whiteColor}" "0" "Main" "UIMenu"
+            run_Program() { su -c settings delete global global_http_proxy_port &> $HOME/zerr.log; errCode=$?; log "$errCode"; sleep 0.5s; }
+            run_Program & pid=$!
+            spin "${greenColorBold}Delete http proxy port${whiteColor}" "0" "Main" "UIMenu"
+            echo -e "${yellowColorBold}You need to restart your phone\nor you will have no Internet${whiteColor}"
+        fi
+    fi  
     getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
     if [[ $getSettingsConf = true ]]; then
         genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | grep "zex")
@@ -113,10 +126,13 @@ mitmProxyRun() {
             sleep 1
             clear
             whoMadeThis
-            echo "${yellowColorBold}Make sure you already install Certificate"
-            sleep 0.1s
-            echo "if you not do that will not work${whiteColor}"
-            echo "========================================"
+            rmpathCertRoot=/system/etc/security/cacerts/zexCert
+            if [ ! -f $rmpathCertRoot ]; then
+                echo "${yellowColorBold}Make sure you already install Certificate"
+                sleep 0.1s
+                echo "if you not do that will not work${whiteColor}"
+                echo "========================================"
+            fi
         else
             echo "${yellowColorBold}Make Sure you already set the proxy and port"
             sleep 0.1s
@@ -152,7 +168,7 @@ mitmProxyRun() {
             echo "${greenColorBold}Log saved to /sdcard/mitm.log"
             echo "For stop press CTRL + C on your keyboard"
             echo "Now you can open Genshin${whiteColor}"
-            run_Program() { ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false >> /sdcard/mitm.log; echo "Babi" &> $HOME/zerr.log; errCode=$?; log "$errCode"; }
+            run_Program() { ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false > /sdcard/mitm.log; echo "Babi" &> $HOME/zerr.log; errCode=$?; log "$errCode"; }
             run_Program & pid=$!
             spin "${greenColorBold}mitmdump/mitmproxy running${whiteColor}" "0" "Nothing" "changeProxy"
             changeProxy

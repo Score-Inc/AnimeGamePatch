@@ -149,11 +149,22 @@ changeServer_list() {
     else
         zdomsh_echo="${redColorBold}Can't display : proxy_config.py file not found${whiteColor}"
     fi
-    echo "${greenColorBold}Checking server...${whiteColor}"
-    curl -Ism 3 -f https://sg.genshin.ps.yuuki.me &> /dev/null
-    resultsCheckServerYuukiSG=$?
-    curl -Ism 3 -f https://eu.genshin.ps.yuuki.me &> /dev/null
-    resultsCheckServerYuukiEU=$?
+    # echo "${greenColorBold}Checking server...${whiteColor}"
+    # curl -Ism 3 -f https://sg.genshin.ps.yuuki.me &> /dev/null
+    # resultsCheckServerYuukiSG=$?
+    run_Program() { curl -Ism 3 -f https://sg.genshin.ps.yuuki.me &> $HOME/zerr.log; errCode=$?; log "$errCode"; }
+    run_Program & pid=$!
+    spin "${greenColorBold}Checking server Singapore${whiteColor}" "0" "Menu" "UIMenu" "1"
+    # curl -Ism 3 -f https://eu.genshin.ps.yuuki.me &> /dev/null
+    # resultsCheckServerYuukiEU=$?
+    checkErrorOutput=$(cat $HOME/z.log)
+    resultsCheckServerYuukiSG=$checkErrorOutput
+    run_Program() { curl -Ism 3 -f https://eu.genshin.ps.yuuki.me &> $HOME/zerr.log; errCode=$? ;log "$errCode"; }
+    run_Program & pid=$!
+    spin "${greenColorBold}Checking server Europe${whiteColor}" "0" "Menu" "UIMenu" "1"
+    checkErrorOutput=$(cat $HOME/z.log)
+    resultsCheckServerYuukiEU=$checkErrorOutput
+    sleep 0.5s
     clear
     whoMadeThis
     echo -e ${zdomsh_echo}

@@ -20,20 +20,22 @@ spin() {
                 echo -ne "\r[${greenColorBold}✓${whiteColor}"
                 echo
             else
-                trap - INT
                 echo -ne "\r[${redColorBold}X${whiteColor}"
-                echo -e "\n${redColorBold}Failed output${whiteColor}"
-                echo
-                echo "Reason :"
-                echo "$errOutput"
-                echo
                 rm $HOME/zerr.log
-                rm $HOME/z.log
-                read -p "Press enter for back to $3!"
-                $4
+                if [[ $5 != "1" ]]; then
+                    echo -e "\n${redColorBold}Failed output${whiteColor}"
+                    echo
+                    echo "Reason :"
+                    echo "$errOutput"
+                    echo
+                    rm $HOME/zerr.log
+                    rm $HOME/z.log
+                    read -p "Press enter for back to $3!"
+                    $4
+                else
+                    echo
+                fi
             fi
-            rm $HOME/z.log
-            rm $HOME/zerr.log
             trap - INT
         fi
     done

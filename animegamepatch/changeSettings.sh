@@ -78,6 +78,31 @@ ChangeConfSettings() {
             changeFrom="false"
             changeTo="true"
         fi
+    elif [[ $inputsettings = "5" ]]; then
+        clear
+        whoMadeThis
+        if [[ $isRooted = false ]]; then
+            clear
+            whoMadeThis
+            echo "${redColorBold}Sorry this only for Rooted Device!${whiteColor}"
+            echo ""
+            echo -n "Press enter for back to Settings!"
+            read -r
+            settingsScript
+            return
+        fi
+        echo "${cyanColorBold}1. Mode 1       ${whiteColor}3. ${yellowColorBold}Help"
+        echo "${cyanColorBold}2. Mode 2       ${whiteColor}0. ${redColorBold}Back${whiteColor}"
+        echo
+        echo -n "Enter input : "
+        read ChangeConfSettings_input
+        case $ChangeConfSettings_input in
+            "1" ) stringchange="reset"; changeFrom="2"; changeTo="1";;
+            "2" ) stringchange="reset"; changeFrom="1"; changeTo="2";;
+            "3" ) clear; whoMadeThis; echo -e "${cyanColorBold}1. Mode 1 ${whiteColor} :\n${yellowColorBold}No need to Restart phone for reset proxy\n${cyanColorBold}2. Mode 2 ${whiteColor} :\n${yellowColorBold}Need Restart after delete proxy\nthis not reset but delete for Proxy so need to Restart\n"; read -p "${whiteColor}Press enter for back"; ChangeConfSettings;;
+            "0" ) settingsScript;;
+            * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; ChangeConfSettings;;
+        esac
     fi
 
     if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]]; then
@@ -98,6 +123,7 @@ changeSettings_list() {
     getSettingsConf2=$(cat "$pathScript" | grep "installcert" | sed "s/.*installcert=//g")
     getSettingsConf3=$(cat "$pathScript" | grep "openGenshin" | sed "s/.*openGenshin=//g")
     getSettingsConf4=$(cat "$pathScript" | grep "setProxy" | sed "s/.*setProxy=//g")
+    getSettingsConf5=$(cat "$pathScript" | grep "reset" | sed "s/.*reset=//g")
 
     if [[ $getSettingsConf = true ]]; then
         renameconf="${greenColorBold}ON${whiteColor}"
@@ -105,7 +131,7 @@ changeSettings_list() {
     elif [[ $getSettingsConf = false ]]; then
         renameconf="${redColorBold}OFF${whiteColor}"
         isConfisTrue=false
-    elif [[ $getSettingsConf = "" ]]; then
+    elif [[ $getSettingsConf != true ]] || [[ $getSettingsConf != false ]]; then
         isConfisTrue=err
     fi
 
@@ -115,7 +141,7 @@ changeSettings_list() {
     elif [[ $getSettingsConf2 = false ]]; then
         installcertconf="${redColorBold}OFF${whiteColor}"
         isConfisTrue2=false
-    elif [[ $getSettingsConf2 = "" ]]; then
+    elif [[ $getSettingsConf2 != true ]] || [[ $getSettingsConf2 != false ]]; then
         isConfisTrue2=err
     fi
 
@@ -125,7 +151,7 @@ changeSettings_list() {
     elif [[ $getSettingsConf3 = false ]]; then
         openGenshinConf="${redColorBold}OFF${whiteColor}"
         isConfisTrue3=false
-    elif [[ $getSettingsConf3 = "" ]]; then
+    elif [[ $getSettingsConf3 != true ]] || [[ $getSettingsConf3 != false ]]; then
         isConfisTrue3=err
     fi
 
@@ -135,13 +161,23 @@ changeSettings_list() {
     elif [[ $getSettingsConf4 = false ]]; then
         setProxyConf="${redColorBold}OFF${whiteColor}"
         isConfisTrue4=false
-    elif [[ $getSettingsConf4 = "" ]]; then
+    elif [[ $getSettingsConf4 != true ]] || [[ $getSettingsConf4 != false ]]; then
         isConfisTrue4=err
     fi
 
-    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]] || [[ $isConfisTrue4 = err ]]; then
+    if [[ $getSettingsConf5 = 1 ]]; then
+        resetProxyConf="${greenColorBold}MODE 1${whiteColor}"
+        isConfisErr=false
+    elif [[ $getSettingsConf5 = 2 ]]; then
+        resetProxyConf="${greenColorBold}MODE 2${whiteColor}"
+        isConfisErr=false
+    elif [[ $getSettingsConf5 != 1 ]] || [[ $getSettingsConf5 != 2 ]]; then
+        isConfisErr=true
+    fi
+
+    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]] || [[ $isConfisTrue4 = err ]] || [[ $isConfisErr = true ]]; then
         rm "$pathScript"
-        echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false" > "$pathScript"
+        echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false\nreset=1" > "$pathScript"
         settingsScript
     fi
 }
