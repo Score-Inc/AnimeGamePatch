@@ -1,6 +1,6 @@
 binary=/data/data/com.termux/files/usr/bin/zex
-versionBashIn1="3.3"
-updateNotif="1. Now progress using spin\n2. Fix some code?"
+versionBashIn1="3.4"
+updateNotif="1. Add more progress with spin\n2. Add reset proxy menu\n3. Fix code?"
 updateNote="There is new version to"
 link=null
 printLatest="This is Latest Version (Ver : $versionBashIn1)"
@@ -35,8 +35,9 @@ updateScript1() {
         rm -rf "$PREFIX/usr/share/animegamepatch"
     fi
     mv animegamepatch $PREFIX/usr/share
-    chmod +x /usr/share/animegamepatch/*
+    chmod +x $PREFIX/usr/share/animegamepatch/*
     rm -rf $HOME/$folderName
+    rm $HOME/.termux/settings.zex
     if [ -f "$PREFIX/bin/zex" ] || [ -d "$PREFIX/usr/share/animegamepatch" ]; then
         clear
         echo "Install Success!!"
