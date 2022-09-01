@@ -90,6 +90,26 @@ mitmProxyRun() {
             UIMenu
             return 1
         fi
+        changeSettings_list
+        echo "${greenColorBold}Select Server : "
+        echo "${whiteColor}1. ${cyanColorBold}Yuuki (Singapore)"
+        echo "${whiteColor}2. ${cyanColorBold}Yuuki (Europe)"
+        echo "${whiteColor}3. ${cyanColorBold}Localhost (Port : $currentPort)"
+        echo "${whiteColor}4. ${cyanColorBold}Custom Server"
+        echo "${whiteColor}0. ${redColorBold}Back/cancel${whiteColor}"
+        echo ""
+        echo -n "Enter input : ${cyanColorBold}"
+        read mitmProxyRun_input
+        echo -n "${whiteColor}"
+        case $mitmProxyRun_input in
+            "1" ) serverGenshin="sg.genshin.ps.yuuki.me"; portGenshin="443";;
+            "2" ) serverGenshin="eu.genshin.ps.yuuki.me"; portGenshin="443";;
+            "3" ) serverGenshin="127.0.0.1"; portGenshin="54321";;
+            "4" ) serverGenshin="$customServer"; portGenshin="$customPort";;
+            "0" ) UIMenu;;
+        esac
+        clear
+        whoMadeThis
         getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
         if [[ $getSettingsConf = true ]]; then
             if [[ $isRooted = false ]]; then
@@ -153,7 +173,10 @@ mitmProxyRun() {
             echo "mitmproxy killed/force stop!"
             exit
         fi
-        
+        getServer=$(cat $HOME/proxy_config.py | grep "REMOTE_HOST = \"" | sed -e "s/.*= \"//g" -e "s/\"//g")
+        getPort=$(cat $HOME/proxy_config.py | grep "REMOTE_PORT =" | head -n 1 | sed "s/.*= //g")
+        sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$serverGenshin\"/g" $HOME/proxy_config.py
+        sed -i "s/REMOTE_PORT = $getPort/REMOTE_PORT = $portGenshin/g" $HOME/proxy_config.py
         if [[ $isConfisTrue3 = true ]]; then
             echo "${greenColorBold}Open Genshin...${whiteColor}"
             am start --user 0 com.miHoYo.GenshinImpactzex/com.miHoYo.GetMobileInfo.MainActivity &> "$HOME"/.termux/openGenshin
@@ -165,22 +188,19 @@ mitmProxyRun() {
             else
                 rm "$HOME"/.termux/openGenshin
             fi
-            echo "${greenColorBold}Log saved to /sdcard/mitm.log"
-            echo "For stop press CTRL + C on your keyboard"
-            echo "Now you can open Genshin${whiteColor}"
-            run_Program() { ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false > /sdcard/mitm.log; echo "Babi" &> $HOME/zerr.log; errCode=$?; log "$errCode"; }
-            run_Program & pid=$!
-            spin "${greenColorBold}mitmdump/mitmproxy running${whiteColor}" "0" "Nothing" "changeProxy"
-            changeProxy
-        else
-            echo "${greenColorBold}Log saved to /sdcard/mitm.log"
-            echo "For stop press CTRL + C on your keyboard"
-            echo "Now you can open Genshin${whiteColor}"
-            run_Program() { ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false >> /sdcard/mitm.log; echo "Babi" &> $HOME/zerr.log; errCode=$?; log "$errCode"; }
-            run_Program & pid=$!
-            spin "${greenColorBold}mitmdump/mitmproxy running${whiteColor}" "0" "Nothing" "changeProxy"
-            changeProxy
         fi
+        getServer=$(cat $HOME/proxy_config.py | grep "REMOTE_HOST = \"" | sed -e "s/.*= \"//g" -e "s/\"//g")
+        getPort=$(cat $HOME/proxy_config.py | grep "REMOTE_PORT =" | head -n 1 | sed "s/.*= //g")
+        echo "${greenColorBold}Log saved to /sdcard/mitm.log"
+        echo "For stop press CTRL + C on your keyboard"
+        echo "Now you can open Genshin${whiteColor}"
+        echo "========================================"
+        echo "${greenColorBold}Connect to : ${cyanColorBold}$getServer"
+        echo "${greenColorBold}Port : ${cyanColorBold}$getPort${whiteColor}"
+        echo "========================================"
+        run_Program() { ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false >> /sdcard/mitm.log; echo "Babi" &> $HOME/zerr.log; errCode=$?; log "$errCode"; }
+        run_Program & pid=$!
+        spin "${greenColorBold}mitmdump/mitmproxy running${whiteColor}" "0" "Nothing" "changeProxy"
         changeProxy
     else
         echo -e "${redColorBold}mitmproxy not found!\nPlease download it using ${nameScript} 1\n"

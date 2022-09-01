@@ -24,12 +24,6 @@ if [[ $checkTermux != "Android" ]]; then
 fi
 
 AnimeGamePatch=$PREFIX/share/animegamepatch
-if [ -f "$AnimeGamePatch/changeServer.sh" ]; then
-    source $AnimeGamePatch/changeServer.sh
-else
-    echo "${redColorBold}Error${whiteColor} : $AnimeGamePatch/changeServer.sh not found"
-    exit 1
-fi
 if [ -f "$AnimeGamePatch/changeSettings.sh" ]; then
     source $AnimeGamePatch/changeSettings.sh
 else
@@ -162,54 +156,24 @@ changeServerDOWN() {
         * ) echo "Wrong input!"; exit
     esac
 }
-zdomsh() {
-    clear
-    whoMadeThis
-    ZERR=/data/user/0/com.termux/cache/zlog
-    cd $HOME || exit 1
-    changeServer_list
-    downServer=$((downServerYuukiSG+downServerYuukiEU))
-    if [[ $resultsCheckServerYuukiSG = 28 ]] || [[ $resultsCheckServerYuukiEU = 28 ]]; then
-        echo -e "\n${redColorBold}There is $downServer server DOWN${whiteColor}\n========================================"
-    elif [[ $resultsCheckServerYuukiSG = 0 ]] || [[ $resultsCheckServerYuukiEU = 0 ]]; then
-        echo "========================================"
-    fi
-
-    echo "Select Server"
-    echo "1. Yuuki (Singapore) : $statusServerYuukiSG"
-    echo "2. Yuuki (Europe) : $statusServerYuukiEU"
-    echo "3. localhost (GCAndroid)"
-    echo "4. Custom"
-    echo "5. Download proxy.py"
-    echo "0. BACK"
-    echo ""
-    echo "Example : 1 for select Yuuki Server"
-    echo -n "Enter input : "
-    read -r inpsrv
-    case $inpsrv in
-        "1" | "2" | "3" ) changeServer;;
-        "4" ) customserver;;
-        "5" ) proxyMenu;;
-        "0" ) clear; UIMenu;;
-        * ) echo "Wrong Input!"; sleep 0.5s; zdomsh;;
-    esac
-}
 
 settingsScript() {
     clear
     whoMadeThis
     changeSettings_list
-    echo "[$renameconf] ${cyanColorBold}1. Autorename Package Genshin (ROOT)${whiteColor}"
-    echo "[$installcertconf] ${cyanColorBold}2. Auto Install cert as Root (ROOT)${whiteColor}"
-    echo "[$openGenshinConf] ${cyanColorBold}3. Auto open Genshin Impact App${whiteColor}"
-    echo "[$setProxyConf] ${cyanColorBold}4. Auto Change Proxy (ROOT)${whiteColor}"
-    echo "[$resetProxyConf] ${cyanColorBold}5. Reset Proxy (ROOT)${whiteColor}"
-    echo "0. Back to Menu!"
+    echo "[$renameconf] ${whiteColor}1. ${cyanColorBold}Autorename Package Genshin (ROOT)${whiteColor}"
+    echo "[$installcertconf] ${whiteColor}2. ${cyanColorBold}Auto Install cert as Root (ROOT)${whiteColor}"
+    echo "[$openGenshinConf] ${whiteColor}3. ${cyanColorBold}Auto open Genshin Impact App${whiteColor}"
+    echo "[$setProxyConf] ${whiteColor}4. ${cyanColorBold}Change Proxy (ROOT)${whiteColor}"
+    echo "[$resetProxyConf] ${whiteColor}5. ${cyanColorBold}Reset Proxy (ROOT)${whiteColor}"
+    echo "[$currentPort] ${whiteColor}6. ${cyanColorBold}Localhost Port${whiteColor}"
+    echo "${whiteColor}7. ${cyanColorBold}Custom Server${whiteColor}"
+    echo "0. ${redColorBold}Back to Menu!${whiteColor}"
     echo ""
     echo -n "Enter input : "
     read -r inputsettings
     case $inputsettings in
-        "1" | "2" | "3" | "4" | "5" ) ChangeConfSettings;;
+        "1" | "2" | "3" | "4" | "5" | "6" | "7" ) ChangeConfSettings;;
         "0" ) UIMenu;;
         * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; settingsScript;;
     esac
@@ -222,10 +186,9 @@ UIMenu() {
   echo "${cyanColorBold}1. Extract Mitmproxy! and install Python"
   echo "2. Get Certificate"
   echo "3. Remove Certificate Root"
-  echo "4. Change Domain/Server"
-  echo "5. Download Genshin APKs"
-  echo "6. Run Mitmproxy (zex run)"
-  echo "7. Settings"
+  echo "4. Download Genshin APKs"
+  echo "5. Run Mitmproxy (zex run)"
+  echo "6. Settings"
   echo "0. ${redColorBold}Exit${whiteColor}"
   echo -n "Enter input : "
   read -r enterInputUI
@@ -233,10 +196,9 @@ UIMenu() {
     "1" ) extractMitm;;
     "2" ) getCert;;
     "3" ) removeCertRoot;;
-    "4" ) zdomsh;;
-    "5" ) GenshinAPKs;;
-    "6" ) zexsh;;
-    "7" ) settingsScript;;
+    "4" ) GenshinAPKs;;
+    "5" ) zexsh;;
+    "6" ) settingsScript;;
     "0" ) exit 0;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
   esac
@@ -244,7 +206,7 @@ UIMenu() {
 
 pathScript=$HOME/.termux/settings.zex
 if [[ ! -f $pathScript ]]; then
-    echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false\nreset=1" > "$pathScript"
+    echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false\nreset=1\nport=\"54321\"\ncustomServer=\"elashxander.my.id\"\ncustomPort=443" > "$pathScript"
 fi
 # PLEASE DON'T EDIT THIS, THIS LOAD SOME CODE FROM SERVER
 isThisLatestVersion="${greenColorBold}Checking version...${whiteColor}"
@@ -263,13 +225,6 @@ elif [[ $versionBash1 > $versionBashIn1 ]]; then
     clear
     echo -e "$whatTheFuckEditVersion"
     exit
-    # echo -e "\nWant to fix this?\n"
-    # read -p "Enter input (y/n) : " fixVersionScript
-    # case $fixVersionScript in
-    #    "y" ) fixVersionScripts;;
-    #    "n" ) exit;;
-    #    * ) echo "Wrong Input!"; exit;;
-    # esac
 elif [[ $versionBash1 < $versionBashIn1 ]]; then
     newUpdateScript() {
         clear
@@ -301,10 +256,9 @@ case $userInput1 in
     "1" | "install" ) extractMitm;;
     "2" | "cert" ) getCert;;
     "3" | "remove" | "rmcert" ) removeCertRoot;;
-    "4" | "dom" | "changedomain" ) zdomsh;;
-    "5" | "downloadgenshin" | "download" ) GenshinAPKs;;
-    "6" | "mitm" | "run" ) zexsh;;
-    "7" | "settings" ) settingsScript;;
+    "4" | "downloadgenshin" | "download" ) GenshinAPKs;;
+    "5" | "mitm" | "run" ) zexsh;;
+    "6" | "settings" ) settingsScript;;
     * ) clear; UIMenu;; 
 esac
 

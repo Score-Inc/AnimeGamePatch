@@ -103,6 +103,70 @@ ChangeConfSettings() {
             "0" ) settingsScript;;
             * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; ChangeConfSettings;;
         esac
+    elif [[ $inputsettings = "6" ]]; then
+        clear
+        whoMadeThis
+        echo "${yellowColorBold}Enter b/B for back or cancel"
+        echo
+        echo "${cyanColorBold}Current Port : $getSettingsConf6"
+        echo -n "${whiteColor}Enter custom Port : ${cyanColorBold}"
+        read -r ChangeConfSettings_input
+        echo -n "${whiteColor}"
+        if [[ $ChangeConfSettings_input = "" ]]; then
+            echo "${redColorBold}Please enter port${whiteColor}"
+            sleep 1s
+            ChangeConfSettings
+            return 1
+        elif [[ $ChangeConfSettings_input = "b" ]] || [[ $ChangeConfSettings_input = "B" ]]; then
+            settingsScript
+        elif [[ $ChangeConfSettings_input = "i" ]]; then
+            echo "${redColorBold}Error${whiteColor} : Unknowm Error"
+            sleep 1s
+            ChangeConfSettings
+        elif [[ 1025 < $ChangeConfSettings_input ]]; then
+            echo "${redColorBold}Error${whiteColor} : Port $ChangeConfSettings_input not Allowed for Android"
+            sleep 1
+            ChangeConfSettings
+        elif [[ $ChangeConfSettings_input = $getSettingsConf6 ]]; then
+            echo "${redColorBold}Error${whiteColor} : Same Port"
+            sleep 1s
+            ChangeConfSettings
+        fi
+        stringchange="port"
+        changeFrom="\"$getSettingsConf6\""
+        changeTo="\"$ChangeConfSettings_input\""
+    elif [[ $inputsettings = "7" ]]; then
+        clear
+        whoMadeThis
+        changeSettings_list
+        echo "${yellowColorBold}Enter b/B for back or cancel${whiteColor}"
+        echo ""
+        echo "${cyanColorBold}Current Server : ${greenColorBold}$customServer"
+        echo "${cyanColorBold}Current Port : ${greenColorBold}$customPort${whiteColor}"
+        echo 
+        echo -n "Enter Server : ${cyanColorBold}"
+        read ChangeConfSettings_input
+        echo -n "${whiteColor}"
+        if [[ $ChangeConfSettings_input = "b" ]] || [[ $ChangeConfSettings_input = "B" ]]; then
+            settingsScript
+        elif [[ $ChangeConfSettings_input = "" ]]; then
+            echo "${redColorBold}Error${whiteColor} : Server not entered"
+            sleep 1s
+            ChangeConfSettings
+        fi
+        echo -n "Enter Port : ${cyanColorBold}"
+        read ChangeConfSettings_input_Port
+        echo -n "${whiteColor}"
+        if [[ $ChangeConfSettings_input_Port = "" ]]; then
+            echo "${redColorBold}Error${whiteColor} : Port not entered"
+            sleep 1s
+            ChangeConfSettings
+        elif [[ $ChangeConfSettings_input_Port = "b" ]] || [[ $ChangeConfSettings_input_Port = "B" ]]; then
+            settingsScript
+        fi
+        sed -i "s/customServer=\".*\"/customServer=\"$ChangeConfSettings_input\"/g" "$pathScript"
+        sed -i "s/customPort=.*/customPort=$ChangeConfSettings_input_Port/g" "$pathScript"
+        ChangeConfSettings
     fi
 
     if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]]; then
@@ -124,6 +188,9 @@ changeSettings_list() {
     getSettingsConf3=$(cat "$pathScript" | grep "openGenshin" | sed "s/.*openGenshin=//g")
     getSettingsConf4=$(cat "$pathScript" | grep "setProxy" | sed "s/.*setProxy=//g")
     getSettingsConf5=$(cat "$pathScript" | grep "reset" | sed "s/.*reset=//g")
+    getSettingsConf6=$(cat "$pathScript" | grep "port" | sed -e "s/.*port=\"//g" -e "s/\"//g")
+    getSettingsConf7=$(cat "$pathScript" | grep "customServer" | sed -e "s/.*customServer=\"//g" -e "s/\"//g")
+    getSettingsConf8=$(cat "$pathScript" | grep "customPort" | sed "s/.*customPort=//g")
 
     if [[ $getSettingsConf = true ]]; then
         renameconf="${greenColorBold}ON${whiteColor}"
@@ -175,9 +242,30 @@ changeSettings_list() {
         isConfisErr=true
     fi
 
-    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]] || [[ $isConfisTrue4 = err ]] || [[ $isConfisErr = true ]]; then
+    if [[ $getSettingsConf6 = "" ]]; then
+        isPortMissing=true
+    else
+        currentPort="${greenColorBold}$getSettingsConf6${whiteColor}"
+        isPortMissing=false
+    fi
+
+    if [[ $getSettingsConf7 = "" ]]; then
+        isServerMissing=true
+    else
+        customServer="$getSettingsConf7"
+        isServerMissing=false
+    fi
+
+    if [[ $getSettingsConf8 = "" ]]; then
+        isCustomPortMissing=true
+    else
+        customPort="$getSettingsConf8"
+        isCustomPortMissing=false
+    fi
+
+    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]] || [[ $isConfisTrue4 = err ]] || [[ $isConfisErr = true ]] || [[ $isPortMissing = true ]] || [[ $isServerMissing = true ]] || [[ $isCustomPortMissing = true ]]; then
         rm "$pathScript"
-        echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false\nreset=1" > "$pathScript"
+        echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false\nreset=1\nport=\"54321\"\ncustomServer=\"elashxander.my.id\"\ncustomPort=443" > "$pathScript"
         settingsScript
     fi
 }
