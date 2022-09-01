@@ -13,6 +13,9 @@ getCert() {
     if [[ -d .mitmproxy ]]; then
         rm -rf .mitmproxy
     fi
+    if [ -f "/sdcard/mitm.cer" ]; then
+        rm "/sdcard/mitm.cer"
+    fi
     detectCertInstalled=/system/etc/security/cacerts/zexCert
     if [[ $isRooted = true ]]; then
         if [[ -f $detectCertInstalled ]]; then

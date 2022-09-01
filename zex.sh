@@ -23,7 +23,7 @@ if [[ $checkTermux != "Android" ]]; then
     exit
 fi
 
-AnimeGamePatch=$PREFIX/share/animegamepatch
+AnimeGamePatch=$HOME/.ElaXan/AnimeGamePatch/animegamepatch
 if [ -f "$AnimeGamePatch/changeSettings.sh" ]; then
     source $AnimeGamePatch/changeSettings.sh
 else
@@ -74,7 +74,7 @@ else
 fi
 
 
-versionBash1="3.5"
+versionBash1="3.5.1"
 
 su -c echo &> /dev/null
 RootDetect=$?
@@ -188,7 +188,8 @@ UIMenu() {
   echo "3. Remove Certificate Root"
   echo "4. Download Genshin APKs"
   echo "5. Run Mitmproxy (zex run)"
-  echo "6. Settings"
+  echo "6. Download proxy.py"
+  echo "7. Settings"
   echo "0. ${redColorBold}Exit${whiteColor}"
   echo -n "Enter input : "
   read -r enterInputUI
@@ -198,7 +199,8 @@ UIMenu() {
     "3" ) removeCertRoot;;
     "4" ) GenshinAPKs;;
     "5" ) zexsh;;
-    "6" ) settingsScript;;
+    "6" ) downloadproxy;;
+    "7" ) settingsScript;;
     "0" ) exit 0;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
   esac

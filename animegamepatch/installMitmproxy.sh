@@ -4,12 +4,15 @@ extractMitm() {
     mitmproxyPath=$HOME/.local/bin/mitmproxy
     if [[ -f $mitmproxyPath ]]; then
         echo "${yellowColorBold}mitmproxy already installed!${greenColorBold}"
-        sleep 1s
-        echo -n "Press enter for back to Menu!${whiteColor}"
-        read -r
-        clear
-        UIMenu
-        return
+        echo
+        echo "${greenColorBold}Do you want to reinstall?${whiteColor}"
+        echo -n "Enter input (y/N) : "
+        read -r extractMitm_input
+        case $extractMitm_input in
+            "y" | "Y" ) rm -rf $HOME/.local; clear;;
+            "n" | "N" ) UIMenu;;
+            * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; extractMitm;;
+        esac
     fi
 
     if ! command -v wget &> /dev/null; then

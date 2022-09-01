@@ -19,7 +19,7 @@ downloadproxy() {
     echo -n "Press enter for back to Change Server!"
     read -r
     clear
-    zdomsh
+    UIMenu
 }
 
 

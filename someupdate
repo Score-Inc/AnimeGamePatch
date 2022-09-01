@@ -1,6 +1,6 @@
 binary=/data/data/com.termux/files/usr/bin/zex
-versionBashIn1="3.5"
-updateNotif="1. Move change server to run Mitmproxy and add Settings..."
+versionBashIn1="3.5.1"
+updateNotif="1. Add download proxy.py (before removed)\n2. Change directory from /usr/share to $HOME/.ElaXan"
 updateNote="There is new version to"
 link=null
 printLatest="This is Latest Version (Ver : $versionBashIn1)"
@@ -10,41 +10,37 @@ updateScript1() {
     if [ -f "$PREFIX/bin/zex" ]; then
         rm $PREFIX/bin/zex
     fi
-    if [ -d "$PREFIX/usr/share/animegamepatch" ]; then
-        rm -rf "$PREFIX/usr/share/animegamepatch"
+
+    if [ ! -d ".ElaXan" ]; then
+        mkdir .ElaXan
     fi
-    folderName="AnimeGamePatch"
+
+    folderName="$HOME/.ElaXan/AnimeGamePatch"
+    if [ -d "$folderName" ]; then
+        rm -rf "$folderName"
+    fi
     if ! command -v git &> /dev/null; then
         sudo apt install git -y
     fi
     clear
     echo "Download Script..."
     sleep 1s
-    if [ -d "$folderName" ]; then
-        rm -rf "$folderName"
-    fi
     git clone https://github.com/ElaXan/AnimeGamePatch.git
     if [[ $? != 0 ]]; then
         echo "Install Failed!"
         exit 1
     fi
-    cd $folderName
-    mv zex.sh $PREFIX/bin/zex
+    clear
+    mv $HOME/AnimeGamePatch $folderName
+    ln -sv $folderName/zex.sh $PREFIX/bin/zex
     chmod +x $PREFIX/bin/zex
-    if [ -d "$PREFIX/usr/share/animegamepatch" ]; then
-        rm -rf "$PREFIX/usr/share/animegamepatch"
-    fi
-    mv animegamepatch $PREFIX/usr/share
-    chmod +x $PREFIX/usr/share/animegamepatch/*
-    rm -rf $HOME/$folderName
     rm $HOME/.termux/settings.zex
-    if [ -f "$PREFIX/bin/zex" ] || [ -d "$PREFIX/usr/share/animegamepatch" ]; then
-        clear
+    sleep 1s
+    if [ -f "$PREFIX/bin/zex" ]; then
         echo "Install Success!!"
         echo "now enter command : zex"
         exit
     else
-        clear
         echo "Install Failed!"
         exit
     fi
