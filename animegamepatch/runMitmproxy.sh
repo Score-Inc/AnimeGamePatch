@@ -81,7 +81,7 @@ mitmProxyRun() {
     whoMadeThis
     if [[ -f ./.local/bin/mitmdump ]]; then
         cd $HOME || exit 1
-        if [[ ! -f proxy.py ]] || [[ ! -f proxy_config.py ]]; then
+        if [[ ! -f proxy.py ]] && [[ ! -f proxy_config.py ]]; then
             echo "${redColorBold}proxy.py not found, please download it in main menu!${whiteColor}"
             echo ""
             echo -n "Press Enter for back to menu!"
