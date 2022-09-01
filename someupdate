@@ -1,6 +1,6 @@
 binary=/data/data/com.termux/files/usr/bin/zex
-versionBashIn1="3.4"
-updateNotif="1. Add more progress with spin\n2. Add reset proxy menu\n3. Fix code?"
+versionBashIn1="3.5"
+updateNotif="1. Move change server to run Mitmproxy and add Settings..."
 updateNote="There is new version to"
 link=null
 printLatest="This is Latest Version (Ver : $versionBashIn1)"

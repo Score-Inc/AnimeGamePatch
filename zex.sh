@@ -74,7 +74,7 @@ else
 fi
 
 
-versionBash1="3.4"
+versionBash1="3.5"
 
 su -c echo &> /dev/null
 RootDetect=$?
