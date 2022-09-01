@@ -25,6 +25,9 @@ updateScript1() {
     clear
     echo "Download Script..."
     sleep 1s
+    if [ -d "AnimeGamePatch" ]; then
+        rm -rf AnimeGamePatch
+    fi
     git clone https://github.com/ElaXan/AnimeGamePatch.git
     if [[ $? != 0 ]]; then
         echo "Install Failed!"
