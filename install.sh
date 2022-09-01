@@ -8,7 +8,7 @@ folderPath="$HOME/.ElaXan/AnimeGamePatch"
 if [ -d "$folderPath" ]; then
     rm -rf "$folderPath"
 fi
-if [ ! -d "ElaXan" ]; then
+if [ ! -d ".ElaXan" ]; then
     mkdir .ElaXan
 fi
 if ! command -v git &> /dev/null; then
@@ -26,7 +26,7 @@ if [[ $? != 0 ]]; then
     exit 1
 fi
 clear
-cd $folderName
+mv AnimeGamePatch $folderPath
 ln -sv $folderPath/zex.sh $PREFIX/bin/zex
 chmod +x $PREFIX/bin/zex
 sleep 1s
