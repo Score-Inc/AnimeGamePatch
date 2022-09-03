@@ -23,6 +23,49 @@ if [[ $checkTermux != "Android" ]]; then
     exit
 fi
 
+# Install some program/package if not installed
+if ! command -v ruby &> /dev/null; then
+    echo "${greenColorBold}Installing ruby${whiteColor}"
+    pkg install ruby -y &> /dev/null
+fi
+
+if ! command -v lolcat &> /dev/null; then
+    echo "${greenColorBold}Installing lolcat${whiteColor}"
+    gem install lolcat &> /dev/null
+fi
+
+if ! command -v cowsay &> /dev/null; then
+    echo "${greenColorBold}Installing cowsay${whiteColor}"
+    pkg install cowsay -y
+fi
+
+
+if ! command -v unzip &> /dev/null; then
+    echo "${greenColorBold}Installing unzip${whiteColor}"
+    pkg install unzip -y
+fi
+
+if ! command -v apktool &> /dev/null; then
+    echo "${greenColorBold}Installing apktool${whiteColor}"
+    pkg install apktool -y
+fi
+
+if ! command -v java &> /dev/null; then
+    echo "${greenColorBold}Installing Java${whiteColor}"
+    pkg install openjdk-17 -y
+fi
+
+if ! command -v zip &> /dev/null; then
+    echo "${greenColorBold}Installing zip${whiteColor}"
+    pkg install zip -y
+fi
+
+if [ ! -f "$HOME/.ElaXan/AnimeGamePatch/uber-apk-signer-1.2.1.jar" ]; then
+    cd $HOME/.ElaXan/AnimeGamePatch
+    echo "Downloading uber-apk-signer"
+    wget https://github.com/patrickfav/uber-apk-signer/releases/download/v1.2.1/uber-apk-signer-1.2.1.jar -q
+fi
+
 AnimeGamePatch=$HOME/.ElaXan/AnimeGamePatch/animegamepatch
 if [ -f "$AnimeGamePatch/changeSettings.sh" ]; then
     source $AnimeGamePatch/changeSettings.sh
@@ -54,12 +97,6 @@ else
     echo "${redColorBold}Error${whiteColor} : $AnimeGamePatch/installMitmproxy.sh not found"
     exit 1
 fi
-if [ -f "$AnimeGamePatch/removeCertificate.sh" ]; then
-    source $AnimeGamePatch/removeCertificate.sh
-else
-    echo "${redColorBold}Error${whiteColor} : $AnimeGamePatch/removeCertificate.sh not found"
-    exit 1
-fi
 if [ -f "$AnimeGamePatch/runMitmproxy.sh" ]; then
     source $AnimeGamePatch/runMitmproxy.sh
 else
@@ -70,6 +107,12 @@ if [ -f "$AnimeGamePatch/spin.sh" ]; then
     source $AnimeGamePatch/spin.sh
 else
     echo "${redColorBold}Error${whiteColor} : $AnimeGamePatch/spin.sh not found"
+    exit 1
+fi
+if [ -f "$AnimeGamePatch/InstallCertificateAPK.sh" ]; then
+    source "$AnimeGamePatch/InstallCertificateAPK.sh"
+else
+    echo "${redColorBold}Error${whiteColor} : $AnimeGamePatch/InstallCertificateAPK.sh not found"
     exit 1
 fi
 
@@ -99,6 +142,11 @@ fi
 clear
 whoMadeThis() {
     echo -e "========================================\n               ZEX HERE\n----------------------------------------\n${yellowColor}Script was made by @ElashXander (Telegram)${whiteColor}\n----------------------------------------\n$isThisLatestVersion\n$printRooted\n$FDroidTermux"
+}
+
+showCowsay() {
+    cowsay -f eyes "ElashXander Project" | lolcat
+    echo "========================================" | lolcat
 }
 
 downloadGenshin() {
@@ -162,18 +210,17 @@ settingsScript() {
     whoMadeThis
     changeSettings_list
     echo "[$renameconf] ${whiteColor}1. ${cyanColorBold}Autorename Package Genshin (ROOT)${whiteColor}"
-    echo "[$installcertconf] ${whiteColor}2. ${cyanColorBold}Auto Install cert as Root (ROOT)${whiteColor}"
-    echo "[$openGenshinConf] ${whiteColor}3. ${cyanColorBold}Auto open Genshin Impact App${whiteColor}"
-    echo "[$setProxyConf] ${whiteColor}4. ${cyanColorBold}Change Proxy (ROOT)${whiteColor}"
-    echo "[$resetProxyConf] ${whiteColor}5. ${cyanColorBold}Reset Proxy (ROOT)${whiteColor}"
-    echo "[$currentPort] ${whiteColor}6. ${cyanColorBold}Localhost Port${whiteColor}"
-    echo "${whiteColor}7. ${cyanColorBold}Custom Server${whiteColor}"
+    echo "[$openGenshinConf] ${whiteColor}2. ${cyanColorBold}Auto open Genshin Impact App${whiteColor}"
+    echo "[$setProxyConf] ${whiteColor}3. ${cyanColorBold}Change Proxy (ROOT)${whiteColor}"
+    echo "[$resetProxyConf] ${whiteColor}4. ${cyanColorBold}Reset Proxy (ROOT)${whiteColor}"
+    echo "[$currentPort] ${whiteColor}5. ${cyanColorBold}Localhost Port${whiteColor}"
+    echo "${whiteColor}6. ${cyanColorBold}Custom Server${whiteColor}"
     echo "0. ${redColorBold}Back to Menu!${whiteColor}"
     echo ""
     echo -n "Enter input : "
     read -r inputsettings
     case $inputsettings in
-        "1" | "2" | "3" | "4" | "5" | "6" | "7" ) ChangeConfSettings;;
+        "1" | "2" | "3" | "4" | "5" | "6" ) ChangeConfSettings;;
         "0" ) UIMenu;;
         * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; settingsScript;;
     esac
@@ -183,23 +230,23 @@ settingsScript() {
 UIMenu() {
   clear
   whoMadeThis
-  echo "${cyanColorBold}1. Extract Mitmproxy! and install Python"
-  echo "2. Get Certificate"
-  echo "3. Remove Certificate Root"
-  echo "4. Download Genshin APKs"
-  echo "5. Run Mitmproxy (zex run)"
-  echo "6. Download proxy.py"
-  echo "7. Settings"
-  echo "0. ${redColorBold}Exit${whiteColor}"
+  echo "${whiteColor}1. ${cyanColorBold}Extract Mitmproxy! and install Python"
+  echo "${whiteColor}2. ${cyanColorBold}Get Certificate"
+  echo "${whiteColor}3. ${cyanColorBold}Download Genshin APKs"
+  echo "${whiteColor}4. ${cyanColorBold}Run Mitmproxy (zex run)"
+  echo "${whiteColor}5. ${cyanColorBold}Download proxy.py"
+  echo "${whiteColor}6. ${cyanColorBold}Install certificate to APK"
+  echo "${whiteColor}7. ${cyanColorBold}Settings"
+  echo "${whiteColor}0. ${redColorBold}Exit${whiteColor}"
   echo -n "Enter input : "
   read -r enterInputUI
   case $enterInputUI in
     "1" ) extractMitm;;
     "2" ) getCert;;
-    "3" ) removeCertRoot;;
-    "4" ) GenshinAPKs;;
-    "5" ) zexsh;;
-    "6" ) downloadproxy;;
+    "3" ) GenshinAPKs;;
+    "4" ) zexsh;;
+    "5" ) downloadproxy;;
+    "6" ) installCertAPK;;
     "7" ) settingsScript;;
     "0" ) exit 0;;
     * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
@@ -228,20 +275,17 @@ elif [[ $versionBash1 > $versionBashIn1 ]]; then
     echo -e "$whatTheFuckEditVersion"
     exit
 elif [[ $versionBash1 < $versionBashIn1 ]]; then
-    newUpdateScript() {
-        clear
-        echo -e "$updateNote $versionBashIn1\n\nWhat is new/update? :\n$updateNotif\n"
-        sleep 1s
-        read -p "Want to update? (y/n)" wantUpdateScript
-        while true; do
-        case $wantUpdateScript in
-            "y" | "Y" ) updateScript1;break;;
-            "n" | "N" ) echo "okay!, script will continue without update!"; isThisLatestVersion="Current Version : ${redColorBold}$versionBash1${whiteColor}\nLatest Version : ${greenColorBold}$versionBashIn1${whiteColor}";sleep 1s;break;;
-            * ) echo "wrong input!";sleep 1.5s;newUpdateScript;;
-        esac
-        done
-    }
-    newUpdateScript
+    clear
+    echo -e "$updateNote $versionBashIn1\n\nWhat is new/update? :\n$updateNotif\n"
+    sleep 1s
+    read -p "Want to update? (y/n)" wantUpdateScript
+    while true; do
+    case $wantUpdateScript in
+        "y" | "Y" ) updateScript1;break;;
+        "n" | "N" ) echo "okay!, script will continue without update!"; isThisLatestVersion="Current Version : ${redColorBold}$versionBash1${whiteColor}\nLatest Version : ${greenColorBold}$versionBashIn1${whiteColor}";sleep 1s;break;;
+        * ) echo "wrong input!";sleep 1.5s;newUpdateScript;;
+    esac
+    done
 elif [[ $versionBash1 = $versionBashIn1 ]]; then
     isThisLatestVersion=${greenColorBold}$printLatest${whiteColor}
     noInternet=false

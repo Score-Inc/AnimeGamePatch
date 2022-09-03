@@ -28,7 +28,6 @@ spin() {
                     echo "Reason :"
                     echo "$errOutput"
                     echo
-                    rm $HOME/zerr.log
                     rm $HOME/z.log
                     read -p "Press enter for back to $3!"
                     $4

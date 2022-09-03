@@ -92,9 +92,9 @@ mitmProxyRun() {
         fi
         changeSettings_list
         echo "${greenColorBold}Select Server : "
-        echo "${whiteColor}1. ${cyanColorBold}Yuuki (Singapore)"
-        echo "${whiteColor}2. ${cyanColorBold}Yuuki (Europe)"
-        echo "${whiteColor}3. ${cyanColorBold}Localhost (Port : $currentPort)"
+        echo "${whiteColor}1. ${cyanColorBold}Yuuki ${whiteColor}(${yellowColorBold}Singapore${whiteColor})"
+        echo "${whiteColor}2. ${cyanColorBold}Yuuki ${whiteColor}(${yellowColorBold}Europe${whiteColor})"
+        echo "${whiteColor}3. ${cyanColorBold}Localhost ${whiteColor}(${yellowColorBold}Port ${whiteColor}: $currentPort)"
         echo "${whiteColor}4. ${cyanColorBold}Custom Server"
         echo "${whiteColor}0. ${redColorBold}Back/cancel${whiteColor}"
         echo ""
@@ -109,7 +109,7 @@ mitmProxyRun() {
             "0" ) UIMenu;;
         esac
         clear
-        whoMadeThis
+        showCowsay
         getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
         if [[ $getSettingsConf = true ]]; then
             if [[ $isRooted = false ]]; then
@@ -145,13 +145,13 @@ mitmProxyRun() {
             spin "${greenColorBold}Change Proxy${whiteColor}" "0" "Menu" "UIMenu"
             sleep 1
             clear
-            whoMadeThis
+            showCowsay
             rmpathCertRoot=/system/etc/security/cacerts/zexCert
-            if [ ! -f $rmpathCertRoot ]; then
+            if [ ! -f $HOME/.ElaXan/installed ]; then
                 echo "${yellowColorBold}Make sure you already install Certificate"
                 sleep 0.1s
                 echo "if you not do that will not work${whiteColor}"
-                echo "========================================"
+                echo "========================================" | lolcat
             fi
         else
             echo "${yellowColorBold}Make Sure you already set the proxy and port"
@@ -162,11 +162,13 @@ mitmProxyRun() {
             sleep 0.1s
             echo "If you not do that will not work${whiteColor}"
             sleep 0.1s
-            echo "========================================"
-            echo "${yellowColorBold}Make sure you already install Certificate"
-            sleep 0.1s
-            echo "if you not do that will not work${whiteColor}"
-            echo "========================================"
+            echo "========================================" | lolcat
+            if [ ! -f $HOME/.ElaXan/installed ]; then
+                echo "${yellowColorBold}Make sure you already install Certificate"
+                sleep 0.1s
+                echo "if you not do that will not work${whiteColor}"
+                echo "========================================" | lolcat
+            fi
         fi
         mitmKilled=$(cat "$HOME"/zkill.log &> /dev/null)
         if [[ $mitmKilled = "Killed" ]]; then

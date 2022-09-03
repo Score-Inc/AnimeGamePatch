@@ -19,52 +19,20 @@ ChangeConfSettings() {
             changeTo="true"
         fi
     elif [[ $inputsettings = "2" ]]; then
-        stringchange="installcert"
+        stringchange="openGenshin"
         if [[ $isConfisTrue2 = true ]]; then
             changeFrom="true"
             changeTo="false"
         elif [[ $isConfisTrue2 = false ]]; then
-            if [[ $isRooted = false ]]; then
-                clear
-                whoMadeThis
-                echo "${redColorBold}Sorry this only for Rooted device!${whiteColor}"
-                echo ""
-                echo -n "Press enter for back to Settings!"
-                read -r
-                settingsScript
-                return
-            fi
-            clear
-            whoMadeThis
-            echo "${greenColorBold}Do you want to install Certificate as Root?${whiteColor}"
-            echo "${yellowColorBold}i'm not take any responsibility if there is something wrong with your Phone"
-            echo "or even can't delete for the certficate${whiteColor}"
-            echo ""
-            echo -n "Enter input (y/n) : "
-            read -r installCert
-            case $installCert in
-                "y" | "Y" ) sleep 0.1s;;
-                "n" | "N" ) UIMenu;;
-                * ) echo "Wrong Input!"; sleep 1s; settingsScript;;
-            esac
             changeFrom="false"
             changeTo="true"
         fi
     elif [[ $inputsettings = "3" ]]; then
-        stringchange="openGenshin"
+        stringchange="setProxy"
         if [[ $isConfisTrue3 = true ]]; then
             changeFrom="true"
             changeTo="false"
         elif [[ $isConfisTrue3 = false ]]; then
-            changeFrom="false"
-            changeTo="true"
-        fi
-    elif [[ $inputsettings = "4" ]]; then
-        stringchange="setProxy"
-        if [[ $isConfisTrue4 = true ]]; then
-            changeFrom="true"
-            changeTo="false"
-        elif [[ $isConfisTrue4 = false ]]; then
             if [[ $isRooted = false ]]; then
                 clear
                 whoMadeThis
@@ -78,7 +46,7 @@ ChangeConfSettings() {
             changeFrom="false"
             changeTo="true"
         fi
-    elif [[ $inputsettings = "5" ]]; then
+    elif [[ $inputsettings = "4" ]]; then
         clear
         whoMadeThis
         if [[ $isRooted = false ]]; then
@@ -103,12 +71,12 @@ ChangeConfSettings() {
             "0" ) settingsScript;;
             * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; ChangeConfSettings;;
         esac
-    elif [[ $inputsettings = "6" ]]; then
+    elif [[ $inputsettings = "5" ]]; then
         clear
         whoMadeThis
         echo "${yellowColorBold}Enter b/B for back or cancel"
         echo
-        echo "${cyanColorBold}Current Port : $getSettingsConf6"
+        echo "${cyanColorBold}Current Port : $getSettingsConf5"
         echo -n "${whiteColor}Enter custom Port : ${cyanColorBold}"
         read -r ChangeConfSettings_input
         echo -n "${whiteColor}"
@@ -119,23 +87,21 @@ ChangeConfSettings() {
             return 1
         elif [[ $ChangeConfSettings_input = "b" ]] || [[ $ChangeConfSettings_input = "B" ]]; then
             settingsScript
-        elif [[ $ChangeConfSettings_input = "i" ]]; then
-            echo "${redColorBold}Error${whiteColor} : Unknowm Error"
-            sleep 1s
-            ChangeConfSettings
+        elif [[ $ChangeConfSettings_input = "54321" ]]; then
+            echo -n ""
         elif [[ 1025 < $ChangeConfSettings_input ]]; then
             echo "${redColorBold}Error${whiteColor} : Port $ChangeConfSettings_input not Allowed for Android"
             sleep 1
             ChangeConfSettings
-        elif [[ $ChangeConfSettings_input = $getSettingsConf6 ]]; then
+        elif [[ $ChangeConfSettings_input = $getSettingsConf5 ]]; then
             echo "${redColorBold}Error${whiteColor} : Same Port"
             sleep 1s
             ChangeConfSettings
         fi
         stringchange="port"
-        changeFrom="\"$getSettingsConf6\""
+        changeFrom="\"$getSettingsConf5\""
         changeTo="\"$ChangeConfSettings_input\""
-    elif [[ $inputsettings = "7" ]]; then
+    elif [[ $inputsettings = "6" ]]; then
         clear
         whoMadeThis
         changeSettings_list
@@ -184,13 +150,12 @@ ChangeConfSettings() {
 
 changeSettings_list() {
     getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
-    getSettingsConf2=$(cat "$pathScript" | grep "installcert" | sed "s/.*installcert=//g")
-    getSettingsConf3=$(cat "$pathScript" | grep "openGenshin" | sed "s/.*openGenshin=//g")
-    getSettingsConf4=$(cat "$pathScript" | grep "setProxy" | sed "s/.*setProxy=//g")
-    getSettingsConf5=$(cat "$pathScript" | grep "reset" | sed "s/.*reset=//g")
-    getSettingsConf6=$(cat "$pathScript" | grep "port" | sed -e "s/.*port=\"//g" -e "s/\"//g")
-    getSettingsConf7=$(cat "$pathScript" | grep "customServer" | sed -e "s/.*customServer=\"//g" -e "s/\"//g")
-    getSettingsConf8=$(cat "$pathScript" | grep "customPort" | sed "s/.*customPort=//g")
+    getSettingsConf2=$(cat "$pathScript" | grep "openGenshin" | sed "s/.*openGenshin=//g")
+    getSettingsConf3=$(cat "$pathScript" | grep "setProxy" | sed "s/.*setProxy=//g")
+    getSettingsConf4=$(cat "$pathScript" | grep "reset" | sed "s/.*reset=//g")
+    getSettingsConf5=$(cat "$pathScript" | grep "port" | sed -e "s/.*port=\"//g" -e "s/\"//g")
+    getSettingsConf6=$(cat "$pathScript" | grep "customServer" | sed -e "s/.*customServer=\"//g" -e "s/\"//g")
+    getSettingsConf7=$(cat "$pathScript" | grep "customPort" | sed "s/.*customPort=//g")
 
     if [[ $getSettingsConf = true ]]; then
         renameconf="${greenColorBold}ON${whiteColor}"
@@ -203,67 +168,57 @@ changeSettings_list() {
     fi
 
     if [[ $getSettingsConf2 = true ]]; then
-        installcertconf="${greenColorBold}ON${whiteColor}"
+        openGenshinConf="${greenColorBold}ON${whiteColor}"
         isConfisTrue2=true
     elif [[ $getSettingsConf2 = false ]]; then
-        installcertconf="${redColorBold}OFF${whiteColor}"
+        openGenshinConf="${redColorBold}OFF${whiteColor}"
         isConfisTrue2=false
     elif [[ $getSettingsConf2 != true ]] || [[ $getSettingsConf2 != false ]]; then
         isConfisTrue2=err
     fi
 
     if [[ $getSettingsConf3 = true ]]; then
-        openGenshinConf="${greenColorBold}ON${whiteColor}"
+        setProxyConf="${greenColorBold}ON${whiteColor}"
         isConfisTrue3=true
     elif [[ $getSettingsConf3 = false ]]; then
-        openGenshinConf="${redColorBold}OFF${whiteColor}"
+        setProxyConf="${redColorBold}OFF${whiteColor}"
         isConfisTrue3=false
     elif [[ $getSettingsConf3 != true ]] || [[ $getSettingsConf3 != false ]]; then
         isConfisTrue3=err
     fi
 
-    if [[ $getSettingsConf4 = true ]]; then
-        setProxyConf="${greenColorBold}ON${whiteColor}"
-        isConfisTrue4=true
-    elif [[ $getSettingsConf4 = false ]]; then
-        setProxyConf="${redColorBold}OFF${whiteColor}"
-        isConfisTrue4=false
-    elif [[ $getSettingsConf4 != true ]] || [[ $getSettingsConf4 != false ]]; then
-        isConfisTrue4=err
-    fi
-
-    if [[ $getSettingsConf5 = 1 ]]; then
+    if [[ $getSettingsConf4 = 1 ]]; then
         resetProxyConf="${greenColorBold}MODE 1${whiteColor}"
         isConfisErr=false
-    elif [[ $getSettingsConf5 = 2 ]]; then
+    elif [[ $getSettingsConf4 = 2 ]]; then
         resetProxyConf="${greenColorBold}MODE 2${whiteColor}"
         isConfisErr=false
-    elif [[ $getSettingsConf5 != 1 ]] || [[ $getSettingsConf5 != 2 ]]; then
+    elif [[ $getSettingsConf4 != 1 ]] || [[ $getSettingsConf5 != 2 ]]; then
         isConfisErr=true
     fi
 
-    if [[ $getSettingsConf6 = "" ]]; then
+    if [[ $getSettingsConf5 = "" ]]; then
         isPortMissing=true
     else
-        currentPort="${greenColorBold}$getSettingsConf6${whiteColor}"
+        currentPort="${greenColorBold}$getSettingsConf5${whiteColor}"
         isPortMissing=false
     fi
 
-    if [[ $getSettingsConf7 = "" ]]; then
+    if [[ $getSettingsConf6 = "" ]]; then
         isServerMissing=true
     else
-        customServer="$getSettingsConf7"
+        customServer="$getSettingsConf6"
         isServerMissing=false
     fi
 
-    if [[ $getSettingsConf8 = "" ]]; then
+    if [[ $getSettingsConf7 = "" ]]; then
         isCustomPortMissing=true
     else
-        customPort="$getSettingsConf8"
+        customPort="$getSettingsConf7"
         isCustomPortMissing=false
     fi
 
-    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]] || [[ $isConfisTrue4 = err ]] || [[ $isConfisErr = true ]] || [[ $isPortMissing = true ]] || [[ $isServerMissing = true ]] || [[ $isCustomPortMissing = true ]]; then
+    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]] || [[ $isConfisErr = true ]] || [[ $isPortMissing = true ]] || [[ $isServerMissing = true ]] || [[ $isCustomPortMissing = true ]]; then
         rm "$pathScript"
         echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false\nreset=1\nport=\"54321\"\ncustomServer=\"elashxander.my.id\"\ncustomPort=443" > "$pathScript"
         settingsScript
