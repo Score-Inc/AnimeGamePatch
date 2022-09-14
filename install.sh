@@ -12,7 +12,7 @@ if [ ! -d ".ElaXan" ]; then
     mkdir .ElaXan
 fi
 if ! command -v git &> /dev/null; then
-    sudo apt install git -y
+    pkg install git -y
 fi
 clear
 echo "Download Script..."
