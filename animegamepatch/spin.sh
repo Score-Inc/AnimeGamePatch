@@ -9,7 +9,7 @@ spin() {
         for i in "${spin[@]}"; do
             echo -ne "\r[";
             echo -ne ${greenColorBold}"$i";
-            echo -ne ${whiteColor}"]" "$1"; sleep 0.1;
+            echo -ne ${whiteColor}"]"${greenColorBold} "$1"; sleep 0.1;
             trap '' INT
         done
         # Adding checklist or "✓" for more good by me XD
@@ -20,21 +20,18 @@ spin() {
                 echo -ne "\r[${greenColorBold}✓${whiteColor}"
                 echo
             else
+                trap - INT
                 echo -ne "\r[${redColorBold}X${whiteColor}"
-                rm $HOME/zerr.log
-                if [[ $5 != "1" ]]; then
-                    echo -e "\n${redColorBold}Failed output${whiteColor}"
-                    echo
-                    echo "Reason :"
-                    echo "$errOutput"
-                    echo
-                    rm $HOME/z.log
-                    read -p "Press enter for back to $3!"
-                    $4
-                else
-                    echo
-                fi
+                echo -e "\n${redColorBold}Failed output${whiteColor}"
+                echo
+                echo "Reason :"
+                echo "$errOutput"
+                echo
+                read -p "Press enter for back to $3!"
+                $4
             fi
+            rm $HOME/z.log
+            rm $HOME/zerr.log
             trap - INT
         fi
     done

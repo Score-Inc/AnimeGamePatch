@@ -1,10 +1,7 @@
 downloadYesGenshin() {
     clear
-    whoMadeThis
+    showCowsay
     cd $HOME || exit 1
-    if ! command -v wget &> /dev/null; then
-        pkg install wget
-    fi
     echo "${yellowColorBold}Download Genshin apks. [PLEASE WAIT!]${whiteColor}"
     if [[ $dgenshininp = "1" ]]; then
         if [[ -f "/sdcard/Genshin_Impact_3.0.apks" ]]; then
@@ -17,7 +14,7 @@ downloadYesGenshin() {
         else
             versionGenshin="3.0"
             if [[ -f "$HOME/AnimeGame-Termux-3.0-patched.apks" ]]; then
-                rm "$HOME/AnimeGame-Termux-3.0-patched.apks"
+                busybox rm "$HOME/AnimeGame-Termux-3.0-patched.apks"
             fi
             wget https://github.com/ElaXan/AnimeGamePatch/releases/download/3.0/AnimeGame-Termux-3.0-patched.apks -q --show-progress
         fi
@@ -32,7 +29,7 @@ downloadYesGenshin() {
         else
             versionGenshin="2.8"
             if [[ -f "$HOME/Genshin_Impact_2.8.apks" ]]; then
-                rm "$HOME/Genshin_Impact_2.8.apks"
+                busybox rm "$HOME/Genshin_Impact_2.8.apks"
             fi
             wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.8/Genshin_Impact_2.8.apks -q --show-progress
         fi
@@ -47,7 +44,7 @@ downloadYesGenshin() {
         else
             versionGenshin="2.7"
             if [[ -f "$HOME/Genshin.Impact.Cert.Patch_Sign.apk" ]]; then
-                rm "$HOME/Genshin.Impact.Cert.Patch_Sign.apk"
+                busybox rm "$HOME/Genshin.Impact.Cert.Patch_Sign.apk"
             fi
             wget https://github.com/ElaXan/AnimeGamePatch/releases/download/2.7/Genshin.Impact.Cert.Patch_Sign.apk -q --show-progress
         fi
@@ -55,7 +52,7 @@ downloadYesGenshin() {
     ifdownloadgenshinfailed=$?
     if [[ "$ifdownloadgenshinfailed" != 0 ]]; then
         clear
-        whoMadeThis
+        showCowsay
         echo "${redColorBold}Download Failed!${whiteColor}"
         echo ""
         echo -n "Press enter go back to Menu!"
@@ -64,17 +61,17 @@ downloadYesGenshin() {
         return
     else
         clear
-        whoMadeThis
+        showCowsay
         echo "${greenColorBold}Download Successfully!${whiteColor}"
         sleep 0.5s
         echo "${greenColorBold}Move apks Genshin to /sdcard${whiteColor}"
         sleep 0.5s
         if [[ -f "Genshin_Impact_2.8.apks" ]]; then
-            mv Genshin_Impact_2.8.apks /sdcard
+            busybox mv Genshin_Impact_2.8.apks /sdcard
         elif [[ -f "Genshin.Impact.Cert.Patch_Sign.apk" ]]; then
-            mv Genshin.Impact.Cert.Patch_Sign.apk /sdcard
+            busybox mv Genshin.Impact.Cert.Patch_Sign.apk /sdcard
         elif [[ -f "AnimeGame-Termux-3.0-patched.apks" ]]; then
-            mv AnimeGame-Termux-3.0-patched.apks /sdcard
+            busybox mv AnimeGame-Termux-3.0-patched.apks /sdcard
         else
             echo "${redColorBold}File Genshin APKs not found!${whiteColor}"
             echo ""

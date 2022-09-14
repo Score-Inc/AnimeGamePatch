@@ -9,13 +9,13 @@ downloadproxy() {
     fi
     run_Program() { wget https://raw.githubusercontent.com/Grasscutters/Grasscutter/development/proxy.py -q &> $HOME/zerr.log; errCode=$?; log "$errCode"; }
     run_Program & pid=$!
-    spin "${greenColorBold}Download proxy.py${whiteColor}" "0" "Menu" "UIMenu"
+    spin "}Download proxy.py${whiteColor}" "0" "Menu" "UIMenu"
     run_Program() { wget https://raw.githubusercontent.com/Grasscutters/Grasscutter/development/proxy_config.py -q &> $HOME/zerr.log; errCode=$?; log "$errCode"; }
     run_Program & pid=$!
-    spin "${greenColorBold}Download proxy_config.py${whiteColor}" "0" "Menu" "UIMenu"
-    run_Program() { sed -i "s/REMOTE_HOST = \"localhost\"/REMOTE_HOST = \"sg.genshin.ps.yuuki.me\"/g" proxy_config.py &> $HOME/zerr.log; errCode=$?; log "$errCode"; sleep 1s; }
+    spin "Download proxy_config.py${whiteColor}" "0" "Menu" "UIMenu"
+    run_Program() { busybox sed -i "s/REMOTE_HOST = \"localhost\"/REMOTE_HOST = \"sg.genshin.ps.yuuki.me\"/g" proxy_config.py &> $HOME/zerr.log; errCode=$?; log "$errCode"; sleep 1s; }
     run_Program & pid=$!
-    spin "${greenColorBold}Edit proxy_config.py${whiteColor}" "0" "Menu" "UIMenu"
+    spin "Edit proxy_config.py${whiteColor}" "0" "Menu" "UIMenu"
     echo -n "Press enter for back to Change Server!"
     read -r
     clear

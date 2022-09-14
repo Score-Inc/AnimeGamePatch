@@ -130,8 +130,8 @@ ChangeConfSettings() {
         elif [[ $ChangeConfSettings_input_Port = "b" ]] || [[ $ChangeConfSettings_input_Port = "B" ]]; then
             settingsScript
         fi
-        sed -i "s/customServer=\".*\"/customServer=\"$ChangeConfSettings_input\"/g" "$pathScript"
-        sed -i "s/customPort=.*/customPort=$ChangeConfSettings_input_Port/g" "$pathScript"
+        busybox sed -i "s/customServer=\".*\"/customServer=\"$ChangeConfSettings_input\"/g" "$pathScript"
+        busybox sed -i "s/customPort=.*/customPort=$ChangeConfSettings_input_Port/g" "$pathScript"
         ChangeConfSettings
     fi
 
@@ -144,18 +144,18 @@ ChangeConfSettings() {
         return
     fi
 
-    sed -i "s/$stringchange=$changeFrom/$stringchange=$changeTo/g" "$pathScript"
+    busybox sed -i "s/$stringchange=$changeFrom/$stringchange=$changeTo/g" "$pathScript"
     settingsScript
 }
 
 changeSettings_list() {
-    getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
-    getSettingsConf2=$(cat "$pathScript" | grep "openGenshin" | sed "s/.*openGenshin=//g")
-    getSettingsConf3=$(cat "$pathScript" | grep "setProxy" | sed "s/.*setProxy=//g")
-    getSettingsConf4=$(cat "$pathScript" | grep "reset" | sed "s/.*reset=//g")
-    getSettingsConf5=$(cat "$pathScript" | grep "port" | sed -e "s/.*port=\"//g" -e "s/\"//g")
-    getSettingsConf6=$(cat "$pathScript" | grep "customServer" | sed -e "s/.*customServer=\"//g" -e "s/\"//g")
-    getSettingsConf7=$(cat "$pathScript" | grep "customPort" | sed "s/.*customPort=//g")
+    getSettingsConf=$(cat "$pathScript" | grep "rename" | busybox sed "s/.*rename=//g")
+    getSettingsConf2=$(cat "$pathScript" | grep "openGenshin" | busybox sed "s/.*openGenshin=//g")
+    getSettingsConf3=$(cat "$pathScript" | grep "setProxy" | busybox sed "s/.*setProxy=//g")
+    getSettingsConf4=$(cat "$pathScript" | grep "reset" | busybox sed "s/.*reset=//g")
+    getSettingsConf5=$(cat "$pathScript" | grep "port" | busybox sed -e "s/.*port=\"//g" -e "s/\"//g")
+    getSettingsConf6=$(cat "$pathScript" | grep "customServer" | busybox sed -e "s/.*customServer=\"//g" -e "s/\"//g")
+    getSettingsConf7=$(cat "$pathScript" | grep "customPort" | busybox sed "s/.*customPort=//g")
 
     if [[ $getSettingsConf = true ]]; then
         renameconf="${greenColorBold}ON${whiteColor}"

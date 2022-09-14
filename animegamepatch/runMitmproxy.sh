@@ -5,30 +5,30 @@ changeProxy() {
     whoMadeThis
     trap - INT
     echo -e "${redColorBold}mitmproxy killed/force stopped!${whiteColor}"
-    getSettingsConf4=$(cat "$pathScript" | grep "setProxy" | sed "s/.*setProxy=//g")
-    getSettingsConf5=$(cat "$pathScript" | grep "reset" | sed "s/.*reset=//g")
+    getSettingsConf4=$(cat "$pathScript" | grep "setProxy" | busybox sed "s/.*setProxy=//g")
+    getSettingsConf5=$(cat "$pathScript" | grep "reset" | busybox sed "s/.*reset=//g")
     if [[ $getSettingsConf4 = true ]]; then
         if [[ $getSettingsConf5 = 1 ]]; then
             run_Program() { su -c settings put global http_proxy :0 &> $HOME/zerr.log; errCode=$?; log "$errCode"; sleep 0.5s; }
             run_Program & pid=$!
-            spin "${greenColorBold}Reset Proxy${whiteColor}" "0" "Main Menu" "UIMenu"
+            spin "Reset Proxy${whiteColor}" "0" "Main Menu" "UIMenu"
         elif [[ $getSettingsConf5 = 2 ]]; then
             run_Program() { su -c settings delete global http_proxy &> $HOME/zerr.log; errCode=$?; log "$errCode"; sleep 0.5s; }
             run_Program & pid=$!
-            spin "${greenColorBold}Delete proxy${whiteColor}" "0" "Main" "UIMenu"
+            spin "Delete proxy${whiteColor}" "0" "Main" "UIMenu"
             run_Program() { su -c settings delete global global_http_proxy_host &> $HOME/zerr.log; errCode=$?; log "$errCode"; sleep 0.5s; }
             run_Program & pid=$!
-            spin "${greenColorBold}Delete http proxy host${whiteColor}" "0" "Main" "UIMenu"
+            spin "Delete http proxy host${whiteColor}" "0" "Main" "UIMenu"
             run_Program() { su -c settings delete global global_http_proxy_port &> $HOME/zerr.log; errCode=$?; log "$errCode"; sleep 0.5s; }
             run_Program & pid=$!
-            spin "${greenColorBold}Delete http proxy port${whiteColor}" "0" "Main" "UIMenu"
+            spin "Delete http proxy port${whiteColor}" "0" "Main" "UIMenu"
             echo -e "${yellowColorBold}You need to restart your phone\nor you will have no Internet${whiteColor}"
         fi
     fi  
-    getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
+    getSettingsConf=$(cat "$pathScript" | grep "rename" | busybox sed "s/.*rename=//g")
     if [[ $getSettingsConf = true ]]; then
-        genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | grep "zex")
-        zexPackage=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | sed "s/.*zex//g")
+        genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | busybox sed "s/.*com/com/g" | grep "zex")
+        zexPackage=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | busybox sed "s/.*com/com/g" | sed "s/.*zex//g")
         if [[ ${genshinData} = "com.miHoYo.GenshinImpact" ]] && [[ ${zexPackage} = "com.miHoYo.GenshinImpact" ]]; then
             echo "${redColorBold}Skip Rename Package${whiteColor}"
         elif [[ ${zexPackage} = "com.miHoYo.GenshinImpact" ]]; then
@@ -54,7 +54,7 @@ killMtimprob() {
     fi
     if [[ $killMitms = 1 ]]; then
         echo "${yellowColorBold}Trying seconds method!${whiteColor}"
-        killMitmd=$(ps ax > "$HOME"/z.log; grep "mitmdump" "$HOME"/z.log | sed "s/ pts\/1.*false//g")
+        killMitmd=$(ps ax > "$HOME"/z.log; grep "mitmdump" "$HOME"/z.log | busybox sed "s/ pts\/1.*false//g")
         kill "$killMitmd"
         echo "Killed" > "$HOME"/zkill.log
         rm "$HOME"/z.log
@@ -110,7 +110,7 @@ mitmProxyRun() {
         esac
         clear
         showCowsay
-        getSettingsConf=$(cat "$pathScript" | grep "rename" | sed "s/.*rename=//g")
+        getSettingsConf=$(cat "$pathScript" | grep "rename" | busybox sed "s/.*rename=//g")
         if [[ $getSettingsConf = true ]]; then
             if [[ $isRooted = false ]]; then
                 echo "${redColorBold}Sorry auto rename only for Rooted device!${whiteColor}"
@@ -121,8 +121,8 @@ mitmProxyRun() {
                 UIMenu
                 return
             fi
-            genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | grep "zex")
-            genshinDatas=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | sed "s/.*com/com/g" | sed "s/com.*zex//g" | grep "com")
+            genshinData=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | busybox sed "s/.*com/com/g" | grep "zex")
+            genshinDatas=$(su -c ls /sdcard/Android/data | grep "com.miHoYo" | busybox sed "s/.*com/com/g" | busybox sed "s/com.*zex//g" | grep "com")
             if [[ $genshinDatas != "com.miHoYo.GenshinImpact" ]]; then
                 echo "${redColorBold}Can't Rename, Package genshin doesn't exist!...${whiteColor}"
                 echo "========================================"
@@ -142,7 +142,7 @@ mitmProxyRun() {
         if [[ $getSettingsConf4 = true ]]; then
             run_Program() { su -c settings put global http_proxy 127.0.0.1:8080 &> $HOME/zerr.log; errCode=$?; log "$errCode"; sleep 1s; }
             run_Program & pid=$!
-            spin "${greenColorBold}Change Proxy${whiteColor}" "0" "Menu" "UIMenu"
+            spin "Change Proxy${whiteColor}" "0" "Menu" "UIMenu"
             sleep 1
             clear
             showCowsay
@@ -175,14 +175,14 @@ mitmProxyRun() {
             echo "mitmproxy killed/force stop!"
             exit
         fi
-        getServer=$(cat $HOME/proxy_config.py | grep "REMOTE_HOST = \"" | sed -e "s/.*= \"//g" -e "s/\"//g")
-        getPort=$(cat $HOME/proxy_config.py | grep "REMOTE_PORT =" | head -n 1 | sed "s/.*= //g")
-        sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$serverGenshin\"/g" $HOME/proxy_config.py
-        sed -i "s/REMOTE_PORT = $getPort/REMOTE_PORT = $portGenshin/g" $HOME/proxy_config.py
+        getServer=$(cat $HOME/proxy_config.py | grep "REMOTE_HOST = \"" | busybox sed -e "s/.*= \"//g" -e "s/\"//g")
+        getPort=$(cat $HOME/proxy_config.py | grep "REMOTE_PORT =" | head -n 1 | busybox sed "s/.*= //g")
+        busybox sed -i "s/REMOTE_HOST = \".*\"/REMOTE_HOST = \"$serverGenshin\"/g" $HOME/proxy_config.py
+        busybox sed -i "s/REMOTE_PORT = $getPort/REMOTE_PORT = $portGenshin/g" $HOME/proxy_config.py
         if [[ $isConfisTrue3 = true ]]; then
             echo "${greenColorBold}Open Genshin...${whiteColor}"
             am start --user 0 com.miHoYo.GenshinImpactzex/com.miHoYo.GetMobileInfo.MainActivity &> "$HOME"/.termux/openGenshin
-            detectErrorOpenGenshin=$(cat "$HOME"/.termux/openGenshin | sed 's/.*does not/does not/g' | grep "does not")
+            detectErrorOpenGenshin=$(cat "$HOME"/.termux/openGenshin | busybox sed 's/.*does not/does not/g' | grep "does not")
             if [[ $detectErrorOpenGenshin = "does not exist." ]]; then
                 echo -e "${redColorBold}Can't open Genshin...\nTarget to com.miHoYo.GenshinImpactzex\n${yellowColorBold}Will Skip open Genshin${whiteColor}"
                 sleep 1s
@@ -191,8 +191,8 @@ mitmProxyRun() {
                 rm "$HOME"/.termux/openGenshin
             fi
         fi
-        getServer=$(cat $HOME/proxy_config.py | grep "REMOTE_HOST = \"" | sed -e "s/.*= \"//g" -e "s/\"//g")
-        getPort=$(cat $HOME/proxy_config.py | grep "REMOTE_PORT =" | head -n 1 | sed "s/.*= //g")
+        getServer=$(cat $HOME/proxy_config.py | grep "REMOTE_HOST = \"" | busybox sed -e "s/.*= \"//g" -e "s/\"//g")
+        getPort=$(cat $HOME/proxy_config.py | grep "REMOTE_PORT =" | head -n 1 | busybox sed "s/.*= //g")
         echo "${greenColorBold}Log saved to /sdcard/mitm.log"
         echo "For stop press CTRL + C on your keyboard"
         echo "Now you can open Genshin${whiteColor}"
@@ -202,7 +202,7 @@ mitmProxyRun() {
         echo "========================================"
         run_Program() { ./.local/bin/mitmdump -s proxy.py -k --ssl-insecure --set block_global=false >> /sdcard/mitm.log; echo "Babi" &> $HOME/zerr.log; errCode=$?; log "$errCode"; }
         run_Program & pid=$!
-        spin "${greenColorBold}mitmdump/mitmproxy running${whiteColor}" "0" "Nothing" "changeProxy"
+        spin "mitmdump/mitmproxy running${whiteColor}" "0" "Nothing" "changeProxy"
         changeProxy
     else
         echo -e "${redColorBold}mitmproxy not found!\nPlease download it using ${nameScript} 1\n"

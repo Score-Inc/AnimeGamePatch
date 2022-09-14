@@ -39,12 +39,6 @@ if ! command -v cowsay &> /dev/null; then
     pkg install cowsay -y
 fi
 
-
-if ! command -v unzip &> /dev/null; then
-    echo "${greenColorBold}Installing unzip${whiteColor}"
-    pkg install unzip -y
-fi
-
 if ! command -v apktool &> /dev/null; then
     echo "${greenColorBold}Installing apktool${whiteColor}"
     pkg install apktool -y
@@ -58,6 +52,11 @@ fi
 if ! command -v zip &> /dev/null; then
     echo "${greenColorBold}Installing zip${whiteColor}"
     pkg install zip -y
+fi
+
+if ! command -v busybox &> /dev/null; then
+    echo "${greenColorBold}Installing busybox${whiteColor}"
+    pkg install busybox -y
 fi
 
 if [ ! -f "$HOME/.ElaXan/AnimeGamePatch/uber-apk-signer-1.2.1.jar" ]; then
@@ -117,7 +116,7 @@ else
 fi
 
 
-versionBash1="3.6"
+versionBash1="3.7"
 
 su -c echo &> /dev/null
 RootDetect=$?
@@ -307,4 +306,3 @@ case $userInput1 in
     "6" | "settings" ) settingsScript;;
     * ) clear; UIMenu;; 
 esac
-
