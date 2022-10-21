@@ -11,8 +11,6 @@ This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)<br />
 # 3.1 Android
 If you still want play 3.1 for Android go to [here](https://elaxan.my.id/NotMain/)
 
-# This project It's been abandoned and won't continue (dead)
-
 # GCAndroid
 Want play localhost on your android phone?\
 Go to [GCAndroid](https://github.com/ElaXan/GCAndroid)
