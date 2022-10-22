@@ -65,11 +65,29 @@ ChangeConfSettings() {
         echo -n "Enter input : "
         read ChangeConfSettings_input
         case $ChangeConfSettings_input in
-            "1" ) stringchange="reset"; changeFrom="2"; changeTo="1";;
-            "2" ) stringchange="reset"; changeFrom="1"; changeTo="2";;
-            "3" ) clear; whoMadeThis; echo -e "${cyanColorBold}1. Mode 1 ${whiteColor} :\n${yellowColorBold}No need to Restart phone for reset proxy\n${cyanColorBold}2. Mode 2 ${whiteColor} :\n${yellowColorBold}Need Restart after delete proxy\nthis not reset but delete for Proxy so need to Restart\n"; read -p "${whiteColor}Press enter for back"; ChangeConfSettings;;
-            "0" ) settingsScript;;
-            * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; ChangeConfSettings;;
+        "1")
+            stringchange="reset"
+            changeFrom="2"
+            changeTo="1"
+            ;;
+        "2")
+            stringchange="reset"
+            changeFrom="1"
+            changeTo="2"
+            ;;
+        "3")
+            clear
+            whoMadeThis
+            echo -e "${cyanColorBold}1. Mode 1 ${whiteColor} :\n${yellowColorBold}No need to Restart phone for reset proxy\n${cyanColorBold}2. Mode 2 ${whiteColor} :\n${yellowColorBold}Need Restart after delete proxy\nthis not reset but delete for Proxy so need to Restart\n"
+            read -p "${whiteColor}Press enter for back"
+            ChangeConfSettings
+            ;;
+        "0") settingsScript ;;
+        *)
+            echo "${redColorBold}Wrong input!${whiteColor}"
+            sleep 1s
+            ChangeConfSettings
+            ;;
         esac
     elif [[ $inputsettings = "5" ]]; then
         stringchange="logOutputMitm"
@@ -118,7 +136,7 @@ ChangeConfSettings() {
         echo ""
         echo "${cyanColorBold}Current Server : ${greenColorBold}$customServer"
         echo "${cyanColorBold}Current Port : ${greenColorBold}$customPort${whiteColor}"
-        echo 
+        echo
         echo -n "Enter Server : ${cyanColorBold}"
         read ChangeConfSettings_input
         echo -n "${whiteColor}"
@@ -240,7 +258,7 @@ changeSettings_list() {
 
     if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]] || [[ $isConfisErr = true ]] || [[ $isPortMissing = true ]] || [[ $isServerMissing = true ]] || [[ $isCustomPortMissing = true ]] || [[ $isLogOutput = err ]]; then
         rm "$pathScript"
-        echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false\nreset=1\nport=\"54321\"\ncustomServer=\"elashxander.my.id\"\ncustomPort=443\nlogOutputMitm=false" > "$pathScript"
+        echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false\nreset=1\nport=\"54321\"\ncustomServer=\"elashxander.my.id\"\ncustomPort=443\nlogOutputMitm=false" >"$pathScript"
         settingsScript
     fi
 }

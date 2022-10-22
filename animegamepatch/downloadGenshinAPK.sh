@@ -6,7 +6,7 @@ downloadYesGenshin() {
     if [[ $dgenshininp = "1" ]]; then
         if [[ -f "/sdcard/Genshin_Impact_3.0.apks" ]]; then
             echo "${greenColorBold}Genshin_Impact_3.0.apks already exist in /sdcard !${whiteColor}"
-            echo 
+            echo
             echo -n "Press enter to back Menu!"
             read -r
             UIMenu
@@ -21,7 +21,7 @@ downloadYesGenshin() {
     elif [[ $dgenshininp = "2" ]]; then
         if [[ -f "/sdcard/Genshin_Impact_2.8.apks" ]]; then
             echo "${greenColorBold}Genshin_Impact_2.8.apks already exist in /sdcard !${whiteColor}"
-            echo 
+            echo
             echo -n "Press enter to back Menu!"
             read -r
             UIMenu
@@ -36,7 +36,7 @@ downloadYesGenshin() {
     elif [[ $dgenshininp = "3" ]]; then
         if [[ -f "/sdcard/Genshin.Impact.Cert.Patch_Sign.apk" ]]; then
             echo "${greenColorBold}Genshin.Impact.Cert.Patch_Sign.apk already exist in /sdcard !${whiteColor}"
-            echo 
+            echo
             echo "Press enter to back Menu!"
             read -r
             UIMenu
