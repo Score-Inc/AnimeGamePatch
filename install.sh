@@ -20,7 +20,7 @@ sleep 1s
 if [ -d "$HOME/AnimeGamePatch" ]; then
     rm -rf $HOME/AnimeGamePatch
 fi
-git clone https://github.com/ElaXan/AnimeGamePatch.git
+git clone https://github.com/Score-Inc/AnimeGamePatch.git
 if [[ $? != 0 ]]; then
     echo "Install Failed!"
     exit 1
