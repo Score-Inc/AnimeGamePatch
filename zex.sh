@@ -114,7 +114,7 @@ else
     exit 1
 fi
 
-versionBash1="3.7"
+versionBash1="3.8"
 
 su -c echo &>/dev/null
 RootDetect=$?
