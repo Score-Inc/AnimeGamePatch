@@ -1,11 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-# SCRIPT NOT ENCRYPTED FOR YOU CAN LEARN THE CODE BASH / SHELL SCRIPT.
-# THIS CODE IS FREE
-# CODE STILL DEVELOPMENT FOR FIX SOME CODE AND ADD CODE.
-
-# THANKS TO @CharonCB21 (Telagram) for Helping me about this
-
+# Color Text
 greenColorBold="$(printf '\033[1;32m')"
 redColorBold="$(printf '\033[1;31m')"
 yellowColorBold="$(printf '\033[1;33m')"
@@ -13,9 +8,13 @@ cyanColorBold="$(printf '\033[1;36m')"
 whiteColor="$(printf '\033[0;37m')"
 yellowColor="$(printf '\033[0;33m')"
 
+# Subcommand input
 userInput1=$1
+
+# Name Script
 nameScript=$(basename "$0")
 
+# Check if code run in Termux
 checkTermux=$(uname -o)
 if [[ $checkTermux != "Android" ]]; then
     clear
@@ -24,37 +23,37 @@ if [[ $checkTermux != "Android" ]]; then
 fi
 
 # Install some program/package if not installed
-if ! command -v ruby &> /dev/null; then
+if ! command -v ruby &>/dev/null; then
     echo "${greenColorBold}Installing ruby${whiteColor}"
-    pkg install ruby -y &> /dev/null
+    pkg install ruby -y &>/dev/null
 fi
 
-if ! command -v lolcat &> /dev/null; then
+if ! command -v lolcat &>/dev/null; then
     echo "${greenColorBold}Installing lolcat${whiteColor}"
-    gem install lolcat &> /dev/null
+    gem install lolcat &>/dev/null
 fi
 
-if ! command -v cowsay &> /dev/null; then
+if ! command -v cowsay &>/dev/null; then
     echo "${greenColorBold}Installing cowsay${whiteColor}"
     pkg install cowsay -y
 fi
 
-if ! command -v apktool &> /dev/null; then
+if ! command -v apktool &>/dev/null; then
     echo "${greenColorBold}Installing apktool${whiteColor}"
     pkg install apktool -y
 fi
 
-if ! command -v java &> /dev/null; then
+if ! command -v java &>/dev/null; then
     echo "${greenColorBold}Installing Java${whiteColor}"
     pkg install openjdk-17 -y
 fi
 
-if ! command -v zip &> /dev/null; then
+if ! command -v zip &>/dev/null; then
     echo "${greenColorBold}Installing zip${whiteColor}"
     pkg install zip -y
 fi
 
-if ! command -v busybox &> /dev/null; then
+if ! command -v busybox &>/dev/null; then
     echo "${greenColorBold}Installing busybox${whiteColor}"
     pkg install busybox -y
 fi
@@ -115,10 +114,9 @@ else
     exit 1
 fi
 
-
 versionBash1="3.7"
 
-su -c echo &> /dev/null
+su -c echo &>/dev/null
 RootDetect=$?
 if [[ $RootDetect = 0 ]]; then
     printRooted="${greenColorBold}You're phone is Rooted${whiteColor}"
@@ -161,9 +159,13 @@ downloadGenshin() {
     echo -n "Enter input (y/n) : "
     read -r dwngenshin
     case $dwngenshin in
-        "y" | "Y" ) downloadYesGenshin;;
-        "n" | "N" ) UIMenu;;
-        * ) echo "Wrong Input!"; sleep 1s; UIMenu;;
+    "y" | "Y") downloadYesGenshin ;;
+    "n" | "N") UIMenu ;;
+    *)
+        echo "Wrong Input!"
+        sleep 1s
+        UIMenu
+        ;;
     esac
 }
 
@@ -179,9 +181,13 @@ GenshinAPKs() {
     echo -n "Enter input : "
     read -r dgenshininp
     case $dgenshininp in
-        "1" | "2" | "3" ) downloadGenshin;;
-        "0" ) UIMenu;;
-        * ) echo "Wrong Input!"; sleep 1s; GenshinAPKs;;
+    "1" | "2" | "3") downloadGenshin ;;
+    "0") UIMenu ;;
+    *)
+        echo "Wrong Input!"
+        sleep 1s
+        GenshinAPKs
+        ;;
     esac
 }
 
@@ -198,9 +204,15 @@ changeServerDOWN() {
     echo -n "${yellowColorBold}Are you sure want change to ${greenColorBold}$domainChange${whiteColor}? (y/n) : "
     read -r serverDownSure
     case $serverDownSure in
-        "y" | "Y" ) changeServer2;;
-        "n" | "N" ) echo "${yellowColorBold}Change domain cancelled by user!${whiteColor}"; exit;;
-        * ) echo "Wrong input!"; exit
+    "y" | "Y") changeServer2 ;;
+    "n" | "N")
+        echo "${yellowColorBold}Change domain cancelled by user!${whiteColor}"
+        exit
+        ;;
+    *)
+        echo "Wrong input!"
+        exit
+        ;;
     esac
 }
 
@@ -212,56 +224,65 @@ settingsScript() {
     echo "[$openGenshinConf] ${whiteColor}2. ${cyanColorBold}Auto open Genshin Impact App${whiteColor}"
     echo "[$setProxyConf] ${whiteColor}3. ${cyanColorBold}Change Proxy (ROOT)${whiteColor}"
     echo "[$resetProxyConf] ${whiteColor}4. ${cyanColorBold}Reset Proxy (ROOT)${whiteColor}"
-    echo "[$currentPort] ${whiteColor}5. ${cyanColorBold}Localhost Port${whiteColor}"
-    echo "${whiteColor}6. ${cyanColorBold}Custom Server${whiteColor}"
+    echo "[$isLogOutputSettings] ${whiteColor}5. ${cyanColorBold}Log Output Mitmproxy${whiteColor}"
+    echo "[$currentPort] ${whiteColor}6. ${cyanColorBold}Localhost Port${whiteColor}"
+    echo "${whiteColor}7. ${cyanColorBold}Custom Server${whiteColor}"
     echo "0. ${redColorBold}Back to Menu!${whiteColor}"
     echo ""
     echo -n "Enter input : "
     read -r inputsettings
     case $inputsettings in
-        "1" | "2" | "3" | "4" | "5" | "6" ) ChangeConfSettings;;
-        "0" ) UIMenu;;
-        * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; settingsScript;;
+    "1" | "2" | "3" | "4" | "5" | "6") ChangeConfSettings ;;
+    "0") UIMenu ;;
+    *)
+        echo "${redColorBold}Wrong input!${whiteColor}"
+        sleep 1s
+        settingsScript
+        ;;
     esac
 }
 
-
 UIMenu() {
-  clear
-  whoMadeThis
-  echo "${whiteColor}1. ${cyanColorBold}Extract Mitmproxy! and install Python"
-  echo "${whiteColor}2. ${cyanColorBold}Get Certificate"
-  echo "${whiteColor}3. ${cyanColorBold}Download Genshin APKs"
-  echo "${whiteColor}4. ${cyanColorBold}Run Mitmproxy (zex run)"
-  echo "${whiteColor}5. ${cyanColorBold}Download proxy.py"
-  echo "${whiteColor}6. ${cyanColorBold}Install certificate to APK"
-  echo "${whiteColor}7. ${cyanColorBold}Settings"
-  echo "${whiteColor}0. ${redColorBold}Exit${whiteColor}"
-  echo -n "Enter input : "
-  read -r enterInputUI
-  case $enterInputUI in
-    "1" ) extractMitm;;
-    "2" ) getCert;;
-    "3" ) GenshinAPKs;;
-    "4" ) zexsh;;
-    "5" ) downloadproxy;;
-    "6" ) installCertAPK;;
-    "7" ) settingsScript;;
-    "0" ) exit 0;;
-    * ) echo "Wrong input!"; sleep 1s; clear; UIMenu;;
-  esac
+    clear
+    whoMadeThis
+    echo "${whiteColor}1. ${cyanColorBold}Extract Mitmproxy! and install Python"
+    echo "${whiteColor}2. ${cyanColorBold}Get Certificate"
+    echo "${whiteColor}3. ${cyanColorBold}Download Genshin APKs"
+    echo "${whiteColor}4. ${cyanColorBold}Run Mitmproxy (zex run)"
+    echo "${whiteColor}5. ${cyanColorBold}Download proxy.py"
+    echo "${whiteColor}6. ${cyanColorBold}Install certificate to APK"
+    echo "${whiteColor}7. ${cyanColorBold}Settings"
+    echo "${whiteColor}0. ${redColorBold}Exit${whiteColor}"
+    echo -n "Enter input : "
+    read -r enterInputUI
+    case $enterInputUI in
+    "1") extractMitm ;;
+    "2") getCert ;;
+    "3") GenshinAPKs ;;
+    "4") zexsh ;;
+    "5") downloadproxy ;;
+    "6") installCertAPK ;;
+    "7") settingsScript ;;
+    "0") exit 0 ;;
+    *)
+        echo "Wrong input!"
+        sleep 1s
+        clear
+        UIMenu
+        ;;
+    esac
 }
 
 pathScript=$HOME/.termux/settings.zex
 if [[ ! -f $pathScript ]]; then
-    echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false\nreset=1\nport=\"54321\"\ncustomServer=\"elashxander.my.id\"\ncustomPort=443" > "$pathScript"
+    echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false\nreset=1\nport=\"54321\"\ncustomServer=\"elashxander.my.id\"\ncustomPort=443\nlogOutputMitm=false" >"$pathScript"
 fi
 # PLEASE DON'T EDIT THIS, THIS LOAD SOME CODE FROM SERVER
 isThisLatestVersion="${greenColorBold}Checking version...${whiteColor}"
 whoMadeThis
 # Why Shell Check this said problem... TF
 echo "${greenColorBold}Load data from server...${whiteColor}"
-source <(curl -s https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/main/someupdate)
+source <(curl -s https://raw.githubusercontent.com/Score-Inc/AnimeGamePatch/main/someupdate)
 # source $HOME/AnimeGamePatch/someupdate
 if [[ $versionBashIn1 = "" ]]; then
     echo -e "\n${redColorBold}Can't connect to server!\n\nScript will run without check Update!${whiteColor}"
@@ -279,11 +300,23 @@ elif [[ $versionBash1 < $versionBashIn1 ]]; then
     sleep 1s
     read -p "Want to update? (y/n)" wantUpdateScript
     while true; do
-    case $wantUpdateScript in
-        "y" | "Y" ) updateScript1;break;;
-        "n" | "N" ) echo "okay!, script will continue without update!"; isThisLatestVersion="Current Version : ${redColorBold}$versionBash1${whiteColor}\nLatest Version : ${greenColorBold}$versionBashIn1${whiteColor}";sleep 1s;break;;
-        * ) echo "wrong input!";sleep 1.5s;newUpdateScript;;
-    esac
+        case $wantUpdateScript in
+        "y" | "Y")
+            updateScript1
+            break
+            ;;
+        "n" | "N")
+            echo "okay!, script will continue without update!"
+            isThisLatestVersion="Current Version : ${redColorBold}$versionBash1${whiteColor}\nLatest Version : ${greenColorBold}$versionBashIn1${whiteColor}"
+            sleep 1s
+            break
+            ;;
+        *)
+            echo "wrong input!"
+            sleep 1.5s
+            newUpdateScript
+            ;;
+        esac
     done
 elif [[ $versionBash1 = $versionBashIn1 ]]; then
     isThisLatestVersion=${greenColorBold}$printLatest${whiteColor}
@@ -298,12 +331,15 @@ fi
 # You can edit as you want (IF YOU KNOW SHELL CODE)
 # If you want make to UI 1,2,3,4 install without zex ins for example. You can do it (I SAID AGAIN IF YOU KNOW SHELL CODE)
 case $userInput1 in
-    "1" ) extractMitm;;
-    "2" ) getCert;;
-    "3" ) GenshinAPKs;;
-    "4" ) zexsh;;
-    "5" ) downloadproxy;;
-    "6" ) installCertAPK;;
-    "7" ) settingsScript;;
-    * ) clear; UIMenu;; 
+"1") extractMitm ;;
+"2") getCert ;;
+"3") GenshinAPKs ;;
+"4") zexsh ;;
+"5") downloadproxy ;;
+"6") installCertAPK ;;
+"7") settingsScript ;;
+*)
+    clear
+    UIMenu
+    ;;
 esac

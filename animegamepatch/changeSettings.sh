@@ -72,6 +72,15 @@ ChangeConfSettings() {
             * ) echo "${redColorBold}Wrong input!${whiteColor}"; sleep 1s; ChangeConfSettings;;
         esac
     elif [[ $inputsettings = "5" ]]; then
+        stringchange="logOutputMitm"
+        if [[ $isLogOutput = true ]]; then
+            changeFrom=true
+            changeTo=false
+        elif [[ $isLogOutput = false ]]; then
+            changeFrom=false
+            changeTo=true
+        fi
+    elif [[ $inputsettings = "6" ]]; then
         clear
         whoMadeThis
         echo "${yellowColorBold}Enter b/B for back or cancel"
@@ -101,7 +110,7 @@ ChangeConfSettings() {
         stringchange="port"
         changeFrom="\"$getSettingsConf5\""
         changeTo="\"$ChangeConfSettings_input\""
-    elif [[ $inputsettings = "6" ]]; then
+    elif [[ $inputsettings = "7" ]]; then
         clear
         whoMadeThis
         changeSettings_list
@@ -156,6 +165,7 @@ changeSettings_list() {
     getSettingsConf5=$(cat "$pathScript" | grep "port" | busybox sed -e "s/.*port=\"//g" -e "s/\"//g")
     getSettingsConf6=$(cat "$pathScript" | grep "customServer" | busybox sed -e "s/.*customServer=\"//g" -e "s/\"//g")
     getSettingsConf7=$(cat "$pathScript" | grep "customPort" | busybox sed "s/.*customPort=//g")
+    getSettingsConf8=$(cat "$pathScript" | grep "logOutputMitm" | busybox sed "s/.*logOutputMitm=//g")
 
     if [[ $getSettingsConf = true ]]; then
         renameconf="${greenColorBold}ON${whiteColor}"
@@ -218,9 +228,19 @@ changeSettings_list() {
         isCustomPortMissing=false
     fi
 
-    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]] || [[ $isConfisErr = true ]] || [[ $isPortMissing = true ]] || [[ $isServerMissing = true ]] || [[ $isCustomPortMissing = true ]]; then
+    if [[ $getSettingsConf8 = false ]]; then
+        isLogOutput=false
+        isLogOutputSettings="${redColorBold}False${whiteColor}"
+    elif [[ $getSettingsConf8 = true ]]; then
+        isLogOutput=true
+        isLogOutputSettings="${greenColorBold}True${whiteColor}"
+    else
+        isLogOutput=err
+    fi
+
+    if [[ $isConfisTrue = err ]] || [[ $isConfisTrue2 = err ]] || [[ $isConfisTrue3 = err ]] || [[ $isConfisErr = true ]] || [[ $isPortMissing = true ]] || [[ $isServerMissing = true ]] || [[ $isCustomPortMissing = true ]] || [[ $isLogOutput = err ]]; then
         rm "$pathScript"
-        echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false\nreset=1\nport=\"54321\"\ncustomServer=\"elashxander.my.id\"\ncustomPort=443" > "$pathScript"
+        echo -e -n "# Script made by ElaXan\n# This for Settings Feature. Delete this if have problem on change Settings or you can edit Manual\ninstallcert=false\nrename=false\nopenGenshin=false\nsetProxy=false\nreset=1\nport=\"54321\"\ncustomServer=\"elashxander.my.id\"\ncustomPort=443\nlogOutputMitm=false" > "$pathScript"
         settingsScript
     fi
 }
