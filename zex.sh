@@ -232,7 +232,7 @@ settingsScript() {
     echo -n "Enter input : "
     read -r inputsettings
     case $inputsettings in
-    "1" | "2" | "3" | "4" | "5" | "6") ChangeConfSettings ;;
+    "1" | "2" | "3" | "4" | "5" | "6" | "7") ChangeConfSettings ;;
     "0") UIMenu ;;
     *)
         echo "${redColorBold}Wrong input!${whiteColor}"
