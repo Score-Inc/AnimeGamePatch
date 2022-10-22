@@ -119,10 +119,9 @@ zexsh() {
             fi
             changeSettings_list
             echo "${greenColorBold}Select Server : "
-            echo "${whiteColor}1. ${cyanColorBold}Yuuki ${whiteColor}(${yellowColorBold}Singapore${whiteColor})"
-            echo "${whiteColor}2. ${cyanColorBold}Yuuki ${whiteColor}(${yellowColorBold}Europe${whiteColor})"
-            echo "${whiteColor}3. ${cyanColorBold}Localhost ${whiteColor}(${yellowColorBold}Port ${whiteColor}: $currentPort)"
-            echo "${whiteColor}4. ${cyanColorBold}Custom Server"
+            echo "${whiteColor}1. ${cyanColorBold}Yuuki Server${whiteColor}"
+            echo "${whiteColor}2. ${cyanColorBold}Localhost ${whiteColor}(${yellowColorBold}Port ${whiteColor}: $currentPort)"
+            echo "${whiteColor}3. ${cyanColorBold}Custom Server"
             echo "${whiteColor}0. ${redColorBold}Back/cancel${whiteColor}"
             echo ""
             echo -n "Enter input : ${cyanColorBold}"
@@ -130,18 +129,14 @@ zexsh() {
             echo -n "${whiteColor}"
             case $mitmProxyRun_input in
             "1")
-                serverGenshin="sg.genshin.ps.yuuki.me"
+                serverGenshin="genshin.ps.yuuki.me"
                 portGenshin="443"
                 ;;
             "2")
-                serverGenshin="eu.genshin.ps.yuuki.me"
-                portGenshin="443"
-                ;;
-            "3")
                 serverGenshin="127.0.0.1"
                 portGenshin="54321"
                 ;;
-            "4")
+            "3")
                 serverGenshin="$customServer"
                 portGenshin="$customPort"
                 ;;
