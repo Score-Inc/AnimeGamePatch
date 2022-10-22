@@ -298,11 +298,12 @@ fi
 # You can edit as you want (IF YOU KNOW SHELL CODE)
 # If you want make to UI 1,2,3,4 install without zex ins for example. You can do it (I SAID AGAIN IF YOU KNOW SHELL CODE)
 case $userInput1 in
-    "1" | "install" ) extractMitm;;
-    "2" | "cert" ) getCert;;
-    "3" | "remove" | "rmcert" ) removeCertRoot;;
-    "4" | "downloadgenshin" | "download" ) GenshinAPKs;;
-    "5" | "mitm" | "run" ) zexsh;;
-    "6" | "settings" ) settingsScript;;
+    "1" ) extractMitm;;
+    "2" ) getCert;;
+    "3" ) GenshinAPKs;;
+    "4" ) zexsh;;
+    "5" ) downloadproxy;;
+    "6" ) installCertAPK;;
+    "7" ) settingsScript;;
     * ) clear; UIMenu;; 
 esac
