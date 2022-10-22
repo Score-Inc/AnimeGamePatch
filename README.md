@@ -1,7 +1,5 @@
 # AnimeGamePatch
-For who have Android 8 or crash issue can try use this Patch.<br />
 This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)<br />
-<br />Feel free dm me on [Telegram](https://t.me/ElashXander) If you want need help how to use this or have issue install
 - [x] No Root
 - [x] Root
 - [ ] Install Mitmproxy with pipx
@@ -9,7 +7,7 @@ This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)<br />
 - [x] Autoscript
 
 # 3.1 Android
-If you still want play 3.1 for Android go to [here](https://elaxan.com/NotMain/)
+If you still want play 3.1 for Android go to [here](https://elaxan.com/NotMain/) and download with support using Termux
 
 # GCAndroid
 Want play localhost on your android phone?\
@@ -17,7 +15,7 @@ Go to [GCAndroid](https://github.com/ElaXan/GCAndroid)
 
 #### This just for install mitmproxy
 Maybe for now just for install mitmproxy and change a server as you want<br />
-This good for beginner/who don't know about Termux
+This maybe good for begginer
 
 #### Download File
 Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) [Recommend]
@@ -76,9 +74,17 @@ Commands for ```zex```
 #### zex 1
 install program and mitmproxy
 #### zex 2
-Change server or domain
+for get certificate
 #### zex 3
-Run mitmproxy
+Download Genshin .apk
+#### zex 4
+Run Mitmproxy
+#### zex 5
+Download proxy.py and proxy_config.py
+#### zex 6
+Install certificate to .apk
+#### zex 7
+For Settings
 
 # Proxy Settings
 #### Mobile data
