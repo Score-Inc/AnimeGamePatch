@@ -220,11 +220,11 @@ settingsScript() {
     clear
     whoMadeThis
     changeSettings_list
-    echo "[$renameconf] ${whiteColor}1. ${cyanColorBold}Autorename Package Genshin (ROOT)${whiteColor}"
+    echo "[$isLogOutputSettings] ${whiteColor}1. ${cyanColorBold}Log Output Mitmproxy${whiteColor}"
     echo "[$openGenshinConf] ${whiteColor}2. ${cyanColorBold}Auto open Genshin Impact App${whiteColor}"
-    echo "[$setProxyConf] ${whiteColor}3. ${cyanColorBold}Change Proxy (ROOT)${whiteColor}"
-    echo "[$resetProxyConf] ${whiteColor}4. ${cyanColorBold}Reset Proxy (ROOT)${whiteColor}"
-    echo "[$isLogOutputSettings] ${whiteColor}5. ${cyanColorBold}Log Output Mitmproxy${whiteColor}"
+    echo "[$renameconf] ${whiteColor}3. ${cyanColorBold}Autorename Package Genshin (ROOT)${whiteColor}"
+    echo "[$setProxyConf] ${whiteColor}4. ${cyanColorBold}Change Proxy (ROOT)${whiteColor}"
+    echo "[$resetProxyConf] ${whiteColor}5. ${cyanColorBold}Reset Proxy (ROOT)${whiteColor}"
     echo "[$currentPort] ${whiteColor}6. ${cyanColorBold}Localhost Port${whiteColor}"
     echo "${whiteColor}7. ${cyanColorBold}Custom Server${whiteColor}"
     echo "0. ${redColorBold}Back to Menu!${whiteColor}"

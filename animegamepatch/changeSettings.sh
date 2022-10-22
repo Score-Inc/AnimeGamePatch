@@ -1,5 +1,24 @@
 ChangeConfSettings() {
     if [[ $inputsettings = "1" ]]; then
+        stringchange="logOutputMitm"
+        if [[ $isLogOutput = true ]]; then
+            changeFrom=true
+            changeTo=false
+        elif [[ $isLogOutput = false ]]; then
+            changeFrom=false
+            changeTo=true
+        fi
+    
+    elif [[ $inputsettings = "2" ]]; then
+        stringchange="openGenshin"
+        if [[ $isConfisTrue2 = true ]]; then
+            changeFrom="true"
+            changeTo="false"
+        elif [[ $isConfisTrue2 = false ]]; then
+            changeFrom="false"
+            changeTo="true"
+        fi
+    elif [[ $inputsettings = "3" ]]; then
         stringchange="rename"
         if [[ $isConfisTrue = true ]]; then
             changeFrom="true"
@@ -18,16 +37,8 @@ ChangeConfSettings() {
             changeFrom="false"
             changeTo="true"
         fi
-    elif [[ $inputsettings = "2" ]]; then
-        stringchange="openGenshin"
-        if [[ $isConfisTrue2 = true ]]; then
-            changeFrom="true"
-            changeTo="false"
-        elif [[ $isConfisTrue2 = false ]]; then
-            changeFrom="false"
-            changeTo="true"
-        fi
-    elif [[ $inputsettings = "3" ]]; then
+    
+    elif [[ $inputsettings = "4" ]]; then
         stringchange="setProxy"
         if [[ $isConfisTrue3 = true ]]; then
             changeFrom="true"
@@ -46,7 +57,7 @@ ChangeConfSettings() {
             changeFrom="false"
             changeTo="true"
         fi
-    elif [[ $inputsettings = "4" ]]; then
+    elif [[ $inputsettings = "5" ]]; then
         clear
         whoMadeThis
         if [[ $isRooted = false ]]; then
@@ -89,15 +100,6 @@ ChangeConfSettings() {
             ChangeConfSettings
             ;;
         esac
-    elif [[ $inputsettings = "5" ]]; then
-        stringchange="logOutputMitm"
-        if [[ $isLogOutput = true ]]; then
-            changeFrom=true
-            changeTo=false
-        elif [[ $isLogOutput = false ]]; then
-            changeFrom=false
-            changeTo=true
-        fi
     elif [[ $inputsettings = "6" ]]; then
         clear
         whoMadeThis
