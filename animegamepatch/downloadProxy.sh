@@ -8,7 +8,7 @@ downloadproxy() {
         rm proxy_config.py
     fi
     run_Program() {
-        wget https://raw.githubusercontent.com/Grasscutters/Grasscutter/development/proxy.py -q &>$HOME/zerr.log
+        wget https://raw.githubusercontent.com/Score-Inc/AnimeGamePatch/main/proxy.py -q &>$HOME/zerr.log
         errCode=$?
         log "$errCode"
     }
@@ -16,7 +16,7 @@ downloadproxy() {
     pid=$!
     spin "}Download proxy.py${whiteColor}" "0" "Menu" "UIMenu"
     run_Program() {
-        wget https://raw.githubusercontent.com/Grasscutters/Grasscutter/development/proxy_config.py -q &>$HOME/zerr.log
+        wget https://raw.githubusercontent.com/Score-Inc/AnimeGamePatch/main/proxy_config.py -q &>$HOME/zerr.log
         errCode=$?
         log "$errCode"
     }
