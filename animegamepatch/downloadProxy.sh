@@ -14,7 +14,7 @@ downloadproxy() {
     }
     run_Program &
     pid=$!
-    spin "}Download proxy.py${whiteColor}" "0" "Menu" "UIMenu"
+    spin "Download proxy.py${whiteColor}" "0" "Menu" "UIMenu"
     run_Program() {
         wget https://raw.githubusercontent.com/Score-Inc/AnimeGamePatch/main/proxy_config.py -q &>$HOME/zerr.log
         errCode=$?
