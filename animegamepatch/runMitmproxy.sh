@@ -233,8 +233,10 @@ zexsh() {
             fi
             getServer=$(cat $HOME/proxy_config.py | grep "REMOTE_HOST = \"" | busybox sed -e "s/.*= \"//g" -e "s/\"//g")
             getPort=$(cat $HOME/proxy_config.py | grep "REMOTE_PORT =" | head -n 1 | busybox sed "s/.*= //g")
-            echo "${greenColorBold}Log saved to /sdcard/mitm.log"
-            echo "For stop press CTRL + C on your keyboard"
+            if [[ $isLogOutput = false ]]; then
+                echo "${greenColorBold}Log saved to /sdcard/mitm.log"
+            fi
+            echo "${greenColorBold}For stop press CTRL + C on your keyboard"
             echo "Now you can open Genshin${whiteColor}"
             echo "========================================"
             echo "${greenColorBold}Connect to : ${cyanColorBold}$getServer"
