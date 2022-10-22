@@ -248,10 +248,10 @@ changeSettings_list() {
 
     if [[ $getSettingsConf8 = false ]]; then
         isLogOutput=false
-        isLogOutputSettings="${redColorBold}False${whiteColor}"
+        isLogOutputSettings="${redColorBold}OFF${whiteColor}"
     elif [[ $getSettingsConf8 = true ]]; then
         isLogOutput=true
-        isLogOutputSettings="${greenColorBold}True${whiteColor}"
+        isLogOutputSettings="${greenColorBold}ON${whiteColor}"
     else
         isLogOutput=err
     fi
