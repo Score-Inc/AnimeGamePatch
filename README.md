@@ -55,22 +55,5 @@ press Enter on your Keyboard <br />
 <br />5. Script will install some package/program if it not installed
 <br />6. DONE
 
-# Shortcut Commands
-Commands for ```zex```
-#### zex 1
-install mitmproxy
-#### zex 2
-for get certificate
-#### zex 3
-Download Genshin .apk
-#### zex 4
-Run Mitmproxy
-#### zex 5
-Download proxy.py and proxy_config.py
-#### zex 6
-Install certificate to .apk
-#### zex 7
-For Settings
-
 # Wiki
 For More go to [WIKI](https://github.com/Score-Inc/AnimeGamePatch/wiki)
