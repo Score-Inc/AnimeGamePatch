@@ -11,11 +11,7 @@ If you still want play 3.1 for Android go to [here](https://elaxan.com/NotMain/)
 
 # GCAndroid
 Want play localhost on your android phone?\
-Go to [GCAndroid](https://github.com/ElaXan/GCAndroid)
-
-#### This just for install mitmproxy
-Maybe for now just for install mitmproxy and change a server as you want<br />
-This maybe good for begginer
+Go to [GCAndroid](https://github.com/Score-Inc/GCAndroid)
 
 #### Download File
 Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) [Recommend]
@@ -35,7 +31,8 @@ No Termux or mitmproxy go to [YuukiProxy](https://github.com/ElaXan/YuukiProxy)
 
 # Termux
 #### Information
-This need proxy settings on your phone. ~~No need install cert on your phone but follow the script said until it success.~~ If you don't know about this go to [Proxy Settings](https://github.com/ElaXan/AnimeGamePatch#proxy-settings).
+This need proxy settings on your phone. If you don't know about this go to [Proxy Settings](https://github.com/ElaXan/AnimeGamePatch#proxy-settings).\
+if your phone is Rooted, no need to do that. but turn on the Change Proxy in Settings Script
 
 #### Termux Command
 <details markdown='1'><summary>How to</summary>
@@ -64,15 +61,15 @@ pkg update && curl -Ls https://raw.githubusercontent.com/ElaXan/AnimeGamePatch/m
 ```zex```
 <br />~ If ask "motd (Y/I/N/O/D/Z) [default=N] ?" <br />
 press Enter on your Keyboard <br />
-<br />5. Follow what script said
-<br />6. DONE✓
+<br />5. Script will install some package/program if it not installed
+<br />6. DONE
 
 </details>
 
 # Shortcut Commands
 Commands for ```zex```
 #### zex 1
-install program and mitmproxy
+install mitmproxy
 #### zex 2
 for get certificate
 #### zex 3
@@ -117,9 +114,8 @@ For WiFi just follow this picture : <br />
 </details>
 
 # Install certificate on your phone
-#### Download certificate
-Go to [mitm.it](http://mitm.it) but settings proxy on your phone, see [here](https://github.com/ElaXan/AnimeGamePatch#proxy-settings) for how to do that
-And run `mitmdump --ssl-insecure` on Termux then open [mitm.it](http://mitm.it)
+#### Get certificate
+You can get certificate by running `zex 2` command
 
 #### Install Certificate 
 <details markdown='1'><summary>How to</summary>
@@ -141,22 +137,22 @@ First open settings and search "CA Certificate" then follow this picture step by
 <details markdown='1'><summary>Faq List</summary>
 
 #### How to play again? Does i need to follow [this](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux) step again?
-No. just enter command ```zex run``` then play Anime Game
+No. just enter command ```zex 4``` then play Anime Game
 
 #### I want to play other server. How to change server?
-Using command ```zex dom``` and enter the server you want play!
+Change a Custom Server in Settings Script by running command `zex 7`
 
 #### Why it said "Password error" or trying enter username and password?
 Check your Proxy settings on your phone
 
 #### Why am I still on the original server?
-Hmmm.. check your proxy on Settings. Set proxy to<br />Hostname : **127.0.0.1**<br />Port : **8080**<br />After set the Proxy go back to Termux and run command ```bash zex.sh```
+Hmmm.. check your proxy on Settings. Set proxy to<br />Hostname : **127.0.0.1**<br />Port : **8080**<br />After set the Proxy go back to Termux and run command ```zex```
 
 #### Why i got Data Error?
-Because you may the proxy not setting to<br /> Hostname : **127.0.0.1**<br />Port : **8080**<br />Try settings proxy and run ```zex run```
+Because maybe you not setting proxy to<br /> Hostname : **127.0.0.1**<br />Port : **8080**<br />Try settings proxy and run ```zex 4```
 
 #### Why 0% Stuck loading?
-Your data is missing, check it on settings app info, if less than 15GB (I think) you need to download again from original server
+Your data is missing, check it on settings app info, if less than 18GB or more you need to download again from original server
 
 #### Why i got error when i install from [Termux](https://github.com/ElaXan/AnimeGamePatch/edit/main/README.md#termux)?
 Try change your repo termux using ```termux-change-repo``` and follow [this](https://github.com/ElaXan/AnimeGamePatch#termux) step again<br />
