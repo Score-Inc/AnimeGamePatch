@@ -7,7 +7,7 @@ This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)<br />
 - [x] Autoscript
 
 #### Download File
-Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) [Recommend]
+Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) [Recommend]\
 Download AnimeGame 3.2 from [Release](https://github.com/ElaXan/AnimeGamePatch/releases/tag/3.2)
 
 ### FOR ROOT USERS
