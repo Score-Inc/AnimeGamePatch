@@ -6,14 +6,9 @@ This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)<br />
 - [ ] Manual Install 
 - [x] Autoscript
 
-# 3.1 Android
-If you still want play 3.1 for Android go to [here](https://elaxan.com/NotMain/) and download with support using Termux
-
 #### Download File
 Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) [Recommend]
-
-Download Anime Game Patch 3.0 from [Release](https://github.com/ElaXan/AnimeGamePatch/releases/tag/3.0)\
-[OR YOU CAN DOWNLOAD FROM SCRIPT]
+Download AnimeGame 3.2 from [Release](https://github.com/ElaXan/AnimeGamePatch/releases/tag/3.2)
 
 ### FOR ROOT USERS
 If you have no internet after run mitmproxy with script\
