@@ -1,6 +1,6 @@
 binary=/data/data/com.termux/files/usr/bin/zex
-versionBashIn1="3.8"
-updateNotif="1. Remove README-id\n2. Update README\n3. Update subcommand\n4. Add Settings show log Mitmproxy/Mitmdump\n5. Update Server Yuuki\n6. Format Document"
+versionBashIn1="4.0"
+updateNotif="1. Add Download Genshin 3.2\n2. Fix Mitmproxy (no module named \"mitmproxy\")\n3. Update Install Certificate to APK"
 updateNote="There is new version to"
 link=null
 printLatest="This is Latest Version (Ver : $versionBashIn1)"
