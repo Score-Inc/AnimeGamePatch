@@ -58,6 +58,11 @@ if ! command -v busybox &>/dev/null; then
     pkg install busybox -y
 fi
 
+if ! command -v whet &>/dev/null; then
+    echo "${greenColorBold}Installing wget${whiteColor}"
+    apt install wget -y
+fi
+
 if [ ! -f "$HOME/.ElaXan/AnimeGamePatch/uber-apk-signer-1.2.1.jar" ]; then
     cd $HOME/.ElaXan/AnimeGamePatch
     echo "Downloading uber-apk-signer"
