@@ -23,7 +23,7 @@ spin() {
             else
                 trap - INT
                 echo -ne "\r[${redColorBold}X${whiteColor}"
-                echo -e "\n${redColorBold}Failed output${whiteColor}"
+                echo -e "\n${redColorBold}Failed output with code ${errCode}${whiteColor}"
                 echo
                 echo "Reason :"
                 echo "$errOutput"

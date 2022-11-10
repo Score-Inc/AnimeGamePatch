@@ -38,16 +38,6 @@ if ! command -v cowsay &>/dev/null; then
     pkg install cowsay -y
 fi
 
-if ! command -v apktool &>/dev/null; then
-    echo "${greenColorBold}Installing apktool${whiteColor}"
-    pkg install apktool -y
-fi
-
-if ! command -v java &>/dev/null; then
-    echo "${greenColorBold}Installing Java${whiteColor}"
-    pkg install openjdk-17 -y
-fi
-
 if ! command -v zip &>/dev/null; then
     echo "${greenColorBold}Installing zip${whiteColor}"
     pkg install zip -y
