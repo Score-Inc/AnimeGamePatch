@@ -48,7 +48,7 @@ if ! command -v busybox &>/dev/null; then
     pkg install busybox -y
 fi
 
-if ! command -v whet &>/dev/null; then
+if ! command -v wget &>/dev/null; then
     echo "${greenColorBold}Installing wget${whiteColor}"
     apt install wget -y
 fi
@@ -145,10 +145,12 @@ downloadGenshin() {
     clear
     whoMadeThis
     if [[ $dgenshininp = "1" ]]; then
-        echo "${redColorBold}File size is 264 MB... Do you want continue to download?${whiteColor}"
+        echo "${redColorBold}file size is 453 MB... Do you want continue to download?${whiteColor}"
     elif [[ $dgenshininp = "2" ]]; then
-        echo "${redColorBold}File size is 238 MB... Do you want continue to download?${whiteColor}"
+        echo "${redColorBold}File size is 264 MB... Do you want continue to download?${whiteColor}"
     elif [[ $dgenshininp = "3" ]]; then
+        echo "${redColorBold}File size is 238 MB... Do you want continue to download?${whiteColor}"
+    elif [[ $dgenshininp = "4" ]]; then
         echo "${redColorBold}File size is 321 MB... Do you want continue to download?${whiteColor}"
     fi
     echo -n "Enter input (y/n) : "
@@ -168,15 +170,16 @@ GenshinAPKs() {
     clear
     cd $HOME || exit 1
     whoMadeThis
-    echo "1. ${greenColorBold}Genshin Impact Version 3.0${whiteColor}"
-    echo "2. ${yellowColorBold}Genshin Impact Version 2.8${whiteColor}"
-    echo "3. ${yellowColorBold}Genshin Impact Version 2.7${whiteColor}"
+    echo "1. ${greenColorBold}Genshin Impact Version 3.2${whiteColor}"
+    echo "2. ${yellowColorBold}Genshin Impact Version 3.0${whiteColor}"
+    echo "3. ${yellowColorBold}Genshin Impact Version 2.8${whiteColor}"
+    echo "4. ${yellowColorBold}Genshin Impact Version 2.7${whiteColor}"
     echo "0. Back"
     echo ""
     echo -n "Enter input : "
     read -r dgenshininp
     case $dgenshininp in
-    "1" | "2" | "3") downloadGenshin ;;
+    "1" | "2" | "3" | "4") downloadGenshin ;;
     "0") UIMenu ;;
     *)
         echo "Wrong Input!"
