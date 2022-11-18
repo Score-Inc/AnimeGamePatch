@@ -1,11 +1,17 @@
 # AnimeGamePatch
-This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)<br />
+This Patch using [apk-mitm](https://github.com/shroudedcode/apk-mitm)
+
 - [x] No Root
 - [x] Root
 - [ ] Install Mitmproxy with pipx
 - [ ] Manual Install 
 - [x] Autoscript
 
+# PatchGenshinAPK
+
+Try patching apk-mitm by yourself on the Android phone using [PatchGenshinAPK](https://github.com/Score-Inc/PatchGenshinAPK)
+
+# Termux
 #### Download File
 Download Termux from [F-Droid](https://f-droid.org/repo/com.termux_118.apk) [Recommend]\
 Download AnimeGame 3.2 from [Release](https://github.com/ElaXan/AnimeGamePatch/releases/tag/3.2)
@@ -17,7 +23,6 @@ Just copy this command and paste to termux
 su -c settings put global http_proxy :0
 ```
 
-# Termux
 #### Information
 This need proxy settings on your phone. If you don't know about this go to [Proxy Settings](https://github.com/ElaXan/AnimeGamePatch#proxy-settings).\
 if your phone is Rooted, no need to do that. but turn on the Change Proxy in Settings Script
